@@ -636,6 +636,10 @@ body.auc-on .lvup:not(.promo){align-items:start;padding-top:calc(env(safe-area-i
 .mpk-x{padding:8px 12px;top:2px;right:2px;min-height:34px}
 .tut-skip{padding:10px 8px;min-height:36px}
 .lvlb .rkb{width:22px;height:22px;font-size:14px;right:-6px;bottom:-5px}
+/* panels: no iOS rubber-band at the top (it dragged the header down and left a blank gap); pulling down closes instead */
+.sheet{overscroll-behavior:none;-webkit-overflow-scrolling:auto}
+.sheet.dragging{animation:none!important;transition:none!important}
+.sheet.snap{transition:transform .22s cubic-bezier(.2,.9,.3,1)}
 
 </style>
 
@@ -780,7 +784,7 @@ const TOWNS=[
  {n:'Larkspur Hills',d:'Old money',c:'#4c6b3c',inc:25,cost:70,pat:.7,price:3,lvl:41,tier:3,wall:'#eef1e6',wains:'#4f6b44',cap:'#b8933a',ext:'#6e8a5e',runner:'#3d5a35',floor:['#8a5a36','#94633d','#7f5230','#9c6b44'],street:['Ivy Terrace','Manor Close'],mx:110,my:140},
  {n:'Merriton Inner',d:'City fringe',c:'#8e4a5e',inc:40,cost:120,pat:.66,price:2.3,lvl:48,tier:3,wall:'#f2ebe8',wains:'#8a4b3a',cap:'#2b3445',ext:'#a35a48',runner:'#2b3445',floor:['#d0c8c0','#c6bdb4','#d8d1ca','#bdb3a9'],street:['Laneway Street','Brick Row'],mx:232,my:190},
  {n:'Merriton CBD',d:'Sky-high office',c:'#3a4a63',inc:65,cost:220,pat:.62,price:2.9,lvl:55,tier:4,wall:'#f4f6f9',wains:'#2b3445',cap:'#c9a227',ext:'#3a4a63',runner:'#1d2433',floor:['#f2f2f0','#e4e4e2','#f7f7f5','#dcdcda'],street:['Collins Place','Tower Road'],mx:276,my:150},
- {n:'Isla Verde',d:'Island resort',c:'#2fb38a',inc:100,cost:400,pat:.58,price:5,lvl:62,tier:4,wall:'#fbf6ec',wains:'#2fb38a',cap:'#d9a521',ext:'#f2e6cc',runner:'#1d8a6a',floor:['#f4ede0','#ece3d2','#f8f2e8','#e6dcc8'],street:['Lagoon Drive','Palm Walk'],mx:300,my:332},
+ {n:'Isla Verde',d:'Private island',c:'#2fb38a',inc:15000,cost:115000,pat:.38,price:18,lvl:150,tier:4,wall:'#fbf6ec',wains:'#2fb38a',cap:'#d9a521',ext:'#f2e6cc',runner:'#1d8a6a',floor:['#f4ede0','#ece3d2','#f8f2e8','#e6dcc8'],street:['Lagoon Drive','Palm Walk'],mx:300,my:332},
  {n:'Puerto Sol',d:'Harbour town',c:'#2f8fc4',inc:150,cost:600,pat:.56,price:5.5,lvl:70,tier:2,wall:'#fbf4e6',wains:'#3a7fc0',cap:'#c2643b',ext:'#f4e7cf',runner:'#2f6fae',floor:['#e9d2b0','#e1c7a2','#efdabb','#d9bd95'],street:['Via Marina','Lantern Steps'],mx:56,my:300},
  {n:'Olivara',d:'Olive country',c:'#7d8f3a',inc:240,cost:1000,pat:.55,price:4.8,lvl:78,tier:2,wall:'#f6efdf',wains:'#8a9a4a',cap:'#5e6b2a',ext:'#d9caa4',runner:'#6b7a35',floor:['#c9784a','#d18352','#c06e42','#d68c5c'],street:['Olive Grove Road','Via Ulivi'],mx:60,my:218},
  {n:'Vellara Heights',d:'Hillside village',c:'#c2643b',inc:380,cost:1700,pat:.53,price:6,lvl:86,tier:3,wall:'#fdf8ef',wains:'#c2643b',cap:'#7a3a22',ext:'#e8d6b8',runner:'#9e4a2f',floor:['#e8dcc6','#dfd2ba','#efe4d0','#d6c8ae'],street:['Bell Tower Way','Cliff Steps'],mx:96,my:148},
@@ -793,7 +797,8 @@ const TOWNS=[
  {n:'Isola d’Oro',d:'Superyacht office',c:'#d9a521',inc:9500,cost:70000,pat:.4,price:15,lvl:142,tier:4,wall:'#fffaf0',wains:'#d9a521',cap:'#8a6a12',ext:'#f6ead0',runner:'#b8901a',floor:['#f7efe0','#efe5d2','#fbf5ea','#e8dcc4'],street:['Golden Shore','Palm Crescent'],mx:298,my:330}
 ];
 const WORLDS=[{n:'Calder',c:'#1aa3a3',d:'Coastal country',i0:0},{n:'Solmara',c:'#e07b22',d:'The sun coast',i0:10}];
-const worldOf=i=>i>=10?1:0;
+const worldOf=i=>i>=9?1:0;
+const PROG=[0,1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,9],ordT=i=>PROG.indexOf(i),WTOWNS=w=>PROG.filter(i=>worldOf(i)===w);
 const SOL_HOUSES=[['#fbf7ee','#c2643b','#2f6fd6'],['#f6ead2','#b8572f','#2a9a48'],['#fdf2e0','#d06a3a','#1aa3a3'],['#f2f6f8','#c2643b','#2f6fd6'],['#fbe6d0','#a84a2a','#e8a417'],['#f8f0e3','#c97046','#7a2f4f'],['#eef4ee','#b8572f','#2f8fc4']];
 const WTH=[
  {sky:'#9fd8ec',grass:['#8ad466','#80cb5c'],greens:['#3e9a4a','#4fb35a','#45a350','#5bbd5f','#378a43'],sea:'#1f8fd0',seab:'#1b6fa8',sand:'#f2dca6',light:'#e8443a',med:false,
@@ -873,7 +878,7 @@ function migrate(s){
   s.mgr=s.mgr||{};s.eq=s.eq||{};s.sp=s.sp||{};
   if(s.cards){s.gems+=Object.keys(s.cards).length*30;delete s.cards}
   {const d=fresh();for(const k in d)if(s[k]==null)s[k]=d[k];if(s.board)for(const k in d.board)if(s.board[k]===undefined)s.board[k]=d.board[k];['cash','gems','xp','earned','served','auctions','rep'].forEach(k=>{if(typeof s[k]!=='number'||!isFinite(s[k]))s[k]=d[k]});if(!(s.lvl>=1))s.lvl=1;const nw=Date.now();if(s.board){if(!(s.board.next<=nw+BOARD_CD))s.board.next=0;if(!(s.board.until<=nw+BOARD_DUR*2))s.board.until=0}if(!(s.boostUntil<=nw+4*3600e3))s.boostUntil=0;if(!(s.lastSeen<=nw))s.lastSeen=nw;for(const k in s.st){const q=s.st[k];if(!q||typeof q!=='object'){s.st[k]={on:false,lv:1,slots:1};continue}if(!(q.lv>=1&&isFinite(q.lv)))q.lv=1;if(!(q.slots>=1&&isFinite(q.slots)))q.slots=1;q.on=!!q.on}}
-  if(s.vipIn==null)s.vipIn=70;s.walkouts=s.walkouts||0;s.vips=s.vips||0;s.hs=s.hs||{};s.listed=s.listed||0;s.sold=s.sold||0;s.aucSold=s.aucSold||0;s.qa=s.qa||[];s.qn=s.qn||0;s.qg=s.qg||0;s.board=s.board||{on:false,next:0,buff:null,until:0,opts:null,held:0};s.town=s.town||0;s.towns=s.towns||0;if(s.rep==null)s.rep=50;s.repLog=s.repLog||[];if(s.aq){s._aq=s.aq;delete s.aq}s.v=4;return s;
+  if(s.vipIn==null)s.vipIn=70;s.walkouts=s.walkouts||0;s.vips=s.vips||0;s.hs=s.hs||{};s.listed=s.listed||0;s.sold=s.sold||0;s.aucSold=s.aucSold||0;s.qa=s.qa||[];s.qn=s.qn||0;s.qg=s.qg||0;s.board=s.board||{on:false,next:0,buff:null,until:0,opts:null,held:0};s.town=s.town||0;s.towns=s.towns||0;if(s.rep==null)s.rep=50;s.repLog=s.repLog||[];if(s.aq){s._aq=s.aq;delete s.aq}if(s.town===9&&!(s.v>=5))s.ivLegacy=1;s.v=5;return s;
 }
 let WIPING=false;let saveWarned=false;function save(){if(!S||WIPING)return false;S.lastSeen=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){if(!saveWarned){saveWarned=true;try{toast('Progress can\'t be saved on this device (storage is off).','bad')}catch(_){}}return false}}
 function load(){try{const s=localStorage.getItem(KEY);return s?migrate(JSON.parse(s)):null}catch(e){return null}}
@@ -887,7 +892,7 @@ function incMul(k){let m=eqMul(k,'inc')*TW.inc;if(k==='sales'&&boardBuff('sales'
 function miles(lv){return MILES.filter(m=>lv>=m).length}
 function nextMile(lv){return MILES.find(m=>lv<m)||null}
 function value(k,lv){lv=lv||S.st[k].lv;return ST[k].base*lv*Math.pow(2,miles(lv))*incMul(k)}
-let UPG_G=1.08,UNL_M=1,UPC_M=2;const tutFree=k=>document.body.classList.contains('tut-on')&&S.st[k].lv<2&&((S.tut===2&&k==='reception')||(S.tut===4&&k==='sales'));function upCost(k){if(tutFree(k))return 0;return Math.ceil(ST[k].cost0*UPC_M*Math.pow(UPG_G,S.st[k].lv-1)*TW.cost*rankPerk('cost'))}
+let UPG_G=1.08,UNL_M=1,UPC_M=2;const tutFree=k=>document.body.classList.contains('tut-on')&&S.st[k].lv<2&&((S.tut===2&&k==='reception')||(S.tut===4&&k==='sales'));function upCost(k){if(tutFree(k))return 0;return Math.ceil(ST[k].cost0*UPC_M*upExp(S.st[k].lv)*TW.cost*rankPerk('cost'))}const UPX={b1:50,g1:1.06,b2:100,g2:1.03};function upExp(lv){const X=UPX;if(lv<=X.b1)return Math.pow(UPG_G,lv-1);const a=Math.pow(UPG_G,X.b1-1);if(lv<=X.b2)return a*Math.pow(X.g1,lv-X.b1);return a*Math.pow(X.g1,X.b2-X.b1)*Math.pow(X.g2,lv-X.b2)}
 function unlockCost(k){return Math.ceil(ST[k].unlock*UNL_M*TW.cost)}
 function boardBuff(k){return !!(S.board&&S.board.on&&S.board.buff===k&&Date.now()<S.board.until)}
 function repMul(){return .55+S.rep*.009}
@@ -5834,6 +5839,23 @@ function bakeParts(grp){grp.updateMatrixWorld(true);const inv=new T.Matrix4().co
   const bg=new T.BufferGeometry();bg.setAttribute('position',new T.BufferAttribute(pos,3));bg.setAttribute('normal',new T.BufferAttribute(nor,3));bg.setAttribute('color',new T.BufferAttribute(cl,3));bg.computeBoundingSphere();
   const m=new T.Mesh(bg,vcMat());m.castShadow=true;grp.add(m)}
 function bakePerson(g){const u=g.userData;[u.b,u.lL,u.lR,u.aL,u.aR].forEach(bakeParts)}
+// ---- pull a panel down from its top to close it (ignored mid-tour and on panels that hide their close button)
+(function(){let sh=null,y0=0,x0=0,dy=0,on=false,dir=0;
+  const ok=()=>{const sc=$('#sheet');if(!sc||sc.hidden||document.body.classList.contains('tut-on'))return false;const x=sc.querySelector('.x');return !!(x&&x.style.display!=='none')};
+  document.addEventListener('touchstart',e=>{const t=e.target.closest&&e.target.closest('#sheet .sheet');if(!t||!ok()||e.touches.length>1){sh=null;return}
+    sh=t;y0=e.touches[0].clientY;x0=e.touches[0].clientX;dy=0;on=false;dir=0},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!sh)return;const y=e.touches[0].clientY,x=e.touches[0].clientX;
+    if(!dir){if(Math.abs(y-y0)<6&&Math.abs(x-x0)<6)return;dir=Math.abs(y-y0)>Math.abs(x-x0)?1:2}
+    if(dir!==1){sh=null;return}
+    if(!on){if(y>y0&&sh.scrollTop<=0&&!(e.target.closest&&e.target.closest('.mpk-row,input,textarea'))){on=true;y0=y;sh.classList.remove('snap');sh.classList.add('dragging')}else return}
+    dy=Math.max(0,y-y0);if(e.cancelable)e.preventDefault();sh.style.transform=`translateY(${dy}px)`},{passive:false});
+  const end=()=>{if(!sh||!on){sh=null;return}const s_=sh;sh=null;on=false;s_.classList.remove('dragging');s_.classList.add('snap');
+    if(dy>Math.min(140,s_.offsetHeight*.22)){s_.style.transform=`translateY(${s_.offsetHeight+20}px)`;setTimeout(()=>{try{closeSheet()}catch(_){}},200)}
+    else{s_.style.transform='';setTimeout(()=>s_.classList.remove('snap'),240)}};
+  document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true})})();
+// ---- a short cheer when a room is fully maxed (levels, staff and every cash upgrade) — the next town needs them all
+let MAXSEEN=null;setInterval(()=>{try{if(!S||!S.started||!S.st)return;const now=ORDER.filter(roomMaxed);if(MAXSEEN===null){MAXSEEN=new Set(now);return}
+  now.forEach(k=>{if(!MAXSEEN.has(k)){MAXSEEN.add(k);toast(`${ST[k].name} fully maxed! ${now.length}/${ORDER.length} rooms done`,'gold','⭐')}})}catch(e){}},1500);
 
 
 // ================= VIP =================
@@ -6039,12 +6061,12 @@ function unlock(k){if(S.st[k].on)return;const c=unlockCost(k);if(S.cash<c){toast
 function upgradesSheet(){
   const ks=[...ORDER,'board'];
   const rows=ks.map(k=>`<div class="li" data-row="${k}" style="cursor:pointer"><span class="eqi">${DEPT_IC[k]}</span><div><h3></h3><p></p></div><button class="mini"></button></div>`).join('');
-  sheet('Your office','#2fa83d',`<div class="mile"><div class="r"><span>Rooms built in ${TW.n}</span><b id="rb"></b></div><div class="mbar"><i id="rbb"></i></div></div><div class="list">${rows}</div>`,()=>{
-    if(!$('#rb'))return;const n=roomsBuilt();$('#rb').textContent=n+' / '+roomsTotal();$('#rbb').style.width=(n/roomsTotal()*100)+'%';
+  sheet('Your office','#2fa83d',`<div class="mile"><div class="r"><span>Rooms built in ${TW.n}</span><b id="rb"></b></div><div class="mbar"><i id="rbb"></i></div></div><div class="mile"><div class="r"><span>Rooms fully maxed</span><b id="rmx"></b></div><div class="mbar"><i id="rmxb"></i></div></div><div class="list">${rows}</div>`,()=>{
+    if(!$('#rb'))return;const n=roomsBuilt();$('#rb').textContent=n+' / '+roomsTotal();$('#rbb').style.width=(n/roomsTotal()*100)+'%';{const m=maxedN();$('#rmx').textContent=m+' / '+ORDER.length;$('#rmxb').style.width=(m/ORDER.length*100)+'%'}
     for(const k of ks){const r=document.querySelector(`[data-row="${k}"]`);if(!r)continue;const b=r.querySelector('button'),h3=r.querySelector('h3'),p=r.querySelector('p');
       if(k==='board'){h3.textContent='Board Room';const bc=BOARD_COST*TW.cost;if(!boardAvail()){p.textContent='Opens in '+TOWNS[BOARD_TOWN].n;b.textContent='🔒';b.className='mini ghost';b.dataset.need='';b.disabled=false}else if(!S.board.on){p.textContent='Not built yet';b.textContent=fmt(bc);afford(b,S.cash>=bc,'cash')}else{p.textContent=Date.now()>=S.board.next?(hasMgrs()?'Meeting ready':'Needs a manager'):'Next meeting '+mmss(S.board.next-Date.now());b.textContent='Open';afford(b,true)}continue}
       const st=S.st[k];if(!st.on){h3.textContent=ST[k].name;p.textContent='Not built yet';b.textContent=fmt(unlockCost(k));afford(b,S.cash>=unlockCost(k),'cash')}
-      else{h3.textContent=`${ST[k].name} · Lv ${st.lv}`;p.textContent=ST[k].special?`${fmt(value(k))} per seated client · ${SEATS.filter(q=>q.k===k).length} seats`:`${fmt(value(k))} per client · ${st.slots} staff`;b.textContent='Open';afford(b,true)}}},null,'🏢');
+      else{const mx=roomMaxed(k);h3.textContent=`${ST[k].name} · Lv ${st.lv}${mx?' ⭐':''}`;if(mx)p.textContent='Fully maxed';else p.textContent=ST[k].special?`${fmt(value(k))} per seated client · ${SEATS.filter(q=>q.k===k).length} seats`:`${fmt(value(k))} per client · ${st.slots} staff`;b.textContent='Open';afford(b,true)}}},null,'🏢');
   document.querySelectorAll('[data-row]').forEach(r=>r.onclick=()=>{const k=r.dataset.row;if(k==='board'){boardSheet();return}if(!S.st[k].on){unlockSheet(k);return}stationSheet(k)});
 }
 
@@ -6198,9 +6220,11 @@ function managersSheet(){
 let mapSel=null;
 const TOWN_IC=['🎣','🌾','🏘️','🏛️','🌊','🏔️','🌳','🧱','🏙️','🏝️','⛵','🫒','🔔','🍇','⛪','🏖️','🛥️','🌺','🏰','👑'];
 let mapW=null;
-function nextTown(){return Math.min(TOWNS.length-1,S.town===8&&!S.vip?10:S.town+1)}
-const vipTown=i=>i===9;
-function townReq(i){return [{t:`Reach agency level ${TOWNS[i].lvl}`,s:`Level ${S.lvl}/${TOWNS[i].lvl}`,ok:S.lvl>=TOWNS[i].lvl,p:`You're level ${S.lvl}`},{t:`Build all ${roomsTotal()} rooms in ${TW.n}`,s:`Rooms ${roomsBuilt()}/${roomsTotal()}`,ok:roomsBuilt()>=roomsTotal(),p:`${roomsBuilt()} of ${roomsTotal()} built`}]}
+function nextTown(){if(S.town===9&&S.ivLegacy)return 10;const k=ordT(S.town);return k>=0&&k<PROG.length-1?PROG[k+1]:-1}
+const vipTown=()=>false;
+function roomMaxed(k){const q=S.st[k];if(!q||!q.on||q.lv<MAXLV)return false;if(!ST[k].special&&q.slots<slotMax(k))return false;return (ITEMS[k]||[]).every(it=>eqT(k,it.id)>=3)}
+const maxedN=()=>ORDER.filter(roomMaxed).length;
+function townReq(i){return [{t:`Reach agency level ${TOWNS[i].lvl}`,s:`Level ${S.lvl}/${TOWNS[i].lvl}`,ok:S.lvl>=TOWNS[i].lvl,p:`You're level ${S.lvl}`},{t:`Build all ${roomsTotal()} rooms in ${TW.n}`,s:`Rooms ${roomsBuilt()}/${roomsTotal()}`,ok:roomsBuilt()>=roomsTotal(),p:`${roomsBuilt()} of ${roomsTotal()} built`},{t:`Max out every room: all levels, staff and equipment`,s:`Rooms maxed ${maxedN()}/${ORDER.length}`,ok:maxedN()>=ORDER.length,p:`${maxedN()} of ${ORDER.length} maxed`}]}
 const xfmt=v=>v>=1000?fmt(v).slice(1):String(v);
 const MAPPTS=[[48,244],[128,252],[208,242],[284,212],[214,168],[134,162],[58,124],[98,62],[182,52],[292,48]];
 function mapRoute(pts){const seg=[];for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
@@ -6230,12 +6254,12 @@ function mapSheet(){
   const NX=nextTown();if(mapSel==null)mapSel=S.town;if(mapW==null)mapW=worldOf(mapSel);
   const FF="'Lilita One','Arial Rounded MT Bold',Arial,sans-serif",W_=WORLDS[mapW],i0=W_.i0;
   if(worldOf(mapSel)!==mapW)mapSel=worldOf(S.town)===mapW?S.town:i0;
-  const segs=mapRoute(MAPPTS),P0=MAPPTS[0],dn=Math.min(S.town-i0,9);
+  const WL=WTOWNS(mapW),PTS=mapW?MAPPTS.concat([[300,112]]):MAPPTS.slice(0,WL.length),segs=mapRoute(PTS),P0=PTS[0],dn=WL.filter(i=>ordT(i)<ordT(S.town)).length;
   const full=`M${P0[0]} ${P0[1]}`+segs.slice(0,8).join(''),done=dn>0?`M${P0[0]} ${P0[1]}`+segs.slice(0,Math.min(dn,8)).join(''):'';
-  const sea=`M${MAPPTS[8][0]} ${MAPPTS[8][1]}`+segs[8];
+  const sea=segs.length>8?`M${PTS[8][0]} ${PTS[8][1]}`+segs.slice(8).join(''):'';
   const vipL=i=>vipTown(i)&&!S.vip&&S.town<9;
-  const order=[...Array(10).keys()].map(k=>i0+k).sort((a,b)=>(a===mapSel)-(b===mapSel));
-  const pins=order.map(i=>{const k=i-i0,[x,y]=MAPPTS[k],t=TOWNS[i],cur=i===S.town,dn_=i<S.town,nx=i===NX,sel=i===mapSel,lk=!dn_&&!cur&&!nx;
+  const order=WL.slice().sort((a,b)=>(a===mapSel)-(b===mapSel));
+  const pins=order.map(i=>{const k=WL.indexOf(i),[x,y]=PTS[k],t=TOWNS[i],cur=i===S.town,dn_=ordT(i)<ordT(S.town),nx=i===NX,sel=i===mapSel,lk=!dn_&&!cur&&!nx;
     const ring=vipL(i)?'#e6a800':dn_?'#3fb950':cur?t.c:nx?'#ffb01f':'#b6bfcc';const sc=sel?1.18:1;
     const badge=vipL(i)?['#ffc83d','👑']:dn_?['#3fb950','✓']:lk?['#8a96a8','🔒']:nx?['#ffb01f','!']:null;
     const nm=esc(t.n),w=nm.length*5.6+14;
@@ -6248,10 +6272,10 @@ function mapSheet(){
    <path d="${full}" fill="none" stroke="${mapW?'#e8c99a':'#e2cfa6'}" stroke-width="6" stroke-linecap="round"/>
    ${done?`<path d="${done}" fill="none" stroke="#3fb950" stroke-width="6" stroke-linecap="round"/>`:''}
    <path d="${full}" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 6" stroke-linecap="round" opacity=".9"/>
-   <path d="${sea}" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="3 6" stroke-linecap="round"/>
+   ${mapW?'<ellipse cx="300" cy="114" rx="24" ry="11" fill="#f7e4b2"/><ellipse cx="300" cy="112" rx="17" ry="7" fill="#8fcf6c"/>':''}<path d="${sea}" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="3 6" stroke-linecap="round"/>
    ${pins}</svg>`;
-  const i=mapSel,t=TOWNS[i],li=i-i0,vl=vipL(i),isNext=i===NX;
-  const status=vl?'👑 VIP only':i<S.town?(vipTown(i)&&S.town>9&&!S.vipVisited?'Skipped':'Done ✓'):i===S.town?'You are here':isNext?'Up next':'Locked';
+  const i=mapSel,t=TOWNS[i],li=WL.indexOf(i),vl=false,isNext=i===NX;
+  const status=ordT(i)<ordT(S.town)?'Done ✓':i===S.town?'You are here':isNext?'Up next':'Locked';
   const reqs=isNext?townReq(i):null,can=reqs&&reqs.every(r=>r.ok),cross=worldOf(i)!==worldOf(S.town);
   const tabs=WORLDS.map((w,k)=>`<button class="wtab ${k===mapW?'on':''}" data-w="${k}" style="--wc:${w.c}"><b>${k>worldOf(S.town)?'🔒 ':''}World ${k+1} · ${w.n}</b></button>`).join('');
   const stats=i>0?`<div class="mp-stats"><span>💵 <b>×${xfmt(t.inc)}</b></span><span>🏷️ <b>×${xfmt(t.cost)}</b></span><span>⏳ <b>${Math.round(t.pat*100)}%</b></span><span>🏡 <b>×${t.price}</b></span></div>`:'';
@@ -6260,10 +6284,11 @@ function mapSheet(){
   else if(reqs){act=`<div class="mp-req">${reqs.map(r=>`<span class="${r.ok?'ok':''}">${r.ok?'✅':'⬜'} ${r.s}</span>`).join('')}</div>`+
     (can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
         :`<div class="mp-btns"><button class="gbtn ghost" disabled><span>Not ready</span></button><button class="gbtn gem" id="mvg"><span>Unlock</span><span class="price">200${GEMIC}</span></button></div>`)}
-  else if(i>NX){const pv=i===10?(S.vip?9:8):i-1,fly=worldOf(i)>worldOf(S.town)&&worldOf(pv)<worldOf(i);act=`<p class="mp-note">${fly?`Finish ${esc(TOWNS[pv].n)} to fly to ${WORLDS[worldOf(i)].n}.${S.vip?'':' (VIP agents finish Isla Verde first.)'}`:`Reach ${esc(TOWNS[pv].n)} first.`}</p>`}
-  else if(i===S.town&&mapW===0&&NX>=10)act=`<button class="gbtn gold" id="gow2"><span>See World 2 · Solmara</span><span class="price">✈️</span></button>`;
+  else if(NX>=0&&ordT(i)>ordT(NX)){const pv=PROG[ordT(i)-1],fly=worldOf(i)>worldOf(S.town)&&worldOf(pv)<worldOf(i);act=`<p class="mp-note">${fly?`Finish ${esc(TOWNS[pv].n)} to fly to ${WORLDS[worldOf(i)].n}.`:`Reach ${esc(TOWNS[pv].n)} first.`}</p>`}
+  else if(i===S.town&&NX<0)act=`<p class="mp-note">This is the final town. You've built an empire!</p>`;
+  else if(i===S.town&&mapW===0&&NX>=0&&worldOf(NX)===1)act=`<button class="gbtn gold" id="gow2"><span>See World 2 · Solmara</span><span class="price">✈️</span></button>`;
   sheet('World map','#1aa3a3',`<div class="wtabs">${tabs}</div><div class="mapw">${svg}</div>
-   <div class="mpanel" style="--tc:${t.c}"><div class="mp-top"><span class="mp-ic">${TOWN_IC[i]}</span><div><small>${W_.n} · Town ${li+1} of 10 · ${t.d}</small><b>${esc(t.n)}</b></div><span class="mp-st">${status}</span></div>${stats}${act}</div>`,null,null,'🗺️');
+   <div class="mpanel" style="--tc:${t.c}"><div class="mp-top"><span class="mp-ic">${TOWN_IC[i]}</span><div><small>${W_.n} · Town ${li+1} of ${WL.length} · ${t.d}</small><b>${esc(t.n)}</b></div><span class="mp-st">${status}</span></div>${stats}${act}</div>`,null,null,'🗺️');
   const pick_=k=>{mapSel=k;mapSheet()};
   document.querySelectorAll('.pin').forEach(p=>p.onclick=()=>pick_(+p.dataset.i));
   document.querySelectorAll('.wtab').forEach(b=>b.onclick=()=>{const w=+b.dataset.w;if(w===mapW)return;mapW=w;mapSel=worldOf(S.town)===w?S.town:WORLDS[w].i0;mapSheet()});
@@ -6272,11 +6297,11 @@ function mapSheet(){
   const vi=$('#vipIs');if(vi)vi.onclick=()=>vipPassSheet();const g2=$('#gow2');if(g2)g2.onclick=()=>{mapW=1;mapSel=10;mapSheet()};
 }
 function confirmMove(i,paid){const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
-  sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>Whitewashed villages, olive groves, wine valleys and superyacht marinas. Ten new towns on the sun coast.</p></div>`:''}<p>Your ${esc(TW.n)} office stays behind. In ${esc(t.n)} you open a new, empty office.</p>
+  sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>Whitewashed villages, olive groves, wine valleys and superyacht marinas. Eleven new towns on the sun coast, ending on a private island.</p></div>`:''}<p>Your ${esc(TW.n)} office stays behind. In ${esc(t.n)} you open a new, empty office.</p>
   <ul class="tips"><li><span>✓</span>You keep diamonds, managers, diamond specials, your VIP Pass, agency level and goals.</li><li><span>↺</span>Cash, rooms, staff, levels and equipment start again.</li><li><span>!</span>Clients pay ${xfmt(Math.round(t.inc/TW.inc))}× more, but everything costs ${xfmt(Math.round(t.cost/TW.cost))}× more and clients are less patient.</li></ul>
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,'🚚');
   $('#mv2').onclick=()=>{if(paid){if(S.gems<200){needFunds('gems');return}S.gems-=200}moveTown(i)};$('#mv3').onclick=()=>mapSheet()}
-function moveTown(i){const fromT=S.town;S.town=i;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Could not save on this device.','bad');S.town=fromT;return}
+function moveTown(i){const fromT=S.town;S.town=i;if(i!==9)S.ivLegacy=0;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Could not save on this device.','bad');S.town=fromT;return}
   closeSheet();const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
   if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive in your new town.','gold'),4500)}
 
@@ -6312,7 +6337,7 @@ function shopSheet(focus){
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${g.p}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
   ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">A$2.99</span></button></div></div>`}
-  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>⭐ +25% income everywhere</li><li>💎 +1 diamond every 4 min</li><li>🦈 Unlocks The Shark manager</li><li>🏝️ VIP-only island: Isla Verde</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$8.99'}</span></button></div></div>
+  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>⭐ +25% income everywhere</li><li>💎 +1 diamond every 4 min</li><li>🦈 Unlocks The Shark manager</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$8.99'}</span></button></div></div>
   ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Hire your managers from ${mpkLeft().map(P=>P.p).sort()[0]}</small></span><i>›</i></button>`:''}
   <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCards}</div>
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
@@ -6373,7 +6398,7 @@ function profileSheet(){
   </div>
   <h4 class="set-h">Purchases</h4>
   <div class="set-card">
-    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'+25% income, free Shark, Isla Verde'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
+    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'+25% income, free Shark, free diamonds'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
     <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">A$4.99</button>'}</div>
     <button class="gbtn ghost center" id="rsP"><span>Restore purchases</span></button>
   </div>
@@ -6495,36 +6520,36 @@ const QUESTS=[
   {d:'Serve 10 clients',p:()=>S.served,n:10,r:{c:100}},
   {d:'Upgrade Reception to level 5',p:()=>S.st.reception.lv,n:5,r:{c:150}},
   {d:'Upgrade Sales to level 5',p:()=>S.st.sales.lv,n:5,r:{c:250}},
-  {d:'Hire a second sales agent',p:()=>S.st.sales.slots,n:2,r:{g:5}},
+  {d:'Hire a second sales agent',p:()=>S.st.sales.slots,n:2,r:{g:2}},
   {d:'Build the Waiting Room',p:()=>+S.st.waiting.on,n:1,r:{c:200}},
   {d:'Build the Marketing department',p:()=>+S.st.marketing.on,n:1,r:{c:400}},
   {d:'List 3 homes for sale',p:()=>S.listed,n:3,r:{c:600}},
-  {d:'Buy an equipment upgrade',p:()=>eqCount(),n:1,r:{g:5}},
+  {d:'Buy an equipment upgrade',p:()=>eqCount(),n:1,r:{g:2}},
   {d:'Build the Coffee Bar',p:()=>+S.st.coffee.on,n:1,r:{c:900}},
-  {d:'Sign a VIP client',p:()=>S.vips,n:1,r:{g:10}},
+  {d:'Sign a VIP client',p:()=>S.vips,n:1,r:{g:3}},
   {d:'Reach agency level 5',p:()=>S.lvl,n:5,r:{c:1500}},
   {d:'Sell 5 homes',p:()=>S.sold,n:5,r:{c:2000}},
-  {d:'Become a Trusted agency (60 rep)',p:()=>S.rep,n:60,r:{g:10}},
+  {d:'Become a Trusted agency (60 rep)',p:()=>S.rep,n:60,r:{g:3}},
   {d:'Build Admin',p:()=>+S.st.admin.on,n:1,r:{c:2500}},
-  {d:'Build the Board Room',p:()=>+S.board.on,n:1,r:{g:10},req:()=>boardAvail()},
-  {d:'Hire a manager',p:()=>Object.keys(S.mgr).length,n:1,r:{g:10}},
+  {d:'Build the Board Room',p:()=>+S.board.on,n:1,r:{g:3},req:()=>boardAvail()},
+  {d:'Hire a manager',p:()=>Object.keys(S.mgr).length,n:1,r:{g:3}},
   {d:'Hold a board meeting',p:()=>S.board.held||0,n:1,r:{c:3000},req:()=>boardAvail()&&S.board.on},
-  {d:'Upgrade Sales to level 25',p:()=>S.st.sales.lv,n:25,r:{g:10}},
+  {d:'Upgrade Sales to level 25',p:()=>S.st.sales.lv,n:25,r:{g:3}},
   {d:'Build Rentals',p:()=>+S.st.pm.on,n:1,r:{c:6000}},
-  {d:'Build the Auction Room',p:()=>+S.st.auction.on,n:1,r:{g:15}},
+  {d:'Build the Auction Room',p:()=>+S.st.auction.on,n:1,r:{g:4}},
   {d:'Sell a home at auction',p:()=>S.aucSold,n:1,r:{c:15000}},
-  {d:'Buy a diamond special',p:()=>Object.keys(S.sp).length,n:1,r:{g:10}},
-  {d:'Earn $100K in total',p:()=>S.earned,n:1e5,r:{g:20},m:1},
-  {d:'Hire 4 managers',p:()=>Object.keys(S.mgr).length,n:4,r:{g:25}},
-  {d:'Move to the next town',p:()=>S.town,n:1,r:{g:30}},
-  {d:'Upgrade Sales to level 50',p:()=>S.st.sales.lv,n:50,r:{g:20}},
-  {d:'Sell 25 homes',p:()=>S.sold,n:25,r:{g:25}},
-  {d:'Earn $1M in total',p:()=>S.earned,n:1e6,r:{g:40},m:1}
+  {d:'Buy a diamond special',p:()=>Object.keys(S.sp).length,n:1,r:{g:3}},
+  {d:'Earn $100K in total',p:()=>S.earned,n:1e5,r:{g:5},m:1},
+  {d:'Hire 4 managers',p:()=>Object.keys(S.mgr).length,n:4,r:{g:6}},
+  {d:'Move to the next town',p:()=>S.town,n:1,r:{g:8}},
+  {d:'Upgrade Sales to level 50',p:()=>S.st.sales.lv,n:50,r:{g:5}},
+  {d:'Sell 25 homes',p:()=>S.sold,n:25,r:{g:6}},
+  {d:'Earn $1M in total',p:()=>S.earned,n:1e6,r:{g:10},m:1}
 ];
 const QGEN={serve:{d:n=>`Serve ${n} more clients`,p:()=>S.served},sell:{d:n=>`Sell ${n} more homes`,p:()=>S.sold},lvl:{d:n=>`Gain ${n} more agency levels`,p:()=>S.lvl},auc:{d:n=>`Run ${n} more auctions`,p:()=>S.auctions}};
 const QGEN_ORDER=['serve','sell','lvl','auc'];
 function eqCount(){let n=0;for(const k in S.eq)for(const i in S.eq[k])n+=S.eq[k][i];return n}
-function newQuest(){S.qlater=S.qlater||[];const li=S.qlater.findIndex(c=>!QUESTS[c].req||QUESTS[c].req());if(li>=0)return {c:S.qlater.splice(li,1)[0]};while(S.qn<QUESTS.length){const c=S.qn++;if(QUESTS[c].req&&!QUESTS[c].req()){S.qlater.push(c);continue}return {c}}const t=QGEN_ORDER[S.qg%QGEN_ORDER.length];if(t==='auc'&&!S.st.auction.on){S.qg++;return newQuest()}const n={serve:80+S.qg*10,sell:4+Math.floor(S.qg/2),lvl:2,auc:2}[t];S.qg++;return {g:t,base:QGEN[t].p(),n,r:{c:Math.max(2000,Math.round(incomePerSec()*240/100)*100),g:3}}}
+function newQuest(){S.qlater=S.qlater||[];const li=S.qlater.findIndex(c=>!QUESTS[c].req||QUESTS[c].req());if(li>=0)return {c:S.qlater.splice(li,1)[0]};while(S.qn<QUESTS.length){const c=S.qn++;if(QUESTS[c].req&&!QUESTS[c].req()){S.qlater.push(c);continue}return {c}}const t=QGEN_ORDER[S.qg%QGEN_ORDER.length];if(t==='auc'&&!S.st.auction.on){S.qg++;return newQuest()}const n={serve:80+S.qg*10,sell:4+Math.floor(S.qg/2),lvl:2,auc:2}[t];S.qg++;return {g:t,base:QGEN[t].p(),n,r:Object.assign({c:Math.max(2000,Math.round(incomePerSec()*240/100)*100)},S.qg%4===0?{g:2}:{})}}
 function qInfo(q){if(q.c!=null){const Q=QUESTS[q.c];return {d:Q.d,cur:Math.min(Q.p(),Q.n),n:Q.n,r:Q.r,m:Q.m}}const G_=QGEN[q.g];return {d:G_.d(q.n),cur:clamp(G_.p()-q.base,0,q.n),n:q.n,r:q.r}}
 function ensureQuests(){S.qlater=S.qlater||[];S.qa=S.qa.filter(q=>{if(q.c!=null&&QUESTS[q.c]&&QUESTS[q.c].req&&!QUESTS[q.c].req()&&qInfo(q).cur<qInfo(q).n){if(!S.qlater.includes(q.c))S.qlater.push(q.c);return false}return q.c!=null?!!QUESTS[q.c]:!!QGEN[q.g]});while(S.qa.length<3)S.qa.push(newQuest())}
 function rwText(r){return [r.c?fmt(r.c):'',r.g?r.g+' '+GEM:''].filter(Boolean).join(' + ')}
@@ -6783,7 +6808,7 @@ function frame_(now){
 async function start(data){
   const LP=(v,m)=>{try{window.__lp&&window.__lp(v,m)}catch(e){}},yld=()=>new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));
   S=(data&&data.S)?migrate(data.S):(load()||fresh());
-  TW=TOWNS[S.town]||TOWNS[0];WT=WTH[worldOf(S.town)];WLD=worldOf(S.town);WSI=S.town<6?0:S.town<16?1:2;ENV=Object.assign({},ENV_DEF,ENVS[S.town]||{});applyGfx();
+  TW=TOWNS[S.town]||TOWNS[0];WT=WTH[worldOf(S.town)];WLD=worldOf(S.town);WSI=S.town<6?0:(S.town<16&&S.town!==9)?1:2;ENV=Object.assign({},ENV_DEF,ENVS[S.town]||{});applyGfx();
   LP(45,'Laying out the office…');await yld();
   applyEnvLight();planLayout();sizeGrid();genWalls();SND.setWorld(WLD);resize();placeCam();
   LP(55,'Painting the town…');await yld();
@@ -6799,7 +6824,7 @@ async function start(data){
   else{if(!(data&&data.S))awayCheck();for(let i=0;i<4;i++)spawnClient()}
   for(let i=0;i<8;i++)spawnPed(true)
   try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(e){}
-  window.__dbg={sceneKinds:()=>{const m={};scene.children.forEach(o=>{const k=(o.type)+(o.children.length?'['+Math.min(o.children.length,40)+']':'')+(o.userData.rotor?'R':'');m[k]=(m[k]||0)+1});return JSON.stringify(m)},counts:()=>({scene:scene.children.length,lb:document.querySelectorAll('.lb').length,vis:visitors.length,toasts:document.querySelectorAll('.toast').length,pops:document.querySelectorAll('.pop,.fly').length}),setBal:(g,u,c)=>{UPG_G=g;UNL_M=u;UPC_M=c||1},fn:{stationSheet:k=>stationSheet(k),closeSheet:()=>closeSheet(),toast:(...a)=>toast(...a),tutStart:f=>tutStart(f),boardSheet:()=>boardSheet(),get S(){return S},cam:()=>({x:target.x,z:target.z,zm:zoom}),buyLevel,unlock,hireMgr,claimQuest,upCost,unlockCost,hireCost,slotMax,incomePerSec,qInfo,ST,ORDER,MGR,MGR_ORDER,townReq,roomsBuilt,value,svcTime,aucCount,signVIP,spawnRate,patMul,repTier,nextTown,TOWNS,ask,finishAuction,endAuction,startAuction,syncStations,save,get A(){return A},BOARD_COST},sim:(sec)=>{for(let t=0;t<sec;t+=.1){const dt=.1;clock+=dt;if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}stepVIP(dt);stepTraffic(dt);
+  window.__dbg={sceneKinds:()=>{const m={};scene.children.forEach(o=>{const k=(o.type)+(o.children.length?'['+Math.min(o.children.length,40)+']':'')+(o.userData.rotor?'R':'');m[k]=(m[k]||0)+1});return JSON.stringify(m)},counts:()=>({scene:scene.children.length,lb:document.querySelectorAll('.lb').length,vis:visitors.length,toasts:document.querySelectorAll('.toast').length,pops:document.querySelectorAll('.pop,.fly').length}),setBal:(g,u,c)=>{UPG_G=g;UNL_M=u;UPC_M=c||1},fn:{stationSheet:k=>stationSheet(k),closeSheet:()=>closeSheet(),toast:(...a)=>toast(...a),tutStart:f=>tutStart(f),boardSheet:()=>boardSheet(),get S(){return S},cam:()=>({x:target.x,z:target.z,zm:zoom}),buyLevel,unlock,hireMgr,claimQuest,upCost,unlockCost,hireCost,slotMax,incomePerSec,qInfo,ST,ORDER,MGR,MGR_ORDER,townReq,roomsBuilt,value,svcTime,aucCount,signVIP,spawnRate,patMul,repTier,nextTown,TOWNS,ask,UPX:()=>UPX,ITEMS,eqCost,eqT,roomMaxed,maxedN,mapSheet,PROG,MAXLV,finishAuction,endAuction,startAuction,syncStations,save,get A(){return A},BOARD_COST},sim:(sec)=>{for(let t=0;t<sec;t+=.1){const dt=.1;clock+=dt;if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}stepVIP(dt);stepTraffic(dt);
   for(const v of visitors){moveV(v,dt);if((v.state==='exit'||v.ped)&&atGoal(v)){scene.remove(v.g);removeLabel(v.bub);v.dead=true}}visitors=visitors.filter(v=>!v.dead);stepManagers(dt);if(gridDirty){gridDirty=false;rebuildGrid()}syncMeeting();if(BRD&&BRD.mtg&&BRD.mtg.on)stepMeeting(dt);if(A)stepAuctionFx(dt);if(S.vip){vipT+=dt;if(vipT>240){vipT=0;S.gems+=1}}}refreshHUD();updateLabels()},get VIP(){return VIP},VIPst:()=>VIP?VIP.state+'@'+VIP.L.position.x.toFixed(1)+','+VIP.L.position.y.toFixed(1):null,signVIP:()=>signVIP(),EXITS:()=>EXITS,CURB:()=>CURB,VIPSPOT:()=>VIPSPOT,setView:(x,z,zm)=>{target.set(x,0,z);zoom=zm;applyCam()},ANNEX:()=>ANNEX.map(a=>[a.k,a.r,a.nook]),GAPS:()=>GAPS,FRONTDOOR:()=>FRONTDOOR,SHARK:()=>SHARK_SEAT,fixQueues,qpos,OUTW:()=>OUTW,SND,vipSheet,vipPassSheet,addRep,boardSheet,MGRM,MGV,mwalk,managersSheet,DECO,FX,SPK,repSheet,roomLook,get cam(){return [target.x,target.z,zoom,cam.zoom,renderer.getPixelRatio()]},shopSheet,mapSheet,stationSheet,moveTown,get TW(){return TW},get S(){return S},get A(){return A},startVIP,visitors:()=>visitors,G,blk,cellOf,STN,syncStations,HOUSES,v2:{ROOMS:()=>ROOMS,PIECES:()=>PIECES,WALLITEMS,OBS,OUTW:()=>OUTW,PARTS,SEATS,BRD:()=>BRD,DOORS:()=>DOORS,BBOX:()=>BBOX,PL:()=>PL,findPath,floorY,mwalk,cam,scene,DIR,target,applyCam,placeCam,get zoom(){return zoom},set zoom(v){zoom=v},inFloor,roomAt,decoPlan,eqAnchors,SHARK:()=>SHARK_SEAT,qpos,WG},bookAuction,listHouse,startAuction,flyTo,ask,finishAuction,renderer};
   requestAnimationFrame(t=>{last=t;frame(t)});
 }
