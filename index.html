@@ -35,6 +35,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .tag{pointer-events:auto;display:flex;align-items:center;gap:6px;background:linear-gradient(180deg,var(--hud1),var(--hud2));color:#8ff59a;font-family:var(--game);font-size:13px;padding:2px 3px 2px 9px;border-radius:11px;border:2px solid rgba(255,255,255,.25);box-shadow:0 3px 0 rgba(0,0,0,.28)}
 .tag em{font-style:normal;color:#fff;font-size:11px;padding:2px 7px;border-radius:8px;background:var(--c,#2f78e0);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
 .tag .wt{color:#fff;background:var(--red);font-size:10px;padding:2px 6px;border-radius:7px}
+.tag .x3{color:#fff;background:#8b4ce0;font-size:10px;padding:2px 6px;border-radius:7px}
 .tag.gold{border-color:var(--gold)}
 .tag.brd{color:#fff;padding:3px 10px}
 .tag.brd.ready{background:linear-gradient(#ffe27a,#ffb01f);color:var(--ink);animation:wob 1s ease-in-out infinite}
@@ -916,7 +917,7 @@ function addRep(d,why){const t0=repTier();S.rep=clamp(S.rep+d,0,100);const t1=re
   if(!why||d>=0)return;SND.fx('repdown');const p=$('#repBtn');if(p){p.classList.remove('down');void p.offsetWidth;p.classList.add('down')}}
 function roomsBuilt(){return ORDER.filter(k=>S.st[k].on).length+(S.board.on&&boardAvail()?1:0)}
 function mmss(ms){const s=Math.max(0,Math.ceil(ms/1000));if(s>=3600)return Math.floor(s/3600)+'h '+String(Math.floor(s%3600/60)).padStart(2,'0')+'m';return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
-function slotMax(k){return ST[k].slotsMax+(WLD>=1&&k!=='sales'?1:0)}
+function slotMax(k){const m=ST[k].slotsMax+(WLD>=1&&k!=='sales'?1:0),n=STN&&STN[k]&&STN[k].service?STN[k].service.length:0;return n>0?Math.min(m,n):m}
 function hireCost(k){return Math.ceil(ST[k].hire0*Math.pow(5,S.st[k].slots-1)*TW.cost)}
 function svcTime(k){let t=ST[k].time*eqMul(k,'spd');
   if(k!=='coffee'&&S.st.coffee.on)t/=Math.min(1.6,1.15+S.st.coffee.lv*.01);
@@ -5762,6 +5763,7 @@ function stepManagers(dt){for(const k of MGR_ORDER){const m=MGRM[k],v=MGV[k];if(
     sparkle(m.position.x+Math.cos(a)*r,v.walking?rnd(.05,.45):rnd(.25,1.45),m.position.z+Math.sin(a)*r,k==='shark'?rnd(.07,.12):rnd(.05,.1),rnd(.6,1),v.walking?rnd(.15,.45):rnd(.1,.35))}}}
 
 function syncStations(){
+  for(const k in STN){const q=S.st[k];if(q&&!ST[k].special&&q.slots>slotMax(k))q.slots=Math.max(1,slotMax(k))}
   for(const k of ORDER){const s=STN[k],st=S.st[k];s.g.visible=st.on;s.plot.visible=!st.on;
     s.staff.forEach((m,i)=>m.visible=st.on&&i<st.slots);if(s.extra)s.extra.forEach(m=>m.visible=st.on);if(s.gold)s.gold.visible=st.on&&!!S.sp[k]}
   if(BRD){BRD.g.visible=!!BRD.virtual||S.board.on;BRD.plot.visible=!S.board.on}
@@ -6399,7 +6401,7 @@ let LBF=0;function updateLabels(){
     s.ring&&s.ring.forEach((r,i)=>{const v=s.serving[i];if(v&&atGoal(v)){r.el.style.display='';r.el.style.setProperty('--p',(v.t/svcTime(k)*100).toFixed(0)+'%')}else r.el.style.display='none'})}
 }
 function updateTags(){
-  LB.querySelectorAll('.tag[data-k]').forEach(t=>{const k=t.dataset.k;const q=STN[k].queue.length;t.classList.toggle('gold',!!S.sp[k]);const h=`${fmt(value(k))}<em>Lv ${S.st[k].lv}</em>${q>=(k==='reception'?RQCAP:QCAP)?'<span class="wt">FULL</span>':''}`;if(t._h!==h){t.innerHTML=h;t._h=h}});
+  LB.querySelectorAll('.tag[data-k]').forEach(t=>{const k=t.dataset.k;const q=STN[k].queue.length;t.classList.toggle('gold',roomMaxed(k));const h=`${fmt(value(k))}<em>${roomMaxed(k)?'MAX':'Lv '+S.st[k].lv}</em>${S.sp[k]?'<span class="x3">×3</span>':''}${q>=(k==='reception'?RQCAP:QCAP)?'<span class="wt">FULL</span>':''}`;if(t._h!==h){t.innerHTML=h;t._h=h}});
   LB.querySelectorAll('.build').forEach(b=>{const k=b.dataset.k;if(b.classList.contains('lockd'))return;b.classList.toggle('no',S.cash<(k==='board'?BOARD_COST*TW.cost:unlockCost(k)))});
   const bt=document.getElementById('brdTag');if(bt){const now=Date.now(),B=S.board;let h,ready=false;if(B.buff&&now<B.until)h=`${BOARD_OPTS[B.buff].i} ${BOARD_OPTS[B.buff].n} · ${mmss(B.until-now)}`;else if(now>=B.next){if(hasMgrs()){h='📊 Meeting ready!';ready=true}else h='📊 Needs a manager'}else h=`📊 Next meeting ${mmss(B.next-now)}`;bt.classList.toggle('ready',ready);if(bt._h!==h){bt.innerHTML=h;bt._h=h}}
 }
@@ -6429,6 +6431,12 @@ function flyText(el,txt){const r=el.getBoundingClientRect(),f=document.createEle
 let adBusy=false;
 function playAd(cb){if(adBusy)return;adBusy=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;cb()}},1000)}
 function rewarded(cb){if(S.noAds)cb();else playAd(cb)}
+// a short ad break every 5 minutes of play, from the third town on (never for VIP or ad-free players; it waits until nothing is open)
+let adPlay=0;const AD_EVERY=300;
+setInterval(()=>{if(!S||!S.started||document.hidden||S.noAds||S.vip||(S.town|0)<2||S.tut<99)return;adPlay++;
+  if(adPlay<AD_EVERY||adBusy||A||TU||document.body.classList.contains('sheet-on'))return;adPlay=0;
+  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='In the App Store version a short ad plays here every few minutes. VIP or Remove ads turns these off.';
+  playAd(()=>{p.textContent=pt})},1000);
 
 // ================= SHEETS =================
 let openSheet=null,holdStop=null;
@@ -6588,6 +6596,17 @@ function boardSheet(){
       save();refreshHUD();draw()})};
   draw();
 }
+// first time the Board Room is part of the office: fly over to it and explain what it's for, once
+function boardIntro(){S.boardIntro=1;save();if(BRD&&BRD.center){const zm=1.6,u=(cam.right-cam.left)/zm/innerWidth,t=BRD.center.clone().addScaledVector(FWD,-innerHeight*.27*u/SINE);flyTo(t.x,t.z,zm,1.1)}
+  const cost=BOARD_COST*TW.cost,n=mgrN();
+  setTimeout(()=>sheet('New: the Board Room','#5b4a9e',`<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div></div>
+  <p class="br-p">This office has room for a Board Room. It’s where your managers meet to plan the agency’s next move.</p>
+  <div class="li"><span class="eqi">🏗️</span><div><h3>1. Build it</h3><p>It costs ${fmt(cost)}. Tap the “Build Board Room” sign in the empty room.</p></div><span></span></div>
+  <div class="li"><span class="eqi">👔</span><div><h3>2. Managers take a seat</h3><p>Every manager you hire sits at the table. ${n?`You have ${n} already.`:'Hire one from the Managers button.'} More managers make every strategy stronger.</p></div><span></span></div>
+  <div class="li"><span class="eqi">📈</span><div><h3>3. Pick a strategy</h3><p>Every 4 hours the board meets and you choose one: double Sales income, more walk-ins, every team faster, or an instant cash payout. It’s the biggest boost in the agency.</p></div><span></span></div>
+  <button class="gbtn purple center" id="bi1"><span>Got it</span></button>`,null,null,'📊'),900);
+  setTimeout(()=>{const b=$('#bi1');if(b)b.onclick=()=>closeSheet()},950)}
+setInterval(()=>{if(!S||!S.started||S.boardIntro||!boardAvail()||S.board.on||S.tut<99||A||TU||document.body.classList.contains('sheet-on')||document.hidden)return;boardIntro()},2000);
 const SVGF='Lilita One, Arial Rounded MT Bold, Arial, sans-serif';
 const st4=(x,y,r,c)=>`<path d="M${x} ${y-r}Q${x+r*.18} ${y-r*.18} ${x+r} ${y}Q${x+r*.18} ${y+r*.18} ${x} ${y+r}Q${x-r*.18} ${y+r*.18} ${x-r} ${y}Q${x-r*.18} ${y-r*.18} ${x} ${y-r}Z" fill="${c||'#fff'}"/>`;
 const EYES='<rect x="63" y="49" width="8" height="10" rx="3" fill="#1d2433"/><rect x="89" y="49" width="8" height="10" rx="3" fill="#1d2433"/><circle cx="66" cy="52" r="1.7" fill="#fff"/><circle cx="92" cy="52" r="1.7" fill="#fff"/>';
@@ -7124,7 +7143,7 @@ function ask(i){
 }
 function finishAuction(){
   if(!A||A.done)return;const L=A.L,h=A.h;let r;const base=value('auction')*25*eqMul('auction','comm')*(M_('auction')?1.5:1);
-  if(A.leader&&A.cur>=L.reserve){SND.fx('sold');const over=A.cur/L.reserve-1,comm=Math.round(base*(1+over*6)),g=clamp(Math.floor(over*20)+1,1,5);S.cash+=comm;S.earned+=comm;S.gems+=g;addXP(20+Math.round(over*200));r={sold:true,price:A.cur,comm,g,over};addRep(3+Math.min(3,over*60),'Auction sold under the hammer');say(`SOLD! To the ${A.leader.n.toLowerCase()} for ${money(A.cur)}!`,'mkt')}
+  if(A.leader&&A.cur>=L.reserve){SND.fx('sold');const over=A.cur/L.reserve-1,comm=Math.round(base*1.5*(1+over*6)),g=over>=.1?2:over>=.05?1:0;S.cash+=comm;S.earned+=comm;S.gems+=g;addXP(20+Math.round(over*200));r={sold:true,price:A.cur,comm,g,over};addRep(3+Math.min(3,over*60),'Auction sold under the hammer');say(`SOLD! To the ${A.leader.n.toLowerCase()} for ${money(A.cur)}!`,'mkt')}
   else if(A.leader&&A.leader.max>=L.reserve&&A.cur>=L.reserve*.93){SND.fx('sold');const comm=Math.round(base*.8);S.cash+=comm;S.earned+=comm;addXP(12);r={sold:true,post:true,price:L.reserve,comm,g:0,over:0};addRep(1,'Sold just after passing in');say('Passed in, but we did a deal straight after!','hot')}
   else{SND.fx('pass');const comm=Math.round(base*.3);S.cash+=comm;S.earned+=comm;r={sold:false,price:A.cur,comm};addRep(-3,'Auction passed in');say('Passed in. We\'ll sell this one privately.')}
   S.auctions++;
