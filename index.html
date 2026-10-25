@@ -689,6 +689,11 @@ body.tut-on #upg+.hint{margin-top:10px}
 .prof.vipg .ava{box-shadow:0 0 0 2px #ffc83d}
 .prof.vipg::after{content:'👑';position:absolute;left:30px;top:-7px;font-size:14px;transform:rotate(12deg);filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
 .vperks span.vmg{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #ffc83d;background:#dfe7f3;box-sizing:border-box;align-self:center;justify-self:center}.vperks span.vmg svg{width:100%;height:100%;display:block}
+.adsbtn{background:linear-gradient(#ff9b8a,#e8443a);box-shadow:inset 0 -3px 0 rgba(0,0,0,.15),0 3px 0 #a3271b,0 8px 16px rgba(10,20,40,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;align-self:flex-start}
+.adsbtn svg{width:27px;height:27px;margin-top:-2px}.adsbtn b{font-family:var(--game);font-weight:400;font-size:11px;color:#fff;line-height:1;margin-top:-1px;text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.noads-hero{text-align:center;padding:6px 0 4px}.noads-hero .big{font-size:44px;line-height:1}.noads-hero h3{font-family:var(--game);font-weight:400;font-size:22px;margin:6px 0 2px}
+.noads-list{display:grid;gap:6px;margin:10px 0 12px}.noads-list div{background:#fff;border-radius:14px;padding:9px 12px;box-shadow:0 2px 0 var(--line);font-weight:800;font-size:13px;display:flex;gap:10px;align-items:center}.noads-list span{font-size:20px}
+.noads-up{display:block;width:100%;margin-top:8px;text-align:center;font-weight:800;font-size:13px;color:#7c3fd6;padding:8px}
 
 .sh-head .spk{display:none}.mg .vipt{white-space:nowrap;display:inline-block}
 @media (orientation:landscape) and (max-height:520px){.scrim.framed .sheet{max-height:calc(100% - 64px)}}@media (orientation:landscape){.sheet{clip-path:inset(0 round 26px 26px 0 0)}}
@@ -709,6 +714,7 @@ body.tut-on #upg+.hint{margin-top:10px}
       <button class="prof pnl" id="profileBtn" aria-label="Agency settings"><span class="ava"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#7fd38a"/><rect x="10" y="32" width="28" height="20" rx="8" fill="#22304a"/><path d="M20 32l4 7 4-7" fill="#fff"/><path d="M23 33h2l1 8h-4z" fill="#e8443a"/><rect x="14" y="12" width="20" height="20" rx="5" fill="#f1c9a5"/><rect x="13" y="9" width="22" height="8" rx="3" fill="#6b3e1f"/><circle cx="20" cy="22" r="1.6" fill="#1d2433"/><circle cx="28" cy="22" r="1.6" fill="#1d2433"/><path d="M20 27q4 3 8 0" stroke="#1d2433" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span><span><b id="agname">Brick &amp; Key Realty</b><small id="town">Saltbrook</small></span></button>
       <button class="quest pnl" id="questBtn"><span class="qi" id="qIc">🎯</span><span><small>Goal</small><b id="qTxt">Goals</b><span class="qb"><i id="qBar"></i></span></span></button>
       <button class="vipq" id="vipBtn" hidden aria-label="Go to the VIP client"><span class="qi">⭐</span><span><small>VIP client</small><b id="vipTxt">Tap to meet</b></span></button>
+      <button class="rbtn adsbtn" id="adsBtn" hidden aria-label="Remove ads"><svg viewBox="0 0 32 32"><rect x="4" y="7" width="24" height="18" rx="4" fill="#fff" stroke="#9a1f16" stroke-width="2"/><text x="16" y="21" text-anchor="middle" font-family="Lilita One,Arial Rounded MT Bold,Arial" font-size="11" fill="#c8321f">AD</text><path d="M6 27L26 5" stroke="#9a1f16" stroke-width="4.5" stroke-linecap="round"/><path d="M6 27L26 5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><b>No ads</b></button>
     </div>
     <div class="spacer"></div>
     <div class="col r">
@@ -7231,7 +7237,7 @@ function buildLabels(){
 }
 function pop(pos,txt,cls){if(!SET.pops&&!cls)return;const e=document.createElement('div');e.className='lb pop '+(cls||'');e.textContent=txt;const o=addLabel(e,pos,'pop');setTimeout(()=>removeLabel(o),1200)}
 const pv=new T.Vector3();
-let HUDR=null;function hudRects(){const R_=[];document.querySelectorAll('#cashBtn,#lvlBtn,#gemBtn,#profileBtn,#questBtn,#vipBtn,#repBtn,#mapBtn,#homeBtn,#vipPassBtn,nav.dock>*').forEach(e=>{if(e.hidden||e.offsetParent===null)return;const r=e.getBoundingClientRect();if(r.width>2&&r.height>2)R_.push([r.left-4,r.top-4,r.right+4,r.bottom+4])});return R_}
+let HUDR=null;function hudRects(){const R_=[];document.querySelectorAll('#cashBtn,#lvlBtn,#gemBtn,#profileBtn,#questBtn,#vipBtn,#repBtn,#mapBtn,#homeBtn,#vipPassBtn,#adsBtn,nav.dock>*').forEach(e=>{if(e.hidden||e.offsetParent===null)return;const r=e.getBoundingClientRect();if(r.width>2&&r.height>2)R_.push([r.left-4,r.top-4,r.right+4,r.bottom+4])});return R_}
 addEventListener('resize',()=>{HUDR=null});
 let LBF=0;function updateLabels(){
   const w=innerWidth,h=innerHeight;
@@ -7264,7 +7270,7 @@ function updateTags(){
 let lastHud=0;
 function affordableMgrs(){return MGR_ORDER.filter(k=>!S.mgr[k]&&(k==='shark'?S.vip:S.gems>=MGR[k].g&&S.st[k].on)).length}
 function refreshHUD(){
-  $('#vipPassBtn').hidden=!!S.vip;$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
+  $('#vipPassBtn').hidden=!!S.vip;$('#adsBtn').hidden=!!S.noAds||(S.tut|0)<99;$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
   $('#agname').textContent=S.agency;$('#profileBtn').classList.toggle('vipg',!!S.vip);$('#town').textContent=`World ${worldOf(S.town)+1} · ${TW.n}`+(S.vip?' · VIP':'');
   $('#xpRing').setAttribute('stroke-dashoffset',(103.7*(1-clamp(S.xp/xpNeed(S.lvl),0,1))).toFixed(1));
   const ac=aucCount(),ad=$('#aucDot');ad.hidden=!ac;ad.textContent=ac;
@@ -7443,6 +7449,14 @@ const STORE=(()=>{
 })();
 const mpkPrice=P=>STORE.price('mgr_'+P.id,P.p);
 const mpkFrom=list=>{const P=list.slice().sort((a,b)=>parseFloat(a.p.slice(2))-parseFloat(b.p.slice(2)))[0];return P?mpkPrice(P):''};
+
+// ---- "No ads" button under the goal widget: a short sheet with the ad-free pack and the VIP upsell
+function adsSheet(){if(S.noAds)return;sheet('Remove ads','#e8443a',`<div class="noads-hero"><div class="big">🚫</div><h3>Play ad-free</h3></div>
+  <div class="noads-list"><div><span>⏸️</span>No ad breaks</div><div><span>🎁</span>Ad rewards are instant</div><div><span>♾️</span>One payment, for good</div></div>
+  <button class="gbtn gold" id="naBuy"><span>Remove ads</span><span class="price">${STORE.price('noads','A$6.99')}</span></button>
+  ${S.vip?'':`<button class="noads-up" id="naVip">👑 Or get VIP + no ads for ${STORE.price('vip_noads','A$14.99')}</button>`}`,null,null,'🚫');
+  const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',()=>{closeSheet();refreshHUD()});const v=$('#naVip');if(v)v.onclick=()=>vipPassSheet()}
+setTimeout(()=>{const b=document.getElementById('adsBtn');if(b)b.onclick=()=>adsSheet()},0);
 function playAd(cb){if(adBusy)return;adBusy=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;cb()}},1000)}
 function rewarded(cb){if(S.noAds)cb();else if(ADS.native)ADS.rewarded(cb);else playAd(cb)}
 // a short ad break every 5 minutes of play, from the third town on (never for VIP or ad-free players; it waits until nothing is open)
@@ -7467,7 +7481,7 @@ function sheet(title,color,body,live,lvl,icon){
 }
 function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
 function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
-function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200){toast('Not enough cash yet. Nearly there.','bad','💵');return}if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;if(inc>.01&&gap/inc<=60){toast(`Not enough cash. ${Math.max(1,Math.ceil(gap/inc))}s away.`,'bad','💵');return}}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
+function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
 function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
 // a quick double tap on a dock button never lands on the sheet that just slid up under the finger
 let TAPP=null;window.addEventListener('pointerdown',e=>{if(e.isTrusted&&!(e.target&&e.target.closest&&e.target.closest('#sheet .sheet')))TAPP={x:e.clientX,y:e.clientY}},true);
