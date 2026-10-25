@@ -678,6 +678,16 @@ body.auc-on .lvup:not(.promo){align-items:start;padding-top:calc(env(safe-area-i
 .wgo .gbtn{margin:0 auto}
 /* during the tour the upgrade hint sits clear of the spotlight ring around the Upgrade button */
 body.tut-on #upg+.hint{margin-top:10px}
+.vfeat{display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,#0fb5c9,#1d7fb8);color:#fff;box-shadow:0 3px 0 #0d5f86,0 8px 18px rgba(20,120,170,.25)}
+.vfeat .vfi{font-size:34px;line-height:1;flex:none}
+.vfeat b{display:block;font-family:var(--game);font-weight:400;font-size:18px;line-height:1.1}
+.vfeat small{display:block;font-size:12px;font-weight:700;opacity:.92;line-height:1.3;margin-top:2px}
+.mp-vip{display:flex;flex-direction:column;gap:2px;margin:8px 0;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,#fff4cc,#ffe08a);box-shadow:inset 0 0 0 2px #ffc83d}
+.mp-vip b{font-family:var(--game);font-weight:400;font-size:15px;color:#7a5200}.mp-vip span{font-size:12px;font-weight:700;color:#6b5a2a;line-height:1.3}
+.prof.vipg{position:relative;box-shadow:inset 0 0 0 2px #ffc83d,0 3px 0 rgba(0,0,0,.25)}
+.prof.vipg b{color:#ffd970}
+.prof.vipg .ava{box-shadow:0 0 0 2px #ffc83d}
+.prof.vipg::after{content:'👑';position:absolute;left:30px;top:-7px;font-size:14px;transform:rotate(12deg);filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
 
 </style>
 
@@ -892,7 +902,7 @@ const LOWSTY={cottage:1,farm:1,modern:1,chalet:1,mansion:1,villa:1,stone:1,bunga
 
 let TW=null;
 const BOARD_OPTS={sales:{n:'Sales blitz',d:'Sales income ×2 for 1 hour',i:'🤝'},walk:{n:'Open home weekend',d:'50% more walk-ins for 1 hour',i:'🏡'},speed:{n:'Efficiency drive',d:'Every team 25% faster for 1 hour',i:'⚡'},cash:{n:'Cash flow review',d:'Collect 30 minutes of income right now',i:'💰'}};
-const BOARD_CD=4*3600e3,BOARD_DUR=3600e3,MEET_DUR=5*60e3,BOARD_COST=400000,BOARD_TOWN=2;
+const BOARD_CD=4*3600e3,boardCD=()=>S&&S.vip?BOARD_CD/2:BOARD_CD,BOARD_DUR=3600e3,MEET_DUR=5*60e3,BOARD_COST=400000,BOARD_TOWN=2;
 const boardAvail=()=>S.town>=BOARD_TOWN||!!(S.board&&S.board.on),roomsTotal=()=>ORDER.length+(boardAvail()?1:0);
 const STREETS=['Gull Street','Netmaker Lane','Harbour Road','Kelp Crescent','Lighthouse Parade','Anchor Court','Wharf Street','Pelican Way','Tidewater Drive','Breakwall Avenue','Driftwood Grove'];
 const PTYPES=[['3-bed weatherboard','Freshly painted (the front, anyway)'],['2-bed fisherman\'s cottage','Walk to the pub, crawl home'],['Renovator\'s delight','The dream is a bulldozer'],['4-bed clifftop home','Whale watching from the toilet'],['Beach shack on a big block','Sand in every room, as nature intended']];
@@ -1600,7 +1610,8 @@ function liftChair(){const g=new T.Group(),c=pick(['#e8443a','#2f6fd6','#ffc83d'
 function golfCart(c){const g=new T.Group();box(1.7,.45,.95,'#ffffff',0,.2,0,g);box(.5,.3,.9,c,.55,.65,0,g);box(.7,.35,.85,'#f4f1ea',-.35,.65,0,g);[[.75,-.4],[.75,.4],[-.65,-.4],[-.65,.4]].forEach(([x,z])=>box(.05,.9,.05,'#c9cdd3',x,.65,z,g));box(1.75,.06,1.0,c,0,1.55,0,g);
   [[-.55,-.48],[-.55,.48],[.55,-.48],[.55,.48]].forEach(([x,z])=>{const w=cyl(.18,.1,'#1d2433',x,0,z,g,10);w.rotation.x=Math.PI/2;w.position.y=.18});if(Math.random()<.7){const p=randPerson(null);const u=p.userData;if(u&&u.lL){u.lL.rotation.x=-1.42;u.lR.rotation.x=-1.42}p.position.set(-.3,.25,-.2);p.rotation.y=Math.PI/2;g.add(p)}scene.add(g);return g}
 
-function logoTex(){return ctex(1024,256,(x,W,H)=>{x.fillStyle='#1d2433';x.fillRect(0,0,W,H);x.fillStyle='#ffc83d';x.fillRect(0,H-26,W,26);let fs=110;const t=(S?S.agency:'Your Agency').toUpperCase();x.font=`${fs}px "Lilita One", sans-serif`;while(x.measureText(t).width>W*.9&&fs>20){fs-=4;x.font=`${fs}px "Lilita One", sans-serif`}x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';x.fillText(t,W/2,H/2-10)})}
+function logoTex(){const vg=!!(S&&S.vip);return ctex(1024,256,(x,W,H)=>{x.fillStyle=vg?'#14110a':'#1d2433';x.fillRect(0,0,W,H);x.fillStyle='#ffc83d';x.fillRect(0,H-26,W,26);
+  if(vg){const gg=x.createLinearGradient(0,0,0,H);gg.addColorStop(0,'#fff1b0');gg.addColorStop(.5,'#e0a91e');gg.addColorStop(1,'#a8740a');x.strokeStyle=gg;x.lineWidth=14;x.strokeRect(10,10,W-20,H-46);x.lineWidth=3;x.strokeRect(30,30,W-60,H-86)}let fs=110;const t=(S?S.agency:'Your Agency').toUpperCase();x.font=`${fs}px "Lilita One", sans-serif`;while(x.measureText(t).width>W*.9&&fs>20){fs-=4;x.font=`${fs}px "Lilita One", sans-serif`}if(vg){const tg=x.createLinearGradient(0,H*.25,0,H*.75);tg.addColorStop(0,'#fff6c8');tg.addColorStop(.55,'#ffd04a');tg.addColorStop(1,'#c98a10');x.fillStyle=tg}else x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';x.fillText(t,W/2,H/2-10)})}
 function car(x,z,c,ry){const g=new T.Group();box(2,.5,1,MP(c,.22,'sky'),0,.18,0,g);box(1.2,.42,.9,MP(shade(c,.08),.22,'sky'),-.1,.68,0,g);box(1.22,.32,.92,MP('#9fd8ec',.6,'sky'),-.1,.72,0,g);box(.06,.12,.6,'#fff6c2',1.0,.38,0,g);box(.06,.1,.6,'#e8443a',-1.0,.38,0,g);[[-.65,-.5],[.65,-.5],[-.65,.5],[.65,.5]].forEach(([a,b])=>{const w=cyl(.2,.14,'#1d2433',a,0,b,g,10);w.rotation.x=Math.PI/2;w.position.y=.2});g.position.set(x,0,z);g.rotation.y=ry;scene.add(g);return g}
 function limo(){const g=new T.Group();box(4.2,.5,1.1,MP('#15181f',.3,'sky'),0,.18,0,g);box(3.0,.42,1.0,MP('#1d2028',.3,'sky'),-.2,.68,0,g);box(3.02,.28,1.02,MP('#3a4a63',.6,'sky'),-.2,.74,0,g);box(4.22,.05,1.12,'#ffc83d',0,.5,0,g);box(.06,.14,.7,'#fff6c2',2.1,.4,0,g);[[-1.5,-.55],[1.5,-.55],[-1.5,.55],[1.5,.55]].forEach(([a,b])=>{const w=cyl(.22,.14,'#0b0d12',a,0,b,g,10);w.rotation.x=Math.PI/2;w.position.y=.22});scene.add(g);return g}
 let envSky=null,envOffice=null;
@@ -1656,7 +1667,9 @@ function animPerson(g,dt,walking,working,sit){
 const LUX_SHIRTS=['#ffffff','#f4efe6','#e6d8c3','#bfe3f2','#f7d6e0','#1f2c4a','#e9e2f5','#d9ecdf'],LUX_PANTS=['#e9dfcc','#f4f1ea','#1f2c4a','#c9b79a','#ffffff'];
 function randPerson(carry){if(WSI>=1){const lx=WSI>=2;return person({shirt:pick(LUX_SHIRTS),pants:pick(LUX_PANTS),skin:pick(SKIN),hair:pick(HAIR),carry,shades:Math.random()<(lx?.3:.15),hat:Math.random()<(lx?.3:.2)?pick(['#f2e3c0','#ffffff','#e9d3a8','#1f2c4a']):null,watch:lx&&Math.random()<.4})}
   return person({shirt:pick(SHIRTS),pants:pick(PANTS),skin:pick(SKIN),hair:pick(HAIR),carry})}
-function staffPerson(c){if(WSI>=2)return person({shirt:'#ece3d2',pants:'#ece3d2',skin:pick(SKIN),hair:pick(HAIR),suit:true,tie:c,pocket:'#ffc83d',watch:true});
+function vipTrim(m){const b=m&&m.userData&&m.userData.b;if(!b||m.userData.vt)return;m.userData.vt=1;box(.1,.1,.03,'#ffc83d',-.12,.5,.155,b,true);box(.45,.05,.29,'#d9a521',0,.15,0,b,true);[-.25,.25].forEach(x=>box(.16,.04,.22,'#ffc83d',x,.57,0,b,true))}
+function staffPerson(c){const m=staffPerson0(c);if(S&&S.vip)vipTrim(m);return m}
+function staffPerson0(c){if(WSI>=2)return person({shirt:'#ece3d2',pants:'#ece3d2',skin:pick(SKIN),hair:pick(HAIR),suit:true,tie:c,pocket:'#ffc83d',watch:true});
   if(WSI===1)return person({shirt:'#2b3a55',pants:'#c9b79a',skin:pick(SKIN),hair:pick(HAIR),suit:true,tie:'#ffffff',pocket:c});
   return person({shirt:c,pants:'#c8b28a',skin:pick(SKIN),hair:pick(HAIR),polo:true,lanyard:'#1d2433'})}
 
@@ -7124,7 +7137,7 @@ function careerSheet(){const ri=rankOf(),R=RANKS[ri],nx=RANKS[ri+1],lvP=Math.min
   const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>afford(b,S.cash>=perkCost(+b.dataset.perk),'cash'))},500)}
 // a gold dot on the level badge while a reached rank's perk is waiting to be unlocked
 setInterval(()=>{try{const b=document.getElementById('lvlBtn');if(b&&S&&S.started)b.classList.toggle('perkdot',!!perkReady())}catch(e){}},1000);
-window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),perkCost:i=>perkCost(i),buyPerk:i=>buyPerk(i),perkTotal:k=>perkTotal(k),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
+window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),logo:()=>logoMesh,perkCost:i=>perkCost(i),buyPerk:i=>buyPerk(i),perkTotal:k=>perkTotal(k),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
 // ---- every text diamond (◆ or 💎) on screen becomes the game's own diamond coin
 {const SVG='<svg viewBox="0 0 24 24"><path d="M6 5h12l4 5-10 10L2 10z" fill="#fff"/><path d="M2 10h20M8.5 5L12 20l3.5-15" stroke="#7c3fd6" stroke-width="1.6" fill="none" opacity=".55"/></svg>',RX=/[◆💎]/u;
   const swap=n=>{if(n.nodeType===3){if(!RX.test(n.data))return;const p=n.parentNode;if(!p||p.closest&&p.closest('svg,script,style,input,textarea'))return;
@@ -7247,7 +7260,7 @@ let lastHud=0;
 function affordableMgrs(){return MGR_ORDER.filter(k=>!S.mgr[k]&&(k==='shark'?S.vip:S.gems>=MGR[k].g&&S.st[k].on)).length}
 function refreshHUD(){
   $('#vipPassBtn').hidden=!!S.vip;$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
-  $('#agname').textContent=S.agency;$('#town').textContent=`World ${worldOf(S.town)+1} · ${TW.n}`+(S.vip?' · VIP':'');
+  $('#agname').textContent=S.agency;$('#profileBtn').classList.toggle('vipg',!!S.vip);$('#town').textContent=`World ${worldOf(S.town)+1} · ${TW.n}`+(S.vip?' · VIP':'');
   $('#xpRing').setAttribute('stroke-dashoffset',(103.7*(1-clamp(S.xp/xpNeed(S.lvl),0,1))).toFixed(1));
   const ac=aucCount(),ad=$('#aucDot');ad.hidden=!ac;ad.textContent=ac;
   const md=$('#mgrDot'),n=affordableMgrs();md.hidden=!n;md.textContent=n;
@@ -7412,7 +7425,7 @@ function wireMgrPacks(){document.querySelectorAll('[data-bp]').forEach(b=>b.oncl
   const h=$('#mpkHide');if(h)h.onclick=()=>{S.mpkHide=Date.now()+864e5;save();re()};const sw=$('#mpkShow');if(sw)sw.onclick=()=>{S.mpkHide=0;save();re()}}
 function boardPitchHTML(locked,cta){const n=MGR7.filter(k=>S.mgr[k]).length;
   return `<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div>${locked?`<span class="br-lock">🔒 Opens in ${TOWNS[BOARD_TOWN].n}</span>`:''}</div>${cta||''}
-  <h3 class="br-h">Your managers run the show</h3><p class="br-p">Every 4 hours your managers meet here and you pick the strategy. It’s the biggest boost in the agency.</p>
+  <h3 class="br-h">Your managers run the show</h3><p class="br-p">Every ${S.vip?2:4} hours your managers meet here and you pick the strategy. It’s the biggest boost in the agency.</p>
   <div class="strats">${Object.keys(BOARD_OPTS).map(k=>{const o=BOARD_OPTS[k];return `<div><span>${o.i}</span><b>${o.n}</b><small>${boD(k,boardPow())}</small></div>`}).join('')}</div>
   <div class="li"><span class="eqi">👔</span><div><h3>More managers, longer boosts</h3><p>Each extra manager at the table makes strategies last 15% longer and cash reviews pay 15% more. A full board of ${S.vip?8:7} runs strategies for <b>${durTxt(BOARD_DUR*(1+.15*((S.vip?8:7)-1)))}</b> instead of 1 hour.</p></div><span></span></div>
   <div class="mile"><div class="r"><span>Managers hired</span><b>${n} / 7</b></div><div class="mbar"><i style="width:${n/7*100}%"></i></div></div>`}
@@ -7427,7 +7440,7 @@ function boardSheet(){
     if(!hasMgrs()){sheet('Board Room','#5b4a9e',`<div class="li"><span class="eqi">🪑</span><div><h3>The table is empty</h3><p>Board meetings are run by your managers. Hire at least one manager and they'll walk in and take a seat.</p></div><span></span></div><button class="gbtn purple" id="bmh"><span>See managers</span></button>`,null,null,'📊');$('#bmh').onclick=()=>managersSheet();return}
     if(!B.opts)B.opts=shuffle(Object.keys(BOARD_OPTS)).slice(0,3);
     sheet('Board meeting','#5b4a9e',`<p>The board is assembled. Pick this meeting's strategy.</p><div class="li"><span class="eqi">👔</span><div><h3>${mgrN()} manager${mgrN()>1?'s':''} at the table</h3><p>Strategies last <b>${durTxt(BOARD_DUR*boardPow())}</b>. Cash reviews pay ${Math.round(30*boardPow())} minutes of income.${mgrN()<(S.vip?8:7)?' Hire more managers to go further.':''}</p></div><span></span></div><div class="opts">${B.opts.map(o=>`<button class="opt" data-o="${o}"><span class="eqi">${BOARD_OPTS[o].i}</span><span><h3>${BOARD_OPTS[o].n}</h3><p>${boD(o,boardPow())}</p></span></button>`).join('')}</div>`,null,null,'📊');
-    document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=b.dataset.o;B.opts=null;B.held=(B.held||0)+1;B.next=Date.now()+BOARD_CD;
+    document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=b.dataset.o;B.opts=null;B.held=(B.held||0)+1;B.next=Date.now()+boardCD();
       if(o==='cash'){const c=Math.max(200,Math.round(incomePerSec()*1800*boardPow()));S.cash+=c;S.earned+=c;B.buff=null;B.mtg=Date.now()+MEET_DUR;toast(`Cash flow review: +${fmt(c)}`,'gold')}else{const du=BOARD_DUR*boardPow();B.buff=o;B.until=Date.now()+du;B.mtg=Date.now()+MEET_DUR;toast(`${BOARD_OPTS[o].n} is on for ${durTxt(du)}!`,'gold')}
       save();refreshHUD();draw()})};
   draw();
@@ -7439,7 +7452,7 @@ function boardIntro(){S.boardIntro=1;save();if(BRD&&BRD.center){const zm=1.6,u=(
   <p class="br-p">This office has room for a Board Room. It’s where your managers meet to plan the agency’s next move.</p>
   <div class="li"><span class="eqi">🏗️</span><div><h3>1. Build it</h3><p>It costs ${fmt(cost)}. Tap the “Build Board Room” sign in the empty room.</p></div><span></span></div>
   <div class="li"><span class="eqi">👔</span><div><h3>2. Managers take a seat</h3><p>Every manager you hire sits at the table. ${n?`You have ${n} already.`:'Hire one from the Managers button.'} More managers make every strategy stronger.</p></div><span></span></div>
-  <div class="li"><span class="eqi">📈</span><div><h3>3. Pick a strategy</h3><p>Every 4 hours the board meets and you choose one: double Sales income, more walk-ins, every team faster, or an instant cash payout. It’s the biggest boost in the agency.</p></div><span></span></div>
+  <div class="li"><span class="eqi">📈</span><div><h3>3. Pick a strategy</h3><p>Every ${S.vip?2:4} hours the board meets and you choose one: double Sales income, more walk-ins, every team faster, or an instant cash payout. It’s the biggest boost in the agency.</p></div><span></span></div>
   <button class="gbtn purple center" id="bi1"><span>Got it</span></button>`,null,null,'📊'),900);
   setTimeout(()=>{const b=$('#bi1');if(b)b.onclick=()=>closeSheet()},950)}
 setInterval(()=>{if(!S||!S.started||S.boardIntro||!boardAvail()||S.board.on||S.tut<99||A||TU||document.body.classList.contains('sheet-on')||document.hidden)return;boardIntro()},2000);
@@ -7543,7 +7556,8 @@ let mapSel=null;
 const TOWN_IC=['🎣','🌾','🏘️','🏛️','🌊','🏔️','🌳','🧱','🏙️','🏝️','⛵','🫒','🔔','🍇','⛪','🏖️','🛥️','🌺','🏰','👑'];
 let mapW=null;
 function nextTown(){if(S.town===9&&S.ivLegacy)return 10;const k=ordT(S.town);return k>=0&&k<PROG.length-1?PROG[k+1]:-1}
-const vipTown=()=>false;
+const vipTown=i=>i===9;
+const vipBlocked=i=>vipTown(i)&&!S.vip&&!S.vipVisited&&S.town!==9;
 function roomMaxed(k){const q=S.st[k];if(!q||!q.on||q.lv<MAXLV)return false;if(!ST[k].special&&q.slots<slotMax(k))return false;return (ITEMS[k]||[]).every(it=>eqT(k,it.id)>=3)}
 const maxedN=()=>ORDER.filter(roomMaxed).length;
 function townReq(i){return [{t:`Reach agency level ${TOWNS[i].lvl}`,s:`Level ${S.lvl}/${TOWNS[i].lvl}`,ok:S.lvl>=TOWNS[i].lvl,p:`You're level ${S.lvl}`},{t:`Build all ${roomsTotal()} rooms in ${TW.n}`,s:`Rooms ${roomsBuilt()}/${roomsTotal()}`,ok:roomsBuilt()>=roomsTotal(),p:`${roomsBuilt()} of ${roomsTotal()} built`},{t:`Max out every room: all levels, staff and equipment`,s:`Rooms maxed ${maxedN()}/${ORDER.length}`,ok:maxedN()>=ORDER.length,p:`${maxedN()} of ${ORDER.length} maxed`}]}
@@ -7579,7 +7593,7 @@ function mapSheet(){
   const WL=WTOWNS(mapW),PTS=mapW?MAPPTS.concat([[298,124]]):MAPPTS.slice(0,WL.length),segs=mapRoute(PTS),P0=PTS[0],dn=WL.filter(i=>ordT(i)<ordT(S.town)).length;
   const full=`M${P0[0]} ${P0[1]}`+segs.slice(0,8).join(''),done=dn>0?`M${P0[0]} ${P0[1]}`+segs.slice(0,Math.min(dn,8)).join(''):'';
   const sea=segs.length>8?`M${PTS[8][0]} ${PTS[8][1]}`+segs.slice(8).join(''):'';
-  const vipL=i=>vipTown(i)&&!S.vip&&S.town<9;
+  const vipL=i=>vipBlocked(i);
   const order=WL.slice().sort((a,b)=>(a===mapSel)-(b===mapSel));
   const pins=order.map(i=>{const k=WL.indexOf(i),[x,y]=PTS[k],t=TOWNS[i],cur=i===S.town,dn_=ordT(i)<ordT(S.town),nx=i===NX,sel=i===mapSel,lk=!dn_&&!cur&&!nx;
     const ring=vipL(i)?'#e6a800':dn_?'#3fb950':cur?t.c:nx?'#ffb01f':'#b6bfcc';const sc=sel?1.18:1;
@@ -7597,13 +7611,13 @@ function mapSheet(){
    ${mapW?'<ellipse cx="298" cy="126" rx="24" ry="11" fill="#f7e4b2"/><ellipse cx="298" cy="124" rx="17" ry="7" fill="#8fcf6c"/>':''}<path d="${sea}" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="3 6" stroke-linecap="round"/>
    ${pins}</svg>`;
   const i=mapSel,t=TOWNS[i],li=WL.indexOf(i),vl=false,isNext=i===NX;
-  const status=ordT(i)<ordT(S.town)?'Done ✓':i===S.town?'You are here':isNext?'Up next':'Locked';
+  const status=ordT(i)<ordT(S.town)?'Done ✓':i===S.town?'You are here':vipBlocked(i)?'👑 VIP only':isNext?'Up next':'Locked';
   const reqs=isNext?townReq(i):null,can=reqs&&reqs.every(r=>r.ok),cross=worldOf(i)!==worldOf(S.town);
   const tabs=WORLDS.map((w,k)=>`<button class="wtab ${k===mapW?'on':''}" data-w="${k}" style="--wc:${w.c}"><b>${k>worldOf(S.town)?'🔒 ':''}World ${k+1} · ${w.n}</b></button>`).join('');
   const stats=i>0?`<div class="mp-stats"><span>💵 <b>×${xfmt(t.inc)}</b><small>Income</small></span><span>🏷️ <b>×${xfmt(t.cost)}</b><small>Costs</small></span><span>⏳ <b>${Math.round(t.pat*100)}%</b><small>Patience</small></span><span>🏡 <b>×${t.price}</b><small>Home prices</small></span></div>`:'';
   let act='';
   if(reqs){act=`<div class="mp-req">${reqs.map(r=>`<span class="${r.ok?'ok':''}">${r.ok?'✅':'⬜'} ${r.s}</span>`).join('')}</div>`+
-    (can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
+    (vipBlocked(i)?`<div class="mp-vip"><b>👑 VIP members only</b><span>The finale: a private Maldives resort where every room is its own overwater villa.</span></div><button class="gbtn gold" id="vipIs"><span>${can?'Join VIP to move here':'See VIP'}</span><span class="price">👑</span></button>`:can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
         :`<div class="mp-btns"><button class="gbtn ghost" disabled><span>Not ready</span></button><button class="gbtn gem" id="mvg"><span>Unlock</span><span class="price">200${GEMIC}</span></button></div>`)}
   else if(NX>=0&&ordT(i)>ordT(NX)){const pv=PROG[ordT(i)-1],fly=worldOf(i)>worldOf(S.town)&&worldOf(pv)<worldOf(i);act=`<p class="mp-note">${fly?`Finish ${esc(TOWNS[pv].n)} to fly to ${WORLDS[worldOf(i)].n}.`:`Reach ${esc(TOWNS[pv].n)} first.`}</p>`}
   else if(i===S.town&&NX<0)act=`<p class="mp-note">This is the final town. You've built an empire!</p>`;
@@ -7618,7 +7632,7 @@ function mapSheet(){
   const vi=$('#vipIs');if(vi)vi.onclick=()=>vipPassSheet();const g2=$('#gow2');if(g2)g2.onclick=()=>{mapW=1;mapSel=10;mapSheet()};
 }
 const mulTxt=v=>v<9.95?String(+v.toFixed(1)):xfmt(Math.round(v));
-function confirmMove(i,paid){const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
+function confirmMove(i,paid){if(vipBlocked(i)){vipPassSheet();return}const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
   sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>Whitewashed villages, olive groves, wine valleys and superyacht marinas. Eleven new towns on the sun coast, ending on a private island.</p></div>`:''}<p>Your ${esc(TW.n)} office stays behind. In ${esc(t.n)} you open a new, empty office.</p>
   <ul class="tips"><li><span>✓</span>You keep diamonds, managers, diamond specials, your VIP Pass, agency level and goals.</li><li><span>↺</span>Cash, rooms, staff, levels and equipment start again.</li><li><span>!</span>Clients pay ${mulTxt(t.inc/TW.inc)}× more, but everything costs ${mulTxt(t.cost/TW.cost)}× more${t.pat<TW.pat?' and clients are less patient':''}.</li></ul>
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,cross?'✈️':'🚚');
@@ -7659,7 +7673,7 @@ function shopSheet(focus){
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${g.p}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
   ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">A$2.99</span></button></div></div>`}
-  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>⭐ +25% income everywhere</li><li>💎 +1 diamond every 4 min</li><li>🦈 Unlocks The Shark manager</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$8.99'}</span></button></div></div>
+  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$8.99'}</span></button></div></div>
   ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Hire your managers from ${mpkLeft().map(P=>P.p).sort()[0]}</small></span><i>›</i></button>`:''}
   <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCards}</div>
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
@@ -7720,7 +7734,7 @@ function profileSheet(){
   </div>
   <h4 class="set-h">Purchases</h4>
   <div class="set-card">
-    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'+25% income, free Shark, free diamonds'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
+    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'Isla Verde, +25% income, 8h offline'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
     <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">A$4.99</button>'}</div>
     <button class="gbtn ghost center" id="rsP"><span>Restore purchases</span></button>
   </div>
@@ -7803,10 +7817,11 @@ function welcomeSheet(){
   $('#sheet').onclick=null;$('#sheet .x').style.display='none';
   $('#go').onclick=()=>{const v=$('#nm').value.trim();if(v)S.agency=v;S.started=true;refreshLogo();save();refreshHUD();closeSheet();for(let i=0;i<3;i++)spawnClient();setTimeout(()=>tutStart(),600)};
 }
-function awayCheck(){const real=(Date.now()-S.lastSeen)/1000,secs=Math.min(real,2*3600);if(secs>60){const c=Math.round(incomePerSec()*secs*.5);if(c>0){awaySheet(real,c);return true}}return false}
+const awayCap=()=>S.vip?8*3600:2*3600;
+function awayCheck(){const real=(Date.now()-S.lastSeen)/1000,secs=Math.min(real,awayCap());if(secs>60){const c=Math.round(incomePerSec()*secs*.5);if(c>0){awaySheet(real,c);return true}}return false}
 function awaySheet(secs,cash){
   const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60);
-  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m. Your team kept the office running${secs>2*3600?' (earnings count up to 2 hours away)':''}.</p><div class="welcome">${fmt(cash)}</div>${secs>2*3600?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">2h of your ${h}h ${m}m away counted</p>`:''}
+  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m. Your team kept the office running${secs>awayCap()?` (earnings count up to ${awayCap()/3600} hours away)`:''}.</p><div class="welcome">${fmt(cash)}</div>${secs>awayCap()?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${awayCap()/3600}h of your ${h}h ${m}m away counted${S.vip?'':' · 👑 VIP counts up to 8h'}</p>`:''}
   <button class="gbtn gold" id="c2"><span>Collect ×2<small>Watch an ad</small></span><span class="price">${fmt(cash*2)}</span></button><button class="gbtn" id="c1"><span>Collect</span><span class="price">${fmt(cash)}</span></button>`);
   $('#c1').onclick=()=>{S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{S.awayPend=cash*2;save();closeSheet();rewarded(()=>{if(!S.awayPend)return;S.cash+=S.awayPend;S.earned+=S.awayPend;S.awayPend=0;save();refreshHUD()})};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
 }
@@ -7883,14 +7898,16 @@ function updateQuestHUD(){if(!S.qa.length)return;let idx=S.qa.findIndex(q=>{cons
   $('#questBtn').classList.toggle('ready',ready);$('#qTxt').textContent=ready?'Goal done! Tap to claim':I.d;$('#qBar').style.width=(I.cur/I.n*100)+'%';$('#qIc').textContent=ready?'🎁':'🎯'}
 const qNum=(I,v)=>I.m?fmt(v):Math.floor(v).toLocaleString('en-AU');
 function vipPassSheet(){
-  if(S.vip){sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div><div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>You're a VIP</h2><p>Lifetime perks are active${S.noAds?' and ads are gone':''}.</p></div>`,null,null,'👑');return}
+  if(S.vip){sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div><div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>You're a VIP</h2><p>Lifetime perks are active${S.noAds?' and ads are gone':''}.</p></div><div class="vfeat on"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private Maldives resort where every room is an overwater villa</small></div></div>
+  <div class="vperks on"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span>🦈</span><b>The Shark, free</b><small>×1.5 every department</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>`,null,null,'👑');return}
   const sp=[[12,20],[86,14],[20,70],[80,62],[50,8],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
   sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div>${sp}<div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>Become a VIP</h2><p>Pay once. Keep it forever.</p></div>
-  <div class="vperks"><div><span>💰</span><b>+25% income</b><small>Every room, every town</small></div><div><span>🦈</span><b>The Shark, free</b><small>×1.5 on every department</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes of play</small></div></div>
+  <div class="vfeat"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private Maldives resort where every room is an overwater villa</small></div></div>
+  <div class="vperks"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span>🦈</span><b>The Shark, free</b><small>×1.5 every department</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>
   <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">A$8.99</span><em>All VIP perks, one payment</em></button>
-  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">A$12.99</span><em>Every perk, plus rewards with no ads</em></button></div>
+  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">A$12.99</span><em>All VIP perks. No ads, and ad rewards are instant</em></button></div>
   <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'👑');
-  const buy=na=>{S.vip=true;if(na)S.noAds=true;syncStations();save();refreshHUD();closeSheet();toast(na?'Welcome to VIP! Ads are gone too.':'Welcome to VIP!','gold','👑');const b=$('#cashBtn');if(b)flyText(b,'+25%')};
+  const buy=na=>{S.vip=true;if(na)S.noAds=true;syncStations();try{refreshLogo();for(const k in STN)(STN[k].staff||[]).forEach(vipTrim)}catch(e){}save();refreshHUD();closeSheet();toast(na?'Welcome to VIP! Ads are gone too.':'Welcome to VIP!','gold','👑');const b=$('#cashBtn');if(b)flyText(b,'+25%')};
   $('#vp1').onclick=()=>buy(false);$('#vp2').onclick=()=>buy(true);
 }
 function repSheet(){
