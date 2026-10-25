@@ -663,8 +663,8 @@ body.auc-on .lvup:not(.promo){align-items:start;padding-top:calc(env(safe-area-i
 .atop small{display:flex;min-width:0;gap:4px}.atop small .aad{flex:0 1 auto}.atop small .aad+span{flex:0 0 auto;white-space:nowrap}
 #vipp>span:first-child{white-space:nowrap}
 .pk.has-bonus{padding-top:26px}
-.mpk-row{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-right:14px;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
-.mpk-x{padding:8px 12px;top:2px;right:2px;min-height:34px}
+.mpk-row{display:flex;flex-wrap:wrap;overflow:visible;padding:2px;mask-image:none;-webkit-mask-image:none}.mpk-row{flex-direction:column}.mpk-row .mpk-chip{flex:none;width:100%;min-width:0;box-sizing:border-box;padding:6px 10px 6px 6px}.mpk-row .mpk-chip b{font-size:13px}.mpk-row .mpk-chip b{min-width:0;overflow:hidden;text-overflow:ellipsis}.mpk-row .mpk-chip em{margin-left:auto;flex:none}
+.mpk-x{top:19px;right:12px;padding:6px 11px;min-height:0;line-height:1;border-radius:999px;font-size:12px;color:rgba(255,255,255,.88);background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}.mpk-x::before{content:'';position:absolute;inset:-10px -8px}
 .tut-skip{padding:10px 8px;min-height:36px}
 .lvlb .rkb{width:22px;height:22px;font-size:14px;right:-6px;bottom:-5px}
 /* panels: no iOS rubber-band at the top (it dragged the header down and left a blank gap); pulling down closes instead */
@@ -7674,12 +7674,12 @@ function shopSheet(focus){
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${g.p}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
   ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">A$2.99</span></button></div></div>`}
-  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$8.99'}</span></button></div></div>
+  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$9.99'}</span></button></div></div>
   ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Hire your managers from ${mpkLeft().map(P=>P.p).sort()[0]}</small></span><i>›</i></button>`:''}
   <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCards}</div>
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
   <div class="shop-h"><h4>Extras</h4></div>
-  <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Rewards still pay out, no ad needed.</p></div><button class="mini" id="noads">${S.noAds?'Owned':'A$4.99'}</button></div>
+  <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Rewards still pay out, no ad needed.</p></div><button class="mini" id="noads">${S.noAds?'Owned':'A$6.99'}</button></div>
   <div class="proto"><b>Prototype shop.</b> Real-money items are free here so you can test. At launch they go through Apple in-app purchases.</div>`,()=>{
     if(!$('#shCash'))return;$('#shCash').textContent=fmt(S.cash);$('#shGems').textContent=S.gems.toLocaleString('en-AU');
     CASH_PACKS.forEach((c,i)=>{const a=document.querySelector(`[data-amt="${i}"]`);if(a)a.textContent=c.boost?'4 hours':fmt(packCash(c.h));afford(document.querySelector(`[data-cp="${i}"]`),S.gems>=c.g,'gems')});
@@ -7736,7 +7736,7 @@ function profileSheet(){
   <h4 class="set-h">Purchases</h4>
   <div class="set-card">
     <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'Isla Verde, +25% income, 8h offline'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
-    <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">A$4.99</button>'}</div>
+    <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">A$6.99</button>'}</div>
     <button class="gbtn ghost center" id="rsP"><span>Restore purchases</span></button>
   </div>
   <h4 class="set-h">Help</h4>
@@ -7905,8 +7905,8 @@ function vipPassSheet(){
   sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div>${sp}<div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>Become a VIP</h2><p>Pay once. Keep it forever.</p></div>
   <div class="vfeat"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private Maldives resort where every room is an overwater villa</small></div></div>
   <div class="vperks"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span class="vmg">${mgrSVG('shark')}</span><b>The Shark manager</b><small>×1.5 every room</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>
-  <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">A$8.99</span><em>All VIP perks, one payment</em></button>
-  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">A$12.99</span><em>All VIP perks. No ads, and ad rewards are instant</em></button></div>
+  <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">A$9.99</span><em>All VIP perks, one payment</em></button>
+  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">A$14.99</span><em>All VIP perks. No ads, and ad rewards are instant</em></button></div>
   <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'👑');
   const buy=na=>{S.vip=true;if(na)S.noAds=true;syncStations();try{refreshLogo();for(const k in STN)(STN[k].staff||[]).forEach(vipTrim)}catch(e){}save();refreshHUD();closeSheet();toast(na?'Welcome to VIP! Ads are gone too.':'Welcome to VIP!','gold','👑');const b=$('#cashBtn');if(b)flyText(b,'+25%')};
   $('#vp1').onclick=()=>buy(false);$('#vp2').onclick=()=>buy(true);
