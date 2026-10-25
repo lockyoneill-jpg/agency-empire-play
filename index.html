@@ -589,6 +589,25 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .crnote{font-size:12.5px;color:var(--muted);margin:4px 2px 0;line-height:1.4}
 @media (prefers-reduced-motion:reduce){.lvup,.lvc,.lvc>i,.lvup.out{animation:none}}
 
+.pkhd{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.pkhd span{font-size:12px;font-weight:800;color:var(--muted)}.pkhd b{color:#c98a00}
+.pknote{font-size:12px;color:var(--muted);margin:-4px 2px 8px;line-height:1.35}
+.pkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pkc{position:relative;background:#fff;border-radius:16px;padding:12px 10px 10px;box-shadow:0 2px 0 var(--line);display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;min-width:0}
+.pkc .pki{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:23px;background:color-mix(in srgb,var(--pc) 16%,#fff);box-shadow:inset 0 -3px 0 color-mix(in srgb,var(--pc) 22%,transparent);margin-bottom:4px}
+.pkc b{font-family:var(--game);font-weight:400;font-size:24px;line-height:1;color:var(--pc)}
+.pkc em{font-style:normal;font-weight:900;font-size:12.5px;color:var(--ink,#22304a)}
+.pkc small{font-size:10.5px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-bottom:7px}
+.pkc .pkb{width:100%;font-size:15px;padding:7px 6px 8px}
+.pkf{display:block;width:100%;box-sizing:border-box;border-radius:11px;padding:7px 4px;font-family:var(--game);font-size:14px}
+.pkf.own{background:#e7f7ea;color:var(--green-d)}
+.pkf.lock{background:#eef1f6;color:var(--muted)}
+.pkc.ready{box-shadow:0 0 0 2.5px #ffc83d,0 2px 0 var(--line);background:linear-gradient(#fffaf0,#fff)}
+.pkc.ready::before{content:'NEW';position:absolute;top:8px;right:8px;font-family:var(--game);font-size:10px;color:#7a5200;background:#ffd970;border-radius:6px;padding:1px 6px}
+.pkc.lock{opacity:.6}.pkc.lock .pki{filter:grayscale(.85)}.pkc.lock b{color:#8a94a6}
+.pkc .pki{position:relative}.pkc.own .pki::after{content:'✓';position:absolute;right:-6px;bottom:-6px;width:17px;height:17px;border-radius:50%;background:var(--green-d,#2fa83d);color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center;border:2px solid #fff}
+.pkc.just{animation:pkpop .5s ease-out}
+@keyframes pkpop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.pkc.just{animation:none}}
 .rl .rp.own{color:var(--green-d)}
 .rl .rp.lock{color:var(--muted);opacity:.8}
 .rl .rp.buy{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
@@ -7078,23 +7097,31 @@ function levelUp(){const prev=rankOf(S.lvl-1),ri=rankOf(S.lvl),promo=ri>prev,cas
   celebrate(promo,ri,gems,cash)}
 function celebrate(promo,ri,gems,cash){const R=RANKS[ri];let el=$('#lvup');if(el)el.remove();el=document.createElement('div');el.id='lvup';el.className='lvup'+(promo?' promo':'');el.style.setProperty('--rc',R.c);
   const conf=Array.from({length:promo?26:14},(_,i)=>`<i style="--a:${(i*137)%360}deg;--d:${(i%5)*.06}s;--c:${['#ffc83d','#ff7eb6','#3fd0ff','#3fb950','#ffffff'][i%5]}"></i>`).join('');
-  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>perk ready to unlock</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">Unlock in Career</button></div>`
+  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>new perk in the shop</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">See perk</button></div>`
     :`<div class="lvc">${conf}<div class="lvn"><b>${S.lvl}</b></div><small>Level up!</small><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div>${ri<RANKS.length-1?`<p class="lvnext">${RANKS[ri+1].l-S.lvl} level${RANKS[ri+1].l-S.lvl>1?'s':''} to ${RANKS[ri+1].e} ${RANKS[ri+1].n}</p>`:''}</div>`;
   document.body.appendChild(el);const close=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;const pb=el.querySelector('#lvPerk');if(pb)pb.onclick=e=>{e.stopPropagation();close();careerSheet()};if(!promo)setTimeout(close,2600);else setTimeout(close,7000)}
+const PKC={inc:'#2fa83d',walk:'#2f6fd6',pat:'#e0921a',cost:'#8b4ce0'};
+// one perk card per milestone: locked (level not reached), ready (buy with cash) or owned
+function perkCard(i){const r=RANKS[i],[k,v]=r.p,own=perkOwned(i),ready=!own&&S.lvl>=r.l,st=own?'own':ready?'ready':'lock';
+  const foot=own?'<span class="pkf own">✓ Owned</span>':ready?`<button class="mini pkb" data-perk="${i}">${fmt(perkCost(i))}</button>`:`<span class="pkf lock">🔒 Level ${r.l}</span>`;
+  return `<div class="pkc ${st}" data-pc="${i}" style="--pc:${PKC[k]}"><span class="pki">${PERKN[k][0]}</span><b>${k==='cost'?'−':'+'}${Math.round(v*100)}%</b><em>${PERKN[k][1]}</em><small>${r.e} ${r.n} · Lv ${r.l}</small>${foot}</div>`}
 function careerSheet(){const ri=rankOf(),R=RANKS[ri],nx=RANKS[ri+1],lvP=Math.min(100,S.xp/xpNeed(S.lvl)*100);
-  const tot=['inc','walk','pat','cost'].map(k=>{const t=Math.round(perkTotal(k)*100);return `<div><span>${PERKN[k][0]}</span><b class="${t?'pos':''}">${t?(k==='cost'?'−':'+')+t+'%':'—'}</b><small>${PERKN[k][1]}</small></div>`}).join('');
-  const lad=RANKS.map((r,i)=>{const pt=r.p?perkTxt(r.p).replace(/^\S+ /,''):'',own=perkOwned(i),avail=r.p&&i<=ri&&!own;
-    const right=!r.p?'':own?`<span class="rp own">✓ ${pt}</span>`:avail?`<span class="rp buy"><small>${pt}</small><button class="mini" data-perk="${i}">${fmt(perkCost(i))}</button></span>`:`<span class="rp lock">${pt}</span>`;
-    return `<div class="rl${i<=ri?' on':''}${i===ri?' cur':''}${avail?' avail':''}" style="--c:${r.c}"><span class="rf">${r.e}</span><div class="rn"><b>${r.n}</b><small>${i===ri?'From level '+(r.l||1)+' · you are here':'Level '+(r.l||1)}</small></div>${right}</div>`}).join('');
+  const totH=()=>['inc','walk','pat','cost'].map(k=>{const t=Math.round(perkTotal(k)*100);return `<div><span>${PERKN[k][0]}</span><b class="${t?'pos':''}">${t?(k==='cost'?'−':'+')+t+'%':'—'}</b><small>${PERKN[k][1]}</small></div>`}).join('');
+  const idx=RANKS.map((r,i)=>i).filter(i=>RANKS[i].p),nReady=idx.filter(i=>!perkOwned(i)&&S.lvl>=RANKS[i].l).length,nOwn=idx.filter(perkOwned).length;
   sheet('Career','#5b4a9e',`<div class="crhero" style="--rc:${R.c}"><div class="lvb">${R.e}</div><h3>${R.n}</h3><p>Level ${S.lvl}</p><div class="mbar"><i style="width:${lvP}%"></i></div><small>${Math.floor(S.xp).toLocaleString('en-AU')} / ${xpNeed(S.lvl).toLocaleString('en-AU')} XP${nx?` · ${nx.l-S.lvl} level${nx.l-S.lvl>1?'s':''} to ${nx.n}`:''}</small></div>
-  <h4>Your perks · kept in every town</h4><div class="reff">${tot}</div>
-  <h4>Ranks</h4><div class="rlad">${lad}</div>
-  <h4>Earning XP</h4><div class="rhow"><div><span>🙋</span>Serve a client<b>+1–3</b></div><div><span>🏡</span>Sell a home<b>+4</b></div><div><span>🔨</span>Auction sale<b>+12 or more</b></div><div><span>⭐</span>Sign a VIP<b>+15</b></div></div>
-  <p class="crnote">Every level pays diamonds and cash. Every 10 levels you're promoted and a new perk becomes available. Unlock it with cash and it stays with your agency for good, whichever town you're in.</p>`,null,null,'🎓');
+  <h4>Active perks · every town</h4><div class="reff">${totH()}</div>
+  <div class="pkhd"><h4>Perk shop</h4><span>${nOwn}/${idx.length} owned${nReady?` · <b>${nReady} ready</b>`:''}</span></div>
+  <p class="pknote">A new perk opens every 10 levels. Buy it once with cash and it works in every town, for good.</p>
+  <div class="pkgrid">${idx.map(perkCard).join('')}</div>
+  <h4>Earning XP</h4><div class="rhow"><div><span>🙋</span>Serve a client<b>+1–3</b></div><div><span>🏡</span>Sell a home<b>+4</b></div><div><span>🔨</span>Auction sale<b>+12 or more</b></div><div><span>⭐</span>Sign a VIP<b>+15</b></div></div>`,null,null,'🎓');
   const wire=()=>document.querySelectorAll('#sheet [data-perk]').forEach(b=>{const i=+b.dataset.perk;afford(b,S.cash>=perkCost(i),'cash');
-    b.onclick=()=>{if(b.dataset.need)return;if(buyPerk(i)){b._bought=true;const sp=b.parentNode,pt=sp.querySelector('small').textContent;sp.className='rp own';sp.textContent='✓ '+pt;sp.closest('.rl').classList.remove('avail');
-      const tt=document.querySelector('#sheet .reff');if(tt)tt.innerHTML=['inc','walk','pat','cost'].map(k=>{const t=Math.round(perkTotal(k)*100);return `<div><span>${PERKN[k][0]}</span><b class="${t?'pos':''}">${t?(k==='cost'?'−':'+')+t+'%':'—'}</b><small>${PERKN[k][1]}</small></div>`}).join('');wire()}}});
-  wire();const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>afford(b,S.cash>=perkCost(+b.dataset.perk),'cash'))},500)}
+    b.onclick=()=>{if(b.dataset.need)return;if(!buyPerk(i))return;b._bought=true;const c=b.closest('.pkc');c.outerHTML=perkCard(i);
+      const n=document.querySelector(`#sheet [data-pc="${i}"]`);if(n){n.classList.add('just');n.scrollIntoView({block:'nearest',behavior:'smooth'})}
+      const t=document.querySelector('#sheet .reff');if(t)t.innerHTML=totH();
+      const h=document.querySelector('#sheet .pkhd span');if(h){const o=idx.filter(perkOwned).length,r_=idx.filter(j=>!perkOwned(j)&&S.lvl>=RANKS[j].l).length;h.innerHTML=`${o}/${idx.length} owned${r_?` · <b>${r_} ready</b>`:''}`}
+      wire()}});
+  wire();const first=document.querySelector('#sheet .pkc.ready');if(first&&S.lvl>=10)setTimeout(()=>{const sh=$('#sheet .sheet');if(sh)sh.scrollTo({top:Math.max(0,first.offsetTop-120),behavior:'smooth'})},350);
+  const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>afford(b,S.cash>=perkCost(+b.dataset.perk),'cash'))},500)}
 // a gold dot on the level badge while a reached rank's perk is waiting to be unlocked
 setInterval(()=>{try{const b=document.getElementById('lvlBtn');if(b&&S&&S.started)b.classList.toggle('perkdot',!!perkReady())}catch(e){}},1000);
 window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),perkCost:i=>perkCost(i),buyPerk:i=>buyPerk(i),perkTotal:k=>perkTotal(k),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
