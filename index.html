@@ -731,7 +731,7 @@ body.tut-on #upg+.hint{margin-top:10px}
 <div id="toasts" aria-live="polite"></div>
 <div id="sheet" class="scrim" hidden></div>
 <div id="auc" hidden></div>
-<div id="ad" hidden><div class="cdn"><span id="adN">3</span></div><h2>Ad break</h2><p>A short video ad plays here in the app. Your reward follows.</p></div>
+<div id="ad" hidden><div class="cdn"><span id="adN">3</span></div><h2>Ad break</h2><p>Your reward is on its way.</p></div>
 <div id="loading" role="status" aria-live="polite">
   <div class="ld-logo2 logo-ban" style="margin:0;height:auto;border:0;background-color:transparent"></div>
   <div class="ld-mid">
@@ -7449,7 +7449,7 @@ function rewarded(cb){if(S.noAds)cb();else if(ADS.native)ADS.rewarded(cb);else p
 let adPlay=0;const AD_EVERY=300;
 setInterval(()=>{if(!S||!S.started||document.hidden||S.noAds||S.vip||(S.town|0)<2||S.tut<99)return;adPlay++;
   if(adPlay<AD_EVERY||adBusy||A||TU||document.body.classList.contains('sheet-on')||performance.now()-(window.SHUT||0)<4000)return;adPlay=0;if(ADS.native){ADS.inter();return}
-  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='A short ad plays here every few minutes in the app. VIP or Remove ads stops them.';
+  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='Back in a moment. VIP removes ads.';
   playAd(()=>{p.textContent=pt})},1000);
 
 // ================= SHEETS =================
