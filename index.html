@@ -589,6 +589,16 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .crnote{font-size:12.5px;color:var(--muted);margin:4px 2px 0;line-height:1.4}
 @media (prefers-reduced-motion:reduce){.lvup,.lvc,.lvc>i,.lvup.out{animation:none}}
 
+.rl .rp.own{color:var(--green-d)}
+.rl .rp.lock{color:var(--muted);opacity:.8}
+.rl .rp.buy{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.rl .rp.buy small{font-size:11.5px;color:var(--green-d);font-weight:800}
+.rl .rp.buy .mini{font-size:13px;padding:5px 10px 6px}
+.rl.avail{box-shadow:0 0 0 2px #ffc83d inset,0 2px 0 var(--line)}
+.lvlb.perkdot::after{content:'';position:absolute;top:1px;right:1px;width:11px;height:11px;border-radius:50%;background:#ffc83d;border:2px solid #222b45;box-shadow:0 0 0 0 rgba(255,200,61,.6);animation:pdot 1.6s ease-out infinite}
+@keyframes pdot{70%{box-shadow:0 0 0 7px rgba(255,200,61,0)}100%{box-shadow:0 0 0 0 rgba(255,200,61,0)}}
+@media (prefers-reduced-motion:reduce){.lvlb.perkdot::after{animation:none}}
+
 /* ---- phone polish pass */
 .lb.lb-off{opacity:0!important;pointer-events:none!important}
 #labels .lb{transition:opacity .18s}
@@ -617,6 +627,7 @@ body.tut-on .toast{pointer-events:none}
 .top2 .col>.prof,.top2 .col>.quest,.top2 .col>.vipq{width:min(58vw,232px);max-width:none;box-sizing:border-box}
 .top2 .col>.quest>span:last-child,.top2 .col>.vipq>span:last-child,.top2 .col>.prof>span:last-child{min-width:0;flex:1}
 .top2 .col>.quest b,.top2 .col>.vipq b,.top2 .col>.prof b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top2 .col>.quest .qb{width:100%;max-width:none;box-sizing:border-box}
 #lvlBtn{margin-left:5px}
 #cashBtn{min-width:108px}
 /* VIP button: the shine stays, the pulsing glow goes */
@@ -875,10 +886,11 @@ const KEY='agency-empire-v2';
 let S;
 function fresh(){
   const st={};for(const k of ORDER)st[k]={on:ST[k].unlock===0,lv:1,slots:1};
-  return {v:3,agency:'Brick & Key Realty',cash:30,gems:20,xp:0,lvl:1,st,mgr:{},eq:{},sp:{},vip:false,boostUntil:0,lastSeen:Date.now(),started:false,earned:0,served:0,auctions:0,walkouts:0,vipIn:70,vips:0,tipWalk:false,hs:{},listed:0,sold:0,aucSold:0,qa:[],qn:0,qg:0,qc:0,qlater:[],tut:0,board:{on:false,next:0,buff:null,until:0,opts:null,held:0},town:0,towns:0,rep:50,repLog:[]};
+  return {v:3,agency:'Brick & Key Realty',cash:30,gems:20,xp:0,lvl:1,st,mgr:{},eq:{},sp:{},vip:false,boostUntil:0,lastSeen:Date.now(),started:false,earned:0,served:0,auctions:0,walkouts:0,vipIn:70,vips:0,tipWalk:false,hs:{},listed:0,sold:0,aucSold:0,qa:[],qn:0,qg:0,qc:0,qlater:[],tut:0,board:{on:false,next:0,buff:null,until:0,opts:null,held:0},town:0,towns:0,rep:50,repLog:[],perks:[]};
 }
 function migrate(s){
   if(!s||typeof s!=='object')return null;s.st=s.st&&typeof s.st==='object'?s.st:{};if(s.tut==null)s.tut=s.started?99:0;
+  if(!Array.isArray(s.perks)){const L=s.lvl||1;s.perks=RANKS.map((r,i)=>i).filter(i=>i>0&&L>=RANKS[i].l)}
   if(s.st.studio){s.st.marketing=s.st.studio;delete s.st.studio}
   if(!s.st.waiting&&s.st.reception)s.st.waiting={on:!!(s.st.marketing&&s.st.marketing.on),lv:1,slots:1};
   if(s.eq&&s.eq.reception&&s.eq.reception.lounge){s.eq.waiting=s.eq.waiting||{};s.eq.waiting.lounge=s.eq.reception.lounge;delete s.eq.reception.lounge}
@@ -7023,7 +7035,8 @@ function crmBoard(b,t,glow){if(t===1){box(1.3,.86,.04,'#c9cdd3',0,0,0,b);tbox(1.
   const w=t>=3?1.5:1.1,h=w*.58,bz=t>=3?.02:.05;if(t>=3&&glow)box(w+.08,h+.08,.01,'#bfe6f3',0,-.04,-.03,b,true);box(w,h,t>=3?.03:.06,BLK,0,0,0,b);box(w*.5,h*.4,.02,'#4a5262',0,h*.3,-(t>=3?.025:.04),b);tbox(w-bz,h-bz,.006,'#14203a',crmTex(t),'z',0,bz/2,t>=3?.016:.031,b);if(t>=3){box(.4,.04,.05,CHAR,0,-.07,.02,b)}}
 
 // ================= CAREER: agency levels, rank titles every 10 levels, permanent perks =================
-// Ranks and their perks follow the agency across every town (S.lvl is global). Nothing here can be bought: XP comes only from play.
+// Ranks follow the agency across every town (S.lvl is global; XP comes only from play). Reaching a rank makes its perk
+// available; the player unlocks it with cash (S.perks = rank indexes owned), and it then applies in every town.
 const RANKS=[
   {l:0,n:'Junior Agent',e:'🔑',c:'#7d8aa3',p:null},
   {l:10,n:'Sales Agent',e:'🤝',c:'#3fb950',p:['inc',.05]},
@@ -7043,7 +7056,19 @@ const RANKS=[
   {l:150,n:'Hall of Fame',e:'🏆',c:'#d4a020',p:['walk',.10]}];
 const PERKN={inc:['💰','Income'],walk:['🚶','Walk-ins'],pat:['⏳','Client patience'],cost:['🛠️','Upgrade costs']};
 function rankOf(l){l=l==null?S.lvl:l;let i=0;RANKS.forEach((r,j)=>{if(l>=r.l)i=j});return i}
-function perkTotal(k,l){const ri=rankOf(l);let t=0;for(let i=1;i<=ri;i++){const p=RANKS[i].p;if(p&&p[0]===k)t+=p[1]}return t}
+const perkOwned=i=>(S.perks||[]).includes(i);
+function perkTotal(k,l){const ri=rankOf(l);let t=0;for(let i=1;i<=ri;i++){const p=RANKS[i].p;if(p&&p[0]===k&&perkOwned(i))t+=p[1]}return t}
+// price: minutes of this town's income with every room at level 25 (a fixed figure per town, so it can't be gamed by
+// buying straight after a move), more minutes for higher ranks; rounded to 2 significant figures
+let PREF={t:-1,v:0};
+function perkRef(){if(PREF.t===S.town&&PREF.v>0)return PREF.v;const sv=S.st,t={};
+  try{for(const k in sv)t[k]=Object.assign({},sv[k],{on:true,lv:25,slots:slotMax(k)});S.st=t;PREF={t:S.town,v:incomePerSec()/(boosted()?2:1)}}catch(e){PREF={t:-1,v:0}}finally{S.st=sv}
+  return PREF.v}
+function perkCost(i){const ref=perkRef()||BOARD_COST*TW.cost*.02;
+  const c=ref*60*(5+5*i),m=Math.pow(10,Math.max(0,Math.floor(Math.log10(c))-1));return Math.ceil(c/m)*m}
+function buyPerk(i){if(i>rankOf()||perkOwned(i)||!RANKS[i].p)return false;const c=perkCost(i);if(S.cash<c)return false;
+  S.cash-=c;S.perks=(S.perks||[]).concat(i);SND.fx('claim');toast(`${RANKS[i].n} perk unlocked: ${perkTxt(RANKS[i].p).replace(/^\S+ /,'')}`,'gold',RANKS[i].e);save();return true}
+const perkReady=()=>{const ri=rankOf();for(let i=1;i<=ri;i++)if(RANKS[i].p&&!perkOwned(i))return i;return 0};
 function rankPerk(k){const t=perkTotal(k);return k==='cost'?1-t:1+t}
 const perkTxt=p=>p?`${PERKN[p[0]][0]} ${PERKN[p[0]][1]} ${p[0]==='cost'?'−':'+'}${Math.round(p[1]*100)}%`:'Where every career starts';
 // level-up reward: diamonds, plus cash worth 20 seconds of income (a full minute on a promotion)
@@ -7053,18 +7078,26 @@ function levelUp(){const prev=rankOf(S.lvl-1),ri=rankOf(S.lvl),promo=ri>prev,cas
   celebrate(promo,ri,gems,cash)}
 function celebrate(promo,ri,gems,cash){const R=RANKS[ri];let el=$('#lvup');if(el)el.remove();el=document.createElement('div');el.id='lvup';el.className='lvup'+(promo?' promo':'');el.style.setProperty('--rc',R.c);
   const conf=Array.from({length:promo?26:14},(_,i)=>`<i style="--a:${(i*137)%360}deg;--d:${(i%5)*.06}s;--c:${['#ffc83d','#ff7eb6','#3fd0ff','#3fb950','#ffffff'][i%5]}"></i>`).join('');
-  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>for good</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok">Nice!</button></div>`
+  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>perk ready to unlock</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">Unlock in Career</button></div>`
     :`<div class="lvc">${conf}<div class="lvn"><b>${S.lvl}</b></div><small>Level up!</small><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div>${ri<RANKS.length-1?`<p class="lvnext">${RANKS[ri+1].l-S.lvl} level${RANKS[ri+1].l-S.lvl>1?'s':''} to ${RANKS[ri+1].e} ${RANKS[ri+1].n}</p>`:''}</div>`;
-  document.body.appendChild(el);const close=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;if(!promo)setTimeout(close,2600);else setTimeout(close,7000)}
+  document.body.appendChild(el);const close=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;const pb=el.querySelector('#lvPerk');if(pb)pb.onclick=e=>{e.stopPropagation();close();careerSheet()};if(!promo)setTimeout(close,2600);else setTimeout(close,7000)}
 function careerSheet(){const ri=rankOf(),R=RANKS[ri],nx=RANKS[ri+1],lvP=Math.min(100,S.xp/xpNeed(S.lvl)*100);
   const tot=['inc','walk','pat','cost'].map(k=>{const t=Math.round(perkTotal(k)*100);return `<div><span>${PERKN[k][0]}</span><b class="${t?'pos':''}">${t?(k==='cost'?'−':'+')+t+'%':'—'}</b><small>${PERKN[k][1]}</small></div>`}).join('');
-  const lad=RANKS.map((r,i)=>`<div class="rl${i<=ri?' on':''}${i===ri?' cur':''}" style="--c:${r.c}"><span class="rf">${r.e}</span><div class="rn"><b>${r.n}</b><small>${i===ri?'From level '+(r.l||1)+' · you are here':'Level '+(r.l||1)}</small></div><span class="rp">${r.p?perkTxt(r.p).replace(/^\S+ /,''):''}</span></div>`).join('');
+  const lad=RANKS.map((r,i)=>{const pt=r.p?perkTxt(r.p).replace(/^\S+ /,''):'',own=perkOwned(i),avail=r.p&&i<=ri&&!own;
+    const right=!r.p?'':own?`<span class="rp own">✓ ${pt}</span>`:avail?`<span class="rp buy"><small>${pt}</small><button class="mini" data-perk="${i}">${fmt(perkCost(i))}</button></span>`:`<span class="rp lock">${pt}</span>`;
+    return `<div class="rl${i<=ri?' on':''}${i===ri?' cur':''}${avail?' avail':''}" style="--c:${r.c}"><span class="rf">${r.e}</span><div class="rn"><b>${r.n}</b><small>${i===ri?'From level '+(r.l||1)+' · you are here':'Level '+(r.l||1)}</small></div>${right}</div>`}).join('');
   sheet('Career','#5b4a9e',`<div class="crhero" style="--rc:${R.c}"><div class="lvb">${R.e}</div><h3>${R.n}</h3><p>Level ${S.lvl}</p><div class="mbar"><i style="width:${lvP}%"></i></div><small>${Math.floor(S.xp).toLocaleString('en-AU')} / ${xpNeed(S.lvl).toLocaleString('en-AU')} XP${nx?` · ${nx.l-S.lvl} level${nx.l-S.lvl>1?'s':''} to ${nx.n}`:''}</small></div>
   <h4>Your perks · kept in every town</h4><div class="reff">${tot}</div>
   <h4>Ranks</h4><div class="rlad">${lad}</div>
   <h4>Earning XP</h4><div class="rhow"><div><span>🙋</span>Serve a client<b>+1–3</b></div><div><span>🏡</span>Sell a home<b>+4</b></div><div><span>🔨</span>Auction sale<b>+12 or more</b></div><div><span>⭐</span>Sign a VIP<b>+15</b></div></div>
-  <p class="crnote">Every level pays diamonds and cash. Every 10 levels you're promoted, and the new perk stays with your agency for good, whichever town you're in.</p>`,null,null,'🎓')}
-window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
+  <p class="crnote">Every level pays diamonds and cash. Every 10 levels you're promoted and a new perk becomes available. Unlock it with cash and it stays with your agency for good, whichever town you're in.</p>`,null,null,'🎓');
+  const wire=()=>document.querySelectorAll('#sheet [data-perk]').forEach(b=>{const i=+b.dataset.perk;afford(b,S.cash>=perkCost(i),'cash');
+    b.onclick=()=>{if(b.dataset.need)return;if(buyPerk(i)){b._bought=true;const sp=b.parentNode,pt=sp.querySelector('small').textContent;sp.className='rp own';sp.textContent='✓ '+pt;sp.closest('.rl').classList.remove('avail');
+      const tt=document.querySelector('#sheet .reff');if(tt)tt.innerHTML=['inc','walk','pat','cost'].map(k=>{const t=Math.round(perkTotal(k)*100);return `<div><span>${PERKN[k][0]}</span><b class="${t?'pos':''}">${t?(k==='cost'?'−':'+')+t+'%':'—'}</b><small>${PERKN[k][1]}</small></div>`}).join('');wire()}}});
+  wire();const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>afford(b,S.cash>=perkCost(+b.dataset.perk),'cash'))},500)}
+// a gold dot on the level badge while a reached rank's perk is waiting to be unlocked
+setInterval(()=>{try{const b=document.getElementById('lvlBtn');if(b&&S&&S.started)b.classList.toggle('perkdot',!!perkReady())}catch(e){}},1000);
+window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),perkCost:i=>perkCost(i),buyPerk:i=>buyPerk(i),perkTotal:k=>perkTotal(k),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
 // ---- every text diamond (◆ or 💎) on screen becomes the game's own diamond coin
 {const SVG='<svg viewBox="0 0 24 24"><path d="M6 5h12l4 5-10 10L2 10z" fill="#fff"/><path d="M2 10h20M8.5 5L12 20l3.5-15" stroke="#7c3fd6" stroke-width="1.6" fill="none" opacity=".55"/></svg>',RX=/[◆💎]/u;
   const swap=n=>{if(n.nodeType===3){if(!RX.test(n.data))return;const p=n.parentNode;if(!p||p.closest&&p.closest('svg,script,style,input,textarea'))return;
