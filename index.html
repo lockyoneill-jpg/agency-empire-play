@@ -690,6 +690,8 @@ body.tut-on #upg+.hint{margin-top:10px}
 .prof.vipg::after{content:'👑';position:absolute;left:30px;top:-7px;font-size:14px;transform:rotate(12deg);filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
 .vperks span.vmg{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #ffc83d;background:#dfe7f3;box-sizing:border-box;align-self:center;justify-self:center}.vperks span.vmg svg{width:100%;height:100%;display:block}
 
+.sh-head .spk{display:none}.mg .vipt{white-space:nowrap;display:inline-block}
+@media (orientation:landscape) and (max-height:520px){.scrim.framed .sheet{max-height:calc(100% - 64px)}}@media (orientation:landscape){.sheet{clip-path:inset(0 round 26px 26px 0 0)}}
 </style>
 
 <canvas id="gl"></canvas>
@@ -706,7 +708,7 @@ body.tut-on #upg+.hint{margin-top:10px}
     <div class="col">
       <button class="prof pnl" id="profileBtn" aria-label="Agency settings"><span class="ava"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#7fd38a"/><rect x="10" y="32" width="28" height="20" rx="8" fill="#22304a"/><path d="M20 32l4 7 4-7" fill="#fff"/><path d="M23 33h2l1 8h-4z" fill="#e8443a"/><rect x="14" y="12" width="20" height="20" rx="5" fill="#f1c9a5"/><rect x="13" y="9" width="22" height="8" rx="3" fill="#6b3e1f"/><circle cx="20" cy="22" r="1.6" fill="#1d2433"/><circle cx="28" cy="22" r="1.6" fill="#1d2433"/><path d="M20 27q4 3 8 0" stroke="#1d2433" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span><span><b id="agname">Brick &amp; Key Realty</b><small id="town">Saltbrook</small></span></button>
       <button class="quest pnl" id="questBtn"><span class="qi" id="qIc">🎯</span><span><small>Goal</small><b id="qTxt">Goals</b><span class="qb"><i id="qBar"></i></span></span></button>
-      <button class="vipq" id="vipBtn" hidden aria-label="Go to the VIP client"><span class="qi">⭐</span><span><small>VIP client</small><b id="vipTxt">Tap to meet them</b></span></button>
+      <button class="vipq" id="vipBtn" hidden aria-label="Go to the VIP client"><span class="qi">⭐</span><span><small>VIP client</small><b id="vipTxt">Tap to meet</b></span></button>
     </div>
     <div class="spacer"></div>
     <div class="col r">
@@ -729,7 +731,7 @@ body.tut-on #upg+.hint{margin-top:10px}
 <div id="toasts" aria-live="polite"></div>
 <div id="sheet" class="scrim" hidden></div>
 <div id="auc" hidden></div>
-<div id="ad" hidden><div class="cdn"><span id="adN">3</span></div><h2>Ad break</h2><p>In the App Store version, a short rewarded video ad plays here. Your reward lands as soon as it finishes.</p></div>
+<div id="ad" hidden><div class="cdn"><span id="adN">3</span></div><h2>Ad break</h2><p>A short video ad plays here in the app. Your reward follows.</p></div>
 <div id="loading" role="status" aria-live="polite">
   <div class="ld-logo2 logo-ban" style="margin:0;height:auto;border:0;background-color:transparent"></div>
   <div class="ld-mid">
@@ -742,7 +744,7 @@ body.tut-on #upg+.hint{margin-top:10px}
 <script>
 (function(){
   var N=['Saltbrook','Dunmore','Redgum Flats','Millbrook','Kestrel Bay','Pinecrest','Larkspur Hills','Merriton Inner','Merriton CBD','Isla Verde','Puerto Sol','Olivara','Vellara Heights','Vinadora','San Corvo','Bellamar','Costa Lumina','Alta Rosa','Solmara City','Isola d’Oro'];
-  var TIPS=['Hold the Upgrade button to level up fast.','Every 10, 25 and 50 levels a room doubles its income.','Keep the Waiting Room moving. Impatient clients walk out.','VIP clients pay big. Tap them before they leave.','Managers boost a room for good, and they come with you.','Run auctions yourself. Small bids keep the crowd warm.','Reputation brings more walk-ins. Look after your clients.','Coffee makes every other team a little faster.'];
+  var TIPS=['Hold Upgrade to level up fast.','Levels 10, 25, 50 and up: income ×2.','Slow rooms make clients walk out.','VIP clients pay big. Tap before they leave.','Managers boost a room for good, in every town.','Small bids keep the auction crowd warm.','Happy clients bring more walk-ins.','The Coffee Bar speeds up every team.'];
   var el=document.getElementById('loading'),msg=document.getElementById('ldMsg'),sub=document.getElementById('ldSub'),bar=document.getElementById('ldBar'),tip=document.getElementById('ldTip');
   var s=null,mv=null;try{s=JSON.parse(localStorage.getItem('agency-empire-v2')||'null');mv=JSON.parse(localStorage.getItem('ae-move')||'null');localStorage.removeItem('ae-move')}catch(e){}
   var t=s&&s.town!=null?s.town:0;if(t>=10)el.classList.add('w2');
@@ -778,14 +780,14 @@ const GEM='◆';
 
 // ================= GAME DATA =================
 const ST={
-  reception:{name:'Reception',col:'#2f6fd6',base:4,time:2,cost0:10,slotsMax:2,hire0:120,unlock:0,desc:'Greets every client. Holds them here when the next team is full.'},
-  waiting:{name:'Waiting Room',col:'#d65a8a',base:3,time:1,cost0:24,slotsMax:0,hire0:0,unlock:150,special:true,desc:'Comfy seats while clients wait for Reception. Seated clients stay calm for longer, and every one of them adds a little to your takings.'},
-  sales:{name:'Sales',col:'#2a9a48',base:20,time:4,cost0:50,slotsMax:4,hire0:220,unlock:0,desc:'Agents meet vendors and buyers. Your main earner.'},
-  marketing:{name:'Marketing',col:'#8b4ce0',base:40,time:4.5,cost0:300,slotsMax:2,hire0:1400,unlock:500,desc:'Brochures, signboards and online ads. Brings more clients through the door.'},
-  coffee:{name:'Coffee Bar',col:'#9a5a2c',base:10,time:2.2,cost0:200,slotsMax:2,hire0:800,unlock:2500,desc:'Clients grab a coffee on the way out. Every other team works a bit faster.'},
-  admin:{name:'Admin',col:'#16a3a3',base:30,time:3,cost0:700,slotsMax:3,hire0:2600,unlock:10000,desc:'Contracts and settlement paperwork after a sale.'},
-  pm:{name:'Rentals',col:'#e07b22',base:85,time:5,cost0:1400,slotsMax:3,hire0:4500,unlock:40000,desc:'Landlords and tenants. Big fees, slow service.'},
-  auction:{name:'Auction Room',col:'#d63a2f',base:60,time:5,cost0:2500,slotsMax:2,hire0:9000,unlock:150000,desc:'In-room auctions run here all day: bidders register, take a seat and bid on the listings called from the stage. Every so often the team books a big auction on site at one of the homes around town, and you run it live.'}
+  reception:{name:'Reception',col:'#2f6fd6',base:4,time:2,cost0:10,slotsMax:2,hire0:120,unlock:0,desc:'Checks in every client. Holds them when teams are full.'},
+  waiting:{name:'Waiting Room',col:'#d65a8a',base:3,time:1,cost0:24,slotsMax:0,hire0:0,unlock:150,special:true,desc:'Seats for the Reception queue. Seated clients stay calm and pay a little extra.'},
+  sales:{name:'Sales',col:'#2a9a48',base:20,time:4,cost0:50,slotsMax:4,hire0:220,unlock:0,desc:'Your main earner. Agents meet buyers and sellers.'},
+  marketing:{name:'Marketing',col:'#8b4ce0',base:40,time:4.5,cost0:300,slotsMax:2,hire0:1400,unlock:500,desc:'More clients through the door. Brochures, signs and ads.'},
+  coffee:{name:'Coffee Bar',col:'#9a5a2c',base:10,time:2.2,cost0:200,slotsMax:2,hire0:800,unlock:2500,desc:'Every other team works faster. Clients grab one on the way out.'},
+  admin:{name:'Admin',col:'#16a3a3',base:30,time:3,cost0:700,slotsMax:3,hire0:2600,unlock:10000,desc:'Contracts and settlements after each sale.'},
+  pm:{name:'Rentals',col:'#e07b22',base:85,time:5,cost0:1400,slotsMax:3,hire0:4500,unlock:40000,desc:'Big fees, slow service. Landlords and tenants.'},
+  auction:{name:'Auction Room',col:'#d63a2f',base:60,time:5,cost0:2500,slotsMax:2,hire0:9000,unlock:150000,desc:'Auctions all day for steady income. Big ones at homes around town: you run those live.'}
 };
 const ORDER=['reception','waiting','sales','marketing','coffee','admin','pm','auction'];
 const MILES=[10,25,50,75,100,125,150,200],MAXLV=200;
@@ -803,24 +805,24 @@ const ITEMS={
   auction:[{id:'pa',n:'PA system',i:'🎤',t:'heat',c:9000},{id:'phones',n:'Phone bidding desk',i:'📞',t:'bidder',c:14000},{id:'bubbly',n:'Champagne service',i:'🍾',t:'comm',c:20000}]
 };
 const SPECIAL={
-  waiting:{n:'VIP lounge',fx:'Waiting Room income ×3 and seated clients stay twice as calm',g:40},
-  reception:{n:'Concierge service',fx:'Reception income ×3 and clients wait 50% longer',g:60},
-  sales:{n:'Diamond Club',fx:'Sales income ×3',g:100},
-  marketing:{n:'Highway billboard',fx:'Marketing income ×3 and 40% more walk-ins',g:120},
-  coffee:{n:'Celebrity barista',fx:'Coffee Bar income ×3 and clients wait 25% longer',g:80},
-  admin:{n:'Legal eagle on retainer',fx:'Admin income ×3',g:120},
-  pm:{n:'Portfolio buyout',fx:'Rentals income ×3',g:150},
-  auction:{n:'Prestige auctions',fx:'Auction Room income and auction commission ×3',g:150}
+  waiting:{n:'VIP lounge',fx:'Income ×3 · seated clients 2× calmer',g:40},
+  reception:{n:'Concierge service',fx:'Income ×3 · clients wait 50% longer',g:60},
+  sales:{n:'Diamond Club',fx:'Income ×3',g:100},
+  marketing:{n:'Highway billboard',fx:'Income ×3 · +40% walk-ins',g:120},
+  coffee:{n:'Celebrity barista',fx:'Income ×3 · clients wait 25% longer',g:80},
+  admin:{n:'Legal eagle on retainer',fx:'Income ×3',g:120},
+  pm:{n:'Portfolio buyout',fx:'Income ×3',g:150},
+  auction:{n:'Prestige auctions',fx:'Income ×3 · commission ×3',g:150}
 };
 const MGR={
-  reception:{n:'Front Desk Fran',fx:'Reception 40% faster. Clients wait 50% longer.',g:40,suit:'#2f6fd6',pos:[4.45,0,2.7],ry:0},
-  sales:{n:'Kylie the Closer',fx:'Sales income ×2.',g:60,suit:'#2a9a48',pos:[-13.5,0,-2.5],ry:Math.PI/2},
-  marketing:{n:'Brochure Bec',fx:'Marketing income ×2. 20% more walk-ins.',g:80,suit:'#8b4ce0',pos:[13.2,0,-7.6],ry:0},
-  coffee:{n:'Baz the Barista',fx:'Coffee Bar income ×2. All other teams 10% faster.',g:80,suit:'#9a5a2c',pos:[13.3,0,-.6],ry:0},
-  admin:{n:'Paperwork Pam',fx:'Admin income ×2 and 30% faster.',g:100,suit:'#16a3a3',pos:[-12.6,0,7.3],ry:Math.PI/2},
-  pm:{n:'Rent Roll Rita',fx:'Rentals income ×2 and 30% faster.',g:120,suit:'#e07b22',pos:[-13.3,0,-4.4],ry:Math.PI/2},
-  auction:{n:'Hammer Harris',fx:'Auctions booked twice as often. Commission ×1.5.',g:150,suit:'#d63a2f',pos:[3.4,.32,-9.2],ry:0},
-  shark:{n:'The Shark',fx:'Every department earns ×1.5. Chairs your Board Room.',g:400,suit:'#111827',pos:[-6.85,0,-6.6],ry:Math.PI/2,legend:true}
+  reception:{n:'Front Desk Fran',fx:'40% faster · clients wait 50% longer',g:40,suit:'#2f6fd6',pos:[4.45,0,2.7],ry:0},
+  sales:{n:'Kylie the Closer',fx:'Income ×2',g:60,suit:'#2a9a48',pos:[-13.5,0,-2.5],ry:Math.PI/2},
+  marketing:{n:'Brochure Bec',fx:'Income ×2 · +20% walk-ins',g:80,suit:'#8b4ce0',pos:[13.2,0,-7.6],ry:0},
+  coffee:{n:'Baz the Barista',fx:'Income ×2 · other teams 10% faster',g:80,suit:'#9a5a2c',pos:[13.3,0,-.6],ry:0},
+  admin:{n:'Paperwork Pam',fx:'Income ×2 · 30% faster',g:100,suit:'#16a3a3',pos:[-12.6,0,7.3],ry:Math.PI/2},
+  pm:{n:'Rent Roll Rita',fx:'Income ×2 · 30% faster',g:120,suit:'#e07b22',pos:[-13.3,0,-4.4],ry:Math.PI/2},
+  auction:{n:'Hammer Harris',fx:'Auctions 2× as often · commission ×1.5',g:150,suit:'#d63a2f',pos:[3.4,.32,-9.2],ry:0},
+  shark:{n:'The Shark',fx:'Every room ×1.5 · chairs the Board Room',g:400,suit:'#111827',pos:[-6.85,0,-6.6],ry:Math.PI/2,legend:true}
 };
 const MGR_ORDER=['reception','sales','marketing','coffee','admin','pm','auction','shark'];
 const TOWNS=[
@@ -902,7 +904,7 @@ const HCOLS={
 const LOWSTY={cottage:1,farm:1,modern:1,chalet:1,mansion:1,villa:1,stone:1,bungalow:1};
 
 let TW=null;
-const BOARD_OPTS={sales:{n:'Sales blitz',d:'Sales income ×2 for 1 hour',i:'🤝'},walk:{n:'Open home weekend',d:'50% more walk-ins for 1 hour',i:'🏡'},speed:{n:'Efficiency drive',d:'Every team 25% faster for 1 hour',i:'⚡'},cash:{n:'Cash flow review',d:'Collect 30 minutes of income right now',i:'💰'}};
+const BOARD_OPTS={sales:{n:'Sales blitz',d:'Sales income ×2 for 1 hour',i:'🤝'},walk:{n:'Open home weekend',d:'+50% walk-ins for 1 hour',i:'🏡'},speed:{n:'Efficiency drive',d:'Every team 25% faster for 1 hour',i:'⚡'},cash:{n:'Cash flow review',d:'30 minutes of income, now',i:'💰'}};
 const BOARD_CD=4*3600e3,boardCD=()=>S&&S.vip?BOARD_CD/2:BOARD_CD,BOARD_DUR=3600e3,MEET_DUR=5*60e3,BOARD_COST=400000,BOARD_TOWN=2;
 const boardAvail=()=>S.town>=BOARD_TOWN||!!(S.board&&S.board.on),roomsTotal=()=>ORDER.length+(boardAvail()?1:0);
 const STREETS=['Gull Street','Netmaker Lane','Harbour Road','Kelp Crescent','Lighthouse Parade','Anchor Court','Wharf Street','Pelican Way','Tidewater Drive','Breakwall Avenue','Driftwood Grove'];
@@ -928,10 +930,10 @@ function migrate(s){
   s.mgr=s.mgr||{};s.eq=s.eq||{};s.sp=s.sp||{};
   if(s.cards){s.gems+=Object.keys(s.cards).length*30;delete s.cards}
   {const d=fresh();for(const k in d)if(s[k]==null)s[k]=d[k];if(s.board)for(const k in d.board)if(s.board[k]===undefined)s.board[k]=d.board[k];['cash','gems','xp','earned','served','auctions','rep'].forEach(k=>{if(typeof s[k]!=='number'||!isFinite(s[k]))s[k]=d[k]});if(!(s.lvl>=1))s.lvl=1;const nw=Date.now();if(s.board){if(!(s.board.next<=nw+BOARD_CD))s.board.next=0;if(!(s.board.until<=nw+BOARD_DUR*4))s.board.until=0}if(!(s.boostUntil<=nw+14*24*3600e3))s.boostUntil=0;if(!(s.lastSeen<=nw))s.lastSeen=nw;for(const k in s.st){const q=s.st[k];if(!q||typeof q!=='object'){s.st[k]={on:false,lv:1,slots:1};continue}if(!(q.lv>=1&&isFinite(q.lv)))q.lv=1;if(!(q.slots>=1&&isFinite(q.slots)))q.slots=1;q.on=!!q.on}}
-  if(s.vipIn==null)s.vipIn=70;s.walkouts=s.walkouts||0;s.vips=s.vips||0;s.hs=s.hs||{};s.listed=s.listed||0;s.sold=s.sold||0;s.aucSold=s.aucSold||0;s.qa=s.qa||[];s.qn=s.qn||0;s.qg=s.qg||0;s.board=s.board||{on:false,next:0,buff:null,until:0,opts:null,held:0};s.town=TOWNS[+s.town]?+s.town:0;s.towns=s.towns||0;if(s.rep==null)s.rep=50;s.repLog=s.repLog||[];if(s.aq){s._aq=s.aq;delete s.aq}if(s.town===9&&!(s.v>=5))s.ivLegacy=1;s.v=5;return s;
+  if(s.vipIn==null)s.vipIn=70;s.walkouts=s.walkouts||0;s.vips=s.vips||0;s.hs=s.hs||{};s.listed=s.listed||0;s.sold=s.sold||0;s.aucSold=s.aucSold||0;s.qa=s.qa||[];s.qn=s.qn||0;s.qg=s.qg||0;s.board=s.board||{on:false,next:0,buff:null,until:0,opts:null,held:0};s.town=TOWNS[+s.town]?+s.town:0;s.towns=s.towns||0;if(s.rep==null)s.rep=50;s.repLog=s.repLog||[];if(s.aq){s._aq=s.aq;delete s.aq}if(s.town===9&&!(s.v>=5))s.ivLegacy=1;if(s.vip&&!s.mgr.shark)s.mgr.shark=1;s.v=5;return s;
 }
-let WIPING=false;let saveWarned=false,AWAYP=false;function save(){if(!S||WIPING)return false;if(!AWAYP)S.lastSeen=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){if(!saveWarned){saveWarned=true;try{toast('Progress can\'t be saved on this device (storage is off).','bad')}catch(_){}}return false}}
-function load(){try{const s=localStorage.getItem(KEY);return s?migrate(JSON.parse(s)):null}catch(e){return null}}
+let WIPING=false;let saveWarned=false,AWAYP=false,SAVEBAK=0;function save(){if(!S||WIPING||typeof S!=='object'||!S.st)return false;if(!AWAYP)S.lastSeen=Date.now();let js;try{js=JSON.stringify(S);if(!js||js.length<20)return false}catch(e){return false}try{const old=localStorage.getItem(KEY);if(old&&!S.started){try{const o=JSON.parse(old);if(o&&o.started)return false}catch(_){}}if(old&&old!==js&&Date.now()-SAVEBAK>60000){try{localStorage.setItem(KEY+'.bak',old)}catch(_){}SAVEBAK=Date.now()}localStorage.setItem(KEY,js);return true}catch(e){if(!saveWarned){saveWarned=true;try{toast('Can’t save: storage is off on this device.','bad')}catch(_){}}return false}}
+function load(){const rd=k=>{try{const r=localStorage.getItem(k);if(!r)return null;const o=migrate(JSON.parse(r));return o&&o.st?o:null}catch(e){return null}};let s=rd(KEY);if(!s){s=rd(KEY+'.bak');if(!s){try{const r=localStorage.getItem(KEY);if(r)localStorage.setItem(KEY+'.bad',r)}catch(e){}}}return s}
 
 // ================= ECONOMY =================
 const boosted=()=>Date.now()<S.boostUntil;
@@ -946,7 +948,7 @@ let UPG_G=1.08,UNL_M=1,UPC_M=2;const tutFree=k=>document.body.classList.contains
 function unlockCost(k){return Math.ceil(ST[k].unlock*UNL_M*TW.cost)}
 function boardBuff(k){return !!(S.board&&S.board.on&&S.board.buff===k&&Date.now()<S.board.until)}
 function repMul(){return .55+S.rep*.009}
-const REPT=[{n:'Shonky',min:0,c:'#e8443a',f:'😬',inc:-.1,d:'Clients steer clear'},{n:'Shaky',min:20,c:'#ff8a1f',f:'😕',inc:-.05,d:'Word is getting around'},{n:'Reliable',min:40,c:'#e6a800',f:'🙂',inc:0,d:'A solid local name'},{n:'Trusted',min:60,c:'#2fa83d',f:'😄',inc:.05,d:'The agency people recommend'},{n:'Legendary',min:80,c:'#8b4ce0',f:'🤩',inc:.1,d:'Everyone wants to list with you'}];
+const REPT=[{n:'Shonky',min:0,c:'#e8443a',f:'😬',inc:-.1,d:'Clients steer clear'},{n:'Shaky',min:20,c:'#ff8a1f',f:'😕',inc:-.05,d:'Word is getting around'},{n:'Reliable',min:40,c:'#e6a800',f:'🙂',inc:0,d:'A solid local name'},{n:'Trusted',min:60,c:'#2fa83d',f:'😄',inc:.05,d:'People recommend you'},{n:'Legendary',min:80,c:'#8b4ce0',f:'🤩',inc:.1,d:'Everyone wants to list with you'}];
 function repTier(r){r=r==null?S.rep:r;let i=0;REPT.forEach((t,j)=>{if(r>=t.min)i=j});return i}
 const REP_IC=w=>/Happy/.test(w)?'😊':/walked/.test(w)?'😡':/Signed/.test(w)?'🤝':/VIP/.test(w)?'🙅':/passed in|Passed/.test(w)&&!/after/.test(w)?'🚫':/Sold|auction|Auction/.test(w)?'🔨':'⭐';
 function repGauge(r,big){const C=50,R=40,pt=a=>[(C+R*Math.cos(a*Math.PI/180)).toFixed(2),(50-R*Math.sin(a*Math.PI/180)).toFixed(2)];
@@ -971,7 +973,7 @@ function spawnRate(){let r=(.38+S.st.reception.lv*.006)*arriveMul();if(S.st.mark
 function xpNeed(l){return Math.round(20*Math.pow(l,1.45)*Math.min(1,.35+l/18))}
 function incomePerSec(){const on=k=>S.st[k].on,cap=k=>S.st[k].slots/(svcTime(k)+(k==='reception'?3.3:5));const w={sales:5};if(on('pm'))w.pm=2;if(on('marketing'))w.marketing=2;if(on('auction'))w.auction=2;const W=Object.values(w).reduce((a,b)=>a+b,0);let arr=Math.min(spawnRate(),cap('reception'));for(const k in w)arr=Math.min(arr,cap(k)*W/w[k]);let inc=arr*value('reception'),out=0;for(const k in w){const sv=arr*w[k]/W;inc+=sv*value(k);out+=sv;if(k==='sales'&&on('admin'))inc+=Math.min(sv*.55,cap('admin'))*value('admin')}if(on('coffee'))inc+=Math.min(out*.35,cap('coffee'))*value('coffee');if(on('waiting'))inc+=arr*.5*value('waiting');return inc}
 function fxText(t,tier){const v=TIER[t][tier];
-  if(t==='spd')return tier?`${Math.round((1-v)*100)}% faster`:'Standard speed';
+  if(t==='spd')return tier?`${Math.round((1-v)*100)}% faster`:'Base speed';
   if(t==='inc')return tier?`+${Math.round((v-1)*100)}% income`:'No bonus';
   if(t==='pat')return tier?`Clients wait ${Math.round((v-1)*100)}% longer`:'No bonus';
   if(t==='walk')return tier?`+${Math.round((v-1)*100)}% walk-ins`:'No bonus';
@@ -4536,7 +4538,7 @@ MAPS[5]=K=>{
    for(let t=0;t<=1.0001;t+=.04){const x=r0[0]+(r1[0]-r0[0])*t,z=r0[1]+(r1[1]-r0[1])*t,lx=B0[0]+(B1[0]-B0[0])*t,lz=B0[1]+(B1[1]-B0[1])*t;MK.occ(x-6,z-6,x+6,z+6,'piste');MK.occ(lx-2.6,lz-2.6,lx+2.6,lz+2.6,'lift')}
    for(let t=.1;t<.95;t+=.08)[-5,5].forEach(o=>{const x=r0[0]+(r1[0]-r0[0])*t+nx*o,z=r0[1]+(r1[1]-r0[1])*t+nz*o;K.at(x,z,0,()=>cyl(.05,1.3,o<0?'#ff8a1f':'#2f6fd6',0,0,0,null,5))})}
   for(let i=0;i<7;i++){const t=rnd(.25,.85),o=rnd(5.5,9.5),x=B0[0]+(B1[0]-B0[0])*t-nx*o,z=B0[1]+(B1[1]-B0[1])*t-nz*o;K.at(x,z,Math.atan2(-ux,-uz)+rnd(-.35,.35),()=>{const p=randPerson(null);p.rotation.x=-.25;DEF.add(p);box(.1,.03,1.5,pick(['#e8443a','#2f6fd6','#ffc83d']),-.12,.02,0);box(.1,.03,1.5,pick(['#e8443a','#2f6fd6','#ffc83d']),.12,.02,0)})}
-  K.trees(52,-110,95,-95,22,{kind:'snowpine'});K.trees(72,-100,118,-36,190,{kind:'snowpine'});K.trees(62,-36,118,0,90,{kind:'snowpine'});K.trees(-100,-110,-50,-60,26,{kind:'snowpine'});K.trees(-110,-40,-70,0,14,{kind:'snowpine'});
+  K.trees(52,-110,95,-95,16,{kind:'snowpine'});K.trees(72,-100,118,-36,120,{kind:'snowpine'});K.trees(62,-36,118,0,60,{kind:'snowpine'});K.trees(-100,-110,-50,-60,18,{kind:'snowpine'});K.trees(-110,-40,-70,0,14,{kind:'snowpine'});
   // a log cabin with a split-rail fence and a woodshed fills the snowfield west of the shops
   K.shed(-54,-2,4.4,3.6,2.4,'#7a4a2a','#3a2a24');MK.occ(-57.5,-.5,-46,4,'yard');K.shed(-47.5,-4.5,2.2,1.8,1.6,'#5a3a22','#3a2a24');MK.fence([[-62,4.4],[-44,4.4]],'#7a5a3a',.8);K.at(-50.5,1.5,0,()=>dSnowman(0,0));
   K.trees(-48,-30,-30,-6,8,{kind:'snowpine'});K.trees(34,-30,52,-8,8,{kind:'snowpine'});
@@ -6746,8 +6748,8 @@ function next(v){
 }
 function leave(v){v.state='exit';v.st=null;v.sit=false;freeSeat(v);setGoal(v,pick(EXITS))}
 function walkout(v){
-  S.walkouts++;addRep(-1.5,'A client walked out');setBub(v,'😡',true);pop(v.g.position.clone().setY(1.6),'Walked out','bad');leave(v);
-  if(!S.tipWalk){S.tipWalk=true;toast('A client got sick of waiting and left. Hire staff or upgrade to speed things up.','bad')}
+  S.walkouts++;addRep(-1.5,'Client walked out');setBub(v,'😡',true);pop(v.g.position.clone().setY(1.6),'Walked out','bad');leave(v);
+  if(!S.tipWalk){S.tipWalk=true;toast('A client walked out. Hire or upgrade to speed up.','bad')}
 }
 function stepStations(dt){
   for(const k of ORDER){
@@ -7097,10 +7099,12 @@ let PREF={t:-1,v:0};
 function perkRef(){if(PREF.t===S.town&&PREF.v>0)return PREF.v;const sv=S.st,t={};
   try{for(const k in sv)t[k]=Object.assign({},sv[k],{on:true,lv:25,slots:slotMax(k)});S.st=t;PREF={t:S.town,v:incomePerSec()/(boosted()?2:1)}}catch(e){PREF={t:-1,v:0}}finally{S.st=sv}
   return PREF.v}
-function perkCost(i){const ref=perkRef()||BOARD_COST*TW.cost*.02;
-  const c=ref*60*(5+5*i),m=Math.pow(10,Math.max(0,Math.floor(Math.log10(c))-1));return Math.ceil(c/m)*m}
+// ...but the price follows what you actually earn now (capped at that figure, floored at 5% of it so a fresh move can't make
+// it free): the first perk is about 3 minutes of income, each later one 2 minutes more
+function perkCost(i){const R0=perkRef()||BOARD_COST*TW.cost*.02,cur=incomePerSec()/(boosted()?2:1),ref=Math.max(R0*.05,Math.min(R0,cur>0?cur:R0));
+  const c=ref*60*(1+2*i),m=Math.pow(10,Math.max(0,Math.floor(Math.log10(c))-1));return Math.ceil(c/m)*m}
 function buyPerk(i){if(i>rankOf()||perkOwned(i)||!RANKS[i].p)return false;const c=perkCost(i);if(S.cash<c)return false;
-  S.cash-=c;S.perks=(S.perks||[]).concat(i);SND.fx('claim');toast(`${RANKS[i].n} perk unlocked: ${perkTxt(RANKS[i].p).replace(/^\S+ /,'')}`,'gold',RANKS[i].e);save();return true}
+  S.cash-=c;window.LASTBUY=Date.now();S.perks=(S.perks||[]).concat(i);SND.fx('claim');toast(`${RANKS[i].n} perk unlocked: ${perkTxt(RANKS[i].p).replace(/^\S+ /,'')}`,'gold',RANKS[i].e);save();return true}
 const perkReady=()=>{const ri=rankOf();for(let i=1;i<=ri;i++)if(RANKS[i].p&&!perkOwned(i))return i;return 0};
 function rankPerk(k){const t=perkTotal(k);return k==='cost'?1-t:1+t}
 const perkTxt=p=>p?`${PERKN[p[0]][0]} ${PERKN[p[0]][1]} ${p[0]==='cost'?'−':'+'}${Math.round(p[1]*100)}%`:'Where every career starts';
@@ -7111,7 +7115,7 @@ function levelUp(){const prev=rankOf(S.lvl-1),ri=rankOf(S.lvl),promo=ri>prev,cas
   celebrate(promo,ri,gems,cash)}
 function celebrate(promo,ri,gems,cash){const R=RANKS[ri];let el=$('#lvup');if(el)el.remove();el=document.createElement('div');el.id='lvup';el.className='lvup'+(promo?' promo':'');el.style.setProperty('--rc',R.c);
   const conf=Array.from({length:promo?26:14},(_,i)=>`<i style="--a:${(i*137)%360}deg;--d:${(i%5)*.06}s;--c:${['#ffc83d','#ff7eb6','#3fd0ff','#3fb950','#ffffff'][i%5]}"></i>`).join('');
-  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>new perk in the shop</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">See perk</button></div>`
+  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>new perk</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">See perk</button></div>`
     :`<div class="lvc">${conf}<div class="lvn"><b>${S.lvl}</b></div><small>Level up!</small><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div>${ri<RANKS.length-1?`<p class="lvnext">${RANKS[ri+1].l-S.lvl} level${RANKS[ri+1].l-S.lvl>1?'s':''} to ${RANKS[ri+1].e} ${RANKS[ri+1].n}</p>`:''}</div>`;
   document.body.appendChild(el);const close=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;const pb=el.querySelector('#lvPerk');if(pb)pb.onclick=e=>{e.stopPropagation();close();careerSheet()};if(!promo)setTimeout(close,2600);else setTimeout(close,7000)}
 const PKC={inc:'#2fa83d',walk:'#2f6fd6',pat:'#e0921a',cost:'#8b4ce0'};
@@ -7125,17 +7129,17 @@ function careerSheet(){const ri=rankOf(),R=RANKS[ri],nx=RANKS[ri+1],lvP=Math.min
   sheet('Career','#5b4a9e',`<div class="crhero" style="--rc:${R.c}"><div class="lvb">${R.e}</div><h3>${R.n}</h3><p>Level ${S.lvl}</p><div class="mbar"><i style="width:${lvP}%"></i></div><small>${Math.floor(S.xp).toLocaleString('en-AU')} / ${xpNeed(S.lvl).toLocaleString('en-AU')} XP${nx?` · ${nx.l-S.lvl} level${nx.l-S.lvl>1?'s':''} to ${nx.n}`:''}</small></div>
   <h4>Active perks · every town</h4><div class="reff">${totH()}</div>
   <div class="pkhd"><h4>Perk shop</h4><span>${nOwn}/${idx.length} owned${nReady?` · <b>${nReady} ready</b>`:''}</span></div>
-  <p class="pknote">A new perk opens every 10 levels. Buy it once with cash and it works in every town, for good.</p>
+  <p class="pknote">New perk every 10 levels. Buy once, keep it in every town.</p>
   <div class="pkgrid">${idx.map(perkCard).join('')}</div>
   <h4>Earning XP</h4><div class="rhow"><div><span>🙋</span>Serve a client<b>+1–3</b></div><div><span>🏡</span>Sell a home<b>+4</b></div><div><span>🔨</span>Auction sale<b>+12 or more</b></div><div><span>⭐</span>Sign a VIP<b>+15</b></div></div>`,null,null,'🎓');
-  const wire=()=>document.querySelectorAll('#sheet [data-perk]').forEach(b=>{const i=+b.dataset.perk;afford(b,S.cash>=perkCost(i),'cash');
+  const wire=()=>document.querySelectorAll('#sheet [data-perk]').forEach(b=>{const i=+b.dataset.perk;afford(b,S.cash>=perkCost(i),'cash',perkCost(i));
     b.onclick=()=>{if(b.dataset.need)return;if(!buyPerk(i))return;b._bought=true;const c=b.closest('.pkc');c.outerHTML=perkCard(i);
       const n=document.querySelector(`#sheet [data-pc="${i}"]`);if(n){n.classList.add('just');n.scrollIntoView({block:'nearest',behavior:'smooth'})}
       const t=document.querySelector('#sheet .reff');if(t)t.innerHTML=totH();
       const h=document.querySelector('#sheet .pkhd span');if(h){const o=idx.filter(perkOwned).length,r_=idx.filter(j=>!perkOwned(j)&&S.lvl>=RANKS[j].l).length;h.innerHTML=`${o}/${idx.length} owned${r_?` · <b>${r_} ready</b>`:''}`}
       wire()}});
   wire();const first=document.querySelector('#sheet .pkc.ready');if(first&&S.lvl>=10)setTimeout(()=>{const sh=$('#sheet .sheet');if(sh)sh.scrollTo({top:Math.max(0,first.offsetTop-120),behavior:'smooth'})},350);
-  const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>afford(b,S.cash>=perkCost(+b.dataset.perk),'cash'))},500)}
+  const iv=setInterval(()=>{if(!document.querySelector('#sheet [data-perk]')){clearInterval(iv);return}document.querySelectorAll('#sheet [data-perk]').forEach(b=>{const c=perkCost(+b.dataset.perk);if(b.textContent!==fmt(c))b.textContent=fmt(c);afford(b,S.cash>=c,'cash',c)})},500)}
 // a gold dot on the level badge while a reached rank's perk is waiting to be unlocked
 setInterval(()=>{try{const b=document.getElementById('lvlBtn');if(b&&S&&S.started)b.classList.toggle('perkdot',!!perkReady())}catch(e){}},1000);
 window.__lv={addXP:n=>addXP(n),S:()=>S,rankOf:l=>rankOf(l),incMul:k=>incMul(k),upCost:k=>upCost(k),patMul:()=>patMul(),xpNeed:l=>xpNeed(l),career:()=>careerSheet(),logo:()=>logoMesh,perkCost:i=>perkCost(i),buyPerk:i=>buyPerk(i),perkTotal:k=>perkTotal(k),labels:()=>labels,DECO:()=>DECO,scene:()=>scene,toast:(m)=>toast(m,"gold","🎁"),houses:()=>HOUSES,auc:h=>{S.hs[h.id]={s:"auc"};startAuction(h)},terr:()=>TERR,A:()=>A,celebrate:(p,r,g,c)=>celebrate(p,r,g,c),plan:(k,t)=>decoPlan(k,t),info:()=>({calls:renderer.info.render.calls,tris:renderer.info.render.triangles,geo:renderer.info.memory.geometries,tex:renderer.info.memory.textures,objs:(()=>{let n=0;scene.traverse(()=>n++);return n})()}),roads:()=>MK.ALL||[],bound:()=>BOUND,pc:(x,z,zm)=>{target.set(x,0,z);if(zm)zoom=zm;placeCam();const v=new THREE.Vector3(x,0,z).project(cam);return [+target.x.toFixed(1),+target.z.toFixed(1),+zoom.toFixed(2),+v.x.toFixed(2),+v.y.toFixed(2)]},eqv:()=>EQV,geo:()=>({ROOMS,PL,WALLS,PARTS,OUTW,roomAt}),STN:()=>STN,amb:()=>AMB,pieces:()=>PIECES};
@@ -7173,14 +7177,14 @@ function bakePerson(g){const u=g.userData;[u.b,u.lL,u.lR,u.aL,u.aR].forEach(bake
   document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true})})();
 // ---- a short cheer when a room is fully maxed (levels, staff and every cash upgrade) — the next town needs them all
 let MAXSEEN=null;setInterval(()=>{try{if(!S||!S.started||!S.st)return;const now=ORDER.filter(roomMaxed);if(MAXSEEN===null){MAXSEEN=new Set(now);return}
-  now.forEach(k=>{if(!MAXSEEN.has(k)){MAXSEEN.add(k);toast(`${ST[k].name} fully maxed! ${now.length}/${ORDER.length} rooms done`,'gold','⭐')}})}catch(e){}},1500);
+  now.forEach(k=>{if(!MAXSEEN.has(k)){MAXSEEN.add(k);toast(`${ST[k].name} maxed! ${now.length}/${ORDER.length} rooms`,'gold','⭐')}})}catch(e){}},1500);
 
 
 // ================= VIP =================
 let VIP=null;
 let VIPSPOT=V3(-1.4,0,6.6),CURB=V3(1.75,0,9.6);
 function vipReward(){return Math.max(600,Math.round(incomePerSec()*300/50)*50)}
-function startVIP(){if(VIP)return;SND.fx('vip');const L=vipRide(),RD=RIDES[SITE]||RIDES.ground;L.position.set(-26,RD.y,RD.z);VIP={L,state:'drive',t:0,reward:vipReward(),who:pick(VIPS),v:null,lab:null};toast('A VIP client is pulling up out the front!','gold')}
+function startVIP(){if(VIP)return;SND.fx('vip');const L=vipRide(),RD=RIDES[SITE]||RIDES.ground;L.position.set(-26,RD.y,RD.z);VIP={L,state:'drive',t:0,reward:vipReward(),who:pick(VIPS),v:null,lab:null};toast('VIP client arriving!','gold')}
 function vipLeave(happy){if(!VIP||!VIP.v)return;removeLabel(VIP.lab);VIP.lab=null;VIP.state='leave';VIP.happy=happy;setGoal(VIP.v,CURB)}
 function stepVIP(dt){
   if(!VIP){if(S.started&&!A){S.vipIn-=dt;if(S.vipIn<=0)startVIP()}return}
@@ -7190,18 +7194,18 @@ function stepVIP(dt){
   if(V.L.userData.rotor){V.L.userData.rotor.rotation.y+=dt*24;if(V.state!=='driveoff')V.L.position.y=RIDES.tower.y+Math.sin(clock*2.2)*.08}
   if(V.v){moveV(V.v,dt);animPerson(V.v.g,dt,V.v.walking,false)}
   if(V.state==='walkin'&&atGoal(V.v)){V.state='wait';V.t=0;const b=document.createElement('button');b.className='lb vipb';b.innerHTML=`<small>${S.vip?'👑 TAP TO SIGN':'VIP CLIENT'}</small>${fmt(V.reward)}`;b.onclick=e=>{e.stopPropagation();vipSheet()};V.lab=addLabel(b,null,'vip',V.v.g,2.05)}
-  if(V.state==='wait'){V.t+=dt;const da=0.6-V.v.g.rotation.y;V.v.g.rotation.y+=da*Math.min(1,dt*6);if(V.t>50&&!(openSheet&&openSheet.vip)){toast('The VIP got tired of waiting and left. Your reputation took a hit.','bad','⭐');addRep(-4,'Kept a VIP waiting');vipLeave(false)}}
+  if(V.state==='wait'){V.t+=dt;const da=0.6-V.v.g.rotation.y;V.v.g.rotation.y+=da*Math.min(1,dt*6);if(V.t>50&&!(openSheet&&openSheet.vip)){toast('The VIP left. Reputation down.','bad','⭐');addRep(-4,'Kept a VIP waiting');vipLeave(false)}}
   if(V.state==='leave'&&atGoal(V.v)){scene.remove(V.v.g);V.v=null;V.state='driveoff'}
   if(V.state==='driveoff'){let sp=Math.min(12,1+Math.max(0,V.L.position.x-CURB.x)*2.2);if(V.L.userData.rotor)V.L.position.y+=dt*1.2;for(const c of TRAFFIC){if(c.z!==11.2)continue;const dx=c.g.position.x-V.L.position.x;if(dx>0&&dx<4.8)sp=Math.min(sp,c.cur)}V.L.position.x+=sp*dt;if(V.L.position.x>28){scene.remove(V.L);VIP=null;S.vipIn=rnd(150,240)*(1.4-S.rep/100*.8)}}
 }
 function signVIP(){if(!VIP||!VIP.v)return;const [who]=VIP.who,r=VIP.reward;S.cash+=r;S.earned+=r;S.vips++;SND.fx('cash');addRep(4,'Signed a VIP client');addXP(15);
     pop(VIP.v.g.position.clone().setY(2.3),'+'+fmt(r),'big');for(let i=0;i<6;i++)setTimeout(()=>{if(VIP&&VIP.v)pop(VIP.v.g.position.clone().add(V3(rnd(-1,1),rnd(1.2,2.2),rnd(-1,1))),'$')},i*120);
-    toast(`${who} signed with you! +${fmt(r)}`,'gold');save();vipLeave(true)}
+    toast(`+${fmt(r)} · ${who} signed!`,'gold');save();vipLeave(true)}
 function vipSheet(){
   if(!VIP||VIP.state!=='wait')return;if(S.vip){closeSheet();signVIP();return}const [who,prop]=VIP.who;
-  sheet('VIP client','#d99a12',`<p><b>${esc(who)}</b> wants your agency to sell ${esc(prop)}. Sign them up and the fee lands straight in your account.</p>
+  sheet('VIP client','#d99a12',`<p><b>${esc(who)}</b> wants you to sell ${esc(prop)}.</p>
   <div class="welcome" style="color:#b07a00">${fmt(VIP.reward)}</div>
-  <button class="gbtn gold" id="vy"><span>Watch an ad to sign them<small>Free in the prototype</small></span><span class="price">▶ Ad</span></button>
+  <button class="gbtn gold" id="vy"><span>Sign them<small>${ADS.native?'Short video':'Free ad in the prototype'}</small></span><span class="price">▶ Ad</span></button>
   <button class="gbtn ghost center" id="vn"><span>No thanks</span></button>`);
   openSheet.vip=true;
   $('#vy').onclick=()=>{closeSheet();rewarded(signVIP)};
@@ -7266,7 +7270,7 @@ function refreshHUD(){
   const ac=aucCount(),ad=$('#aucDot');ad.hidden=!ac;ad.textContent=ac;
   const md=$('#mgrDot'),n=affordableMgrs();md.hidden=!n;md.textContent=n;
   const b=$('#boostBtn');if(boosted()){b.classList.add('on');$('#boostSub').textContent=mmss(S.boostUntil-Date.now())}else{b.classList.remove('on');$('#boostSub').textContent='Boost'}
-  $('#vipBtn').hidden=!(VIP&&['drive','walkin','wait'].includes(VIP.state));if(VIP)$('#vipTxt').textContent=VIP.state==='wait'?'Tap to meet them':'Pulling up now…';
+  $('#vipBtn').hidden=!(VIP&&['drive','walkin','wait'].includes(VIP.state));if(VIP)$('#vipTxt').textContent=VIP.state==='wait'?'Tap to meet':'Arriving…';
   updateTags();updateQuestHUD();
   if(openSheet&&openSheet.live)openSheet.live();
 }
@@ -7279,18 +7283,178 @@ function flyText(el,txt){const r=el.getBoundingClientRect(),f=document.createEle
 
 // ================= ADS =================
 let adBusy=false;
+// ================= STORE + ADS =================
+// In the phone app (Capacitor) purchases go through StoreKit / Google Play (cordova-plugin-purchase v13) and ads through
+// AdMob (@capacitor-community/admob). On the web, in an artifact, or if a plugin is missing, everything stays simulated:
+// purchases are granted on the spot and the ad is the 3-second fake. See STORE_iap.md.
+//
+// ┌───────────────────────────── OWNER: FILL THESE IN ─────────────────────────────┐
+const STORE_CFG={
+  // Product ids in App Store Connect and Play Console are prefix + key (keys and prices are listed in PRODUCTS.md).
+  prefix:'digital.studioden.agencyempire.',
+  // Optional receipt validation server (e.g. an iaptic.com validator URL). '' = trust the store's answer on the device.
+  validator:'',
+  admob:{
+    // true = Google's test ads (safe while developing). Set false only with your own ad unit ids below.
+    testing:true,
+    // Google's official TEST ad unit ids. Replace with your own from admob.google.com (Apps > Ad units).
+    // Your AdMob APP ids (the ones with ~) go in aeapp/codemagic.yaml: ADMOB_APP_ID_IOS / ADMOB_APP_ID_ANDROID.
+    ios:{interstitial:'ca-app-pub-3940256099942544/4411468910',rewarded:'ca-app-pub-3940256099942544/1712485313'},
+    android:{interstitial:'ca-app-pub-3940256099942544/1033173712',rewarded:'ca-app-pub-3940256099942544/5224354917'}
+  }
+};
+// └────────────────────────────────────────────────────────────────────────────────┘
+const CAPN=(()=>{const C=window.Capacitor;try{return C&&C.isNativePlatform&&C.isNativePlatform()?(C.getPlatform?C.getPlatform():'ios'):''}catch(e){return ''}})();
+
+const ADS=(()=>{
+  const AM=()=>{const C=window.Capacitor;return C&&C.Plugins&&C.Plugins.AdMob};
+  const NATIVE=!!(CAPN&&AM());
+  const ids=()=>STORE_CFG.admob[CAPN==='ios'?'ios':'android'];
+  let inited=null,att=null,CUR=null;
+  function init(){if(!NATIVE)return Promise.resolve();if(inited)return inited;
+    const on=(ev,f)=>{try{const r=AM().addListener(ev,f);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
+    on('onRewardedVideoAdReward',()=>{if(CUR&&CUR.kind==='r')CUR.got=true});
+    on('onRewardedVideoAdDismissed',()=>{const c=CUR;if(c&&c.kind==='r')setTimeout(()=>end(c),300)});
+    on('onRewardedVideoAdFailedToShow',()=>{if(CUR&&CUR.kind==='r')end(CUR,'fail')});
+    on('onRewardedVideoAdFailedToLoad',()=>{if(CUR&&CUR.kind==='r')end(CUR,'fail')});
+    on('interstitialAdDismissed',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
+    on('interstitialAdFailedToShow',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
+    on('interstitialAdFailedToLoad',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
+    inited=Promise.resolve().then(()=>AM().initialize({initializeForTesting:!!STORE_CFG.admob.testing})).catch(()=>{});return inited}
+  // iOS App Tracking Transparency: asked once, right before the first ad (whatever the answer, ads still play)
+  function track(){if(att)return att;
+    att=CAPN!=='ios'?Promise.resolve():Promise.resolve().then(()=>AM().trackingAuthorizationStatus()).then(s=>s&&s.status==='notDetermined'?AM().requestTrackingAuthorization():null).catch(()=>{});
+    return att}
+  const el=()=>$('#ad');let saved=null;
+  function overlay(on){const a=el();if(!a)return;const h=a.querySelector('h2'),p=a.querySelector('p'),c=a.querySelector('.cdn');
+    if(on){saved=[h.textContent,p.textContent];h.textContent='Loading ad…';p.textContent='Your reward lands when it ends.';if(c)c.style.visibility='hidden';a.hidden=false}
+    else{a.hidden=true;if(saved){h.textContent=saved[0];p.textContent=saved[1];saved=null}if(c)c.style.visibility=''}}
+  function end(c,why){if(!c||c.done||CUR!==c)return;c.done=true;CUR=null;clearTimeout(c.to);adBusy=false;try{SND.hush(false)}catch(e){}
+    if(c.kind!=='r')return;overlay(false);
+    if(c.got){c.cb();return}
+    toast(why==='fail'?'No ad right now. Try again soon.':why==='slow'?'Ad took too long. Try again soon.':'Ad closed early. No reward.','bad','📺')}
+  // rewarded: the reward is only paid when AdMob says it was earned. Never leaves the screen stuck: every path ends in end().
+  function rewarded(cb){if(adBusy)return;adBusy=true;const c=CUR={kind:'r',cb,got:false,done:false};overlay(true);
+    c.to=setTimeout(()=>end(c,'slow'),60000);
+    init().then(track).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c,'slow'),20000);
+      return Promise.resolve(AM().prepareRewardVideoAd({adId:ids().rewarded,isTesting:!!STORE_CFG.admob.testing})).then(()=>{if(c.done)return;
+        clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}
+        return Promise.resolve(AM().showRewardVideoAd()).then(r=>{if(r)c.got=true})})}).catch(()=>end(c,'fail'))}
+  // interstitial for the 5-minute ad break: no reward, failures are silent
+  function inter(){if(adBusy)return;adBusy=true;const c=CUR={kind:'i',done:false};c.to=setTimeout(()=>end(c),60000);
+    init().then(track).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),20000);
+      return Promise.resolve(AM().prepareInterstitial({adId:ids().interstitial,isTesting:!!STORE_CFG.admob.testing})).then(()=>{if(c.done)return;
+        clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}return AM().showInterstitial()})}).catch(()=>end(c))}
+  return {native:NATIVE,init,rewarded,inter};
+})();
+
+const STORE=(()=>{
+  const NATIVE=!!CAPN;
+  const gemKey=g=>'gems_'+g.n.toLowerCase();
+  let CAT=null;
+  // every product: nc = non-consumable (restorable), p = fallback A$ price label, n = name used in restore toasts
+  const cat=()=>{if(CAT)return CAT;CAT={vip:{nc:1,p:'A$9.99',n:'VIP'},vip_noads:{nc:1,p:'A$14.99',n:'VIP + No ads'},noads:{nc:1,p:'A$6.99',n:'Ad-free'},starter:{nc:1,p:'A$2.99',n:'Starter Pack'}};
+    MPACKS.forEach(P=>{CAT['mgr_'+P.id]={nc:1,p:P.p,n:P.n}});GEM_PACKS.forEach(g=>{CAT[gemKey(g)]={nc:0,p:g.p,n:g.g.toLocaleString('en-AU')+' diamonds'}});return CAT};
+  const pid=k=>STORE_CFG.prefix+k,keyOf=id=>id&&id.indexOf(STORE_CFG.prefix)===0&&cat()[id.slice(STORE_CFG.prefix.length)]?id.slice(STORE_CFG.prefix.length):null;
+  // VIP includes The Shark: he's hired the moment VIP switches on (purchase or restore) and takes his seat in the Board Room
+  function vipOn(msg){S.vip=true;S.mgr=S.mgr||{};S.mgr.shark=1;syncStations();try{refreshLogo();for(const k in STN)(STN[k].staff||[]).forEach(vipTrim)}catch(e){}
+    if(msg){toast(msg,'gold','👑');const b=$('#cashBtn');if(b)flyText(b,'+25%')}}
+  // what each product gives (q = quiet, for restores). Non-consumables are idempotent: owning one twice changes nothing.
+  // Returns true when something new was granted.
+  function give(k,q){
+    if(k==='vip'){if(S.vip){if(S.mgr&&!S.mgr.shark){S.mgr.shark=1;syncStations();return true}return false}vipOn(q?null:'Welcome to VIP! The Shark is on your team.');return true}
+    if(k==='vip_noads'){if(S.vip&&S.noAds){if(S.mgr&&!S.mgr.shark){S.mgr.shark=1;syncStations();return true}return false}const had=S.vip;S.noAds=true;if(!had)vipOn(q?null:'Welcome to VIP! The Shark is on your team and ads are gone.');else if(!q)toast('Ads removed.','good','🚫');return true}
+    if(k==='noads'){if(S.noAds)return false;S.noAds=true;if(!q)toast('Ads removed.','good','🚫');return true}
+    if(k==='starter'){if(S.starter)return false;S.starter=true;S.gems+=300;S.cash+=packCash(6);S.boostUntil=Math.max(Date.now(),S.boostUntil)+2*3600e3;if(!q)toast('Starter Pack unlocked!','gold','🎁');return true}
+    if(k.indexOf('mgr_')===0){const P=MPACKS.find(p=>'mgr_'+p.id===k);if(!P||!P.k.some(m=>!S.mgr[m]))return false;
+      if(q){P.k.forEach(m=>{S.mgr[m]=1});syncStations()}else buyMgrPack(P.id);return true}
+    const g=GEM_PACKS.find(x=>gemKey(x)===k);if(!g)return false;
+    S.gems+=g.g;if(!q)toast(`+${g.g.toLocaleString('en-AU')} diamonds`,'gold','gem');return true}
+  function grant(k,q){const r=give(k,q);if(r){save();refreshHUD()}return r}
+
+  // ---- native store (cordova-plugin-purchase v13)
+  let CP=null,st=null,readyP=null,RST=null;const WAIT={};
+  function settle(k,ok){const w=WAIT[k];if(!w)return;delete WAIT[k];clearTimeout(w.t);w.res(ok)}
+  // a transaction the store has approved (and verified): grant it once, persist, then the caller finishes it
+  function paid(tx){const prods=tx.products||[];
+    prods.forEach(p=>{const k=keyOf(p.id);if(!k)return;const C=cat()[k];
+      if(C.nc){const q=!!RST;if(grant(k,q)&&q)RST.push(C.n)}
+      else{const tid=String(tx.transactionId||'');S.iapTx=Array.isArray(S.iapTx)?S.iapTx:[];
+        if(tid&&S.iapTx.indexOf(tid+'|'+k)>=0){settle(k,true);return}
+        if(tid){S.iapTx.push(tid+'|'+k);if(S.iapTx.length>300)S.iapTx.splice(0,S.iapTx.length-300)}
+        grant(k,false);save()}
+      settle(k,true)})}
+  function pending(tx){(tx.products||[]).forEach(p=>{const k=keyOf(p.id);if(k&&WAIT[k]){toast('Waiting for approval. It’ll arrive once approved.','gold','⏳');settle(k,false)}})}
+  // anything the store says is owned is switched on (covers reinstalls on Android and finished restores)
+  function syncOwned(){if(!st)return [];const got=[];Object.keys(cat()).forEach(k=>{if(cat()[k].nc&&!WAIT[k]&&st.owned(pid(k))&&grant(k,true))got.push(cat()[k].n)});return got}
+  function setup(){CP=window.CdvPurchase;st=CP.store;const plat=CAPN==='ios'?CP.Platform.APPLE_APPSTORE:CP.Platform.GOOGLE_PLAY;
+    try{st.verbosity=CP.LogLevel.WARNING}catch(e){}
+    if(STORE_CFG.validator)st.validator=STORE_CFG.validator;
+    st.register(Object.keys(cat()).map(k=>({id:pid(k),type:cat()[k].nc?CP.ProductType.NON_CONSUMABLE:CP.ProductType.CONSUMABLE,platform:plat})));
+    st.when()
+      .approved(tx=>tx.verify())
+      .verified(rc=>{const txs=(rc.sourceReceipt&&rc.sourceReceipt.transactions)||[];txs.forEach(tx=>{if(tx.state===CP.TransactionState.APPROVED)paid(tx)});rc.finish()})
+      .unverified(rc=>{try{(rc.receipt&&rc.receipt.transactions||[]).forEach(tx=>(tx.products||[]).forEach(p=>{const k=keyOf(p.id);if(k&&WAIT[k]){toast('Purchase not confirmed. You weren’t charged.','bad');settle(k,false)}}))}catch(e){}})
+      .pending(pending)
+      .receiptUpdated(()=>{const got=syncOwned();if(got.length&&!RST)toast('Restored: '+got.join(', ')+'.','good','✅')});
+    st.error(()=>{});
+    return Promise.resolve(st.initialize([plat])).then(()=>true,()=>true)}
+  function init(){if(!NATIVE||readyP)return;ADS.init();
+    readyP=new Promise(res=>{let n=0;const t=()=>{if(window.CdvPurchase&&window.CdvPurchase.store)return res(true);if(++n>40)return res(false);setTimeout(t,150)};t()})
+      .then(ok=>ok?setup():false).catch(()=>false)}
+  const ready=()=>{if(!readyP)init();return readyP||Promise.resolve(false)};
+  const real=()=>!!st;
+  // simulated purchase (web, artifact, or app without the plugin): granted on the spot, exactly like the prototype
+  function sim(k){grant(k,false);return true}
+  function buy(k){if(!cat()[k])return Promise.resolve(false);if(!NATIVE)return Promise.resolve(sim(k));
+    return ready().then(ok=>{if(!ok||!st)return sim(k);
+      const p=st.get(pid(k));
+      if(p&&cat()[k].nc&&st.owned(pid(k))){if(!grant(k,false))toast('You already own this. It’s active.','good','✅');return true}
+      if(!p||!p.canPurchase){toast(p?'Not available right now.':'Can’t reach the store. Check your connection.','bad');return false}
+      if(WAIT[k])return false;
+      return new Promise(res=>{const w=WAIT[k]={res,t:0};
+        const fail=err=>{if(WAIT[k]!==w)return;const cx=err&&CP.ErrorCode&&err.code===CP.ErrorCode.PAYMENT_CANCELLED;
+          toast(cx?'Purchase cancelled. No charge.':'Purchase failed. No charge.',cx?'':'bad',cx?'🛒':null);settle(k,false)};
+        let o=null;try{o=p.getOffer()}catch(e){}
+        if(!o){fail(null);return}
+        Promise.resolve(st.order(o)).then(err=>{if(err){fail(err);return}
+          // the store sheet is done but nothing came back yet: free the button; a late approval still gets granted
+          if(WAIT[k]===w)w.t=setTimeout(()=>{if(WAIT[k]===w)settle(k,false)},90000)},()=>fail(null))})})}
+  function restore(){
+    const done='Purchases restored.';
+    if(!NATIVE){toast(done,'good','✅');return Promise.resolve(true)}
+    return ready().then(ok=>{if(!ok||!st){toast(done,'good','✅');return true}
+      toast('Checking your purchases…','','🔄');RST=[];
+      return Promise.resolve(st.restorePurchases()).then(err=>new Promise(r=>setTimeout(()=>r(err),1500))).then(err=>{
+        const got=RST.concat(syncOwned()).filter((v,i,a)=>a.indexOf(v)===i);RST=null;
+        if(err&&!got.length){toast('Can’t reach the store. Check your connection.','bad');return false}
+        const own=Object.keys(cat()).some(k=>cat()[k].nc&&st.owned(pid(k)));
+        toast(got.length?'Restored: '+got.join(', ')+'.':own?'Everything’s already active.':'No past purchases found.',got.length||own?'good':'',got.length||own?'✅':'🔍');return true},
+      ()=>{RST=null;toast('Can’t reach the store. Check your connection.','bad');return false})})}
+  // store-localised price once the store has loaded, the A$ label otherwise
+  function price(k,fb){if(st){try{const p=st.get(pid(k)),pr=p&&p.pricing;if(pr&&pr.price)return pr.price}catch(e){}}return fb}
+  const localised=k=>price(k,null)!=null;
+  // a buy button: disabled while the store sheet is up (app only); ok() runs after a confirmed purchase
+  function tap(btn,k,ok){if(btn&&btn._iap)return;const pr=buy(k);if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
+    pr.then(r=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false}if(r&&ok&&(!NATIVE||!btn||btn.isConnected))ok()})}
+  function restoreTap(btn,after){if(btn&&btn._iap)return;if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
+    restore().then(()=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false;if(after&&btn.isConnected)after()}})}
+  return {native:NATIVE,get ready(){return real()},init,buy,restore,price,localised,tap,restoreTap,gemKey,cat,pid};
+})();
+const mpkPrice=P=>STORE.price('mgr_'+P.id,P.p);
+const mpkFrom=list=>{const P=list.slice().sort((a,b)=>parseFloat(a.p.slice(2))-parseFloat(b.p.slice(2)))[0];return P?mpkPrice(P):''};
 function playAd(cb){if(adBusy)return;adBusy=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;cb()}},1000)}
-function rewarded(cb){if(S.noAds)cb();else playAd(cb)}
+function rewarded(cb){if(S.noAds)cb();else if(ADS.native)ADS.rewarded(cb);else playAd(cb)}
 // a short ad break every 5 minutes of play, from the third town on (never for VIP or ad-free players; it waits until nothing is open)
 let adPlay=0;const AD_EVERY=300;
 setInterval(()=>{if(!S||!S.started||document.hidden||S.noAds||S.vip||(S.town|0)<2||S.tut<99)return;adPlay++;
-  if(adPlay<AD_EVERY||adBusy||A||TU||document.body.classList.contains('sheet-on'))return;adPlay=0;
-  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='In the App Store version a short ad plays here every few minutes. VIP or Remove ads turns these off.';
+  if(adPlay<AD_EVERY||adBusy||A||TU||document.body.classList.contains('sheet-on')||performance.now()-(window.SHUT||0)<4000)return;adPlay=0;if(ADS.native){ADS.inter();return}
+  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='A short ad plays here every few minutes in the app. VIP or Remove ads stops them.';
   playAd(()=>{p.textContent=pt})},1000);
 
 // ================= SHEETS =================
 let openSheet=null,holdStop=null;
-const TITLE_IC={'Managers':'#mgrBtn','Shop':'#shopBtn','Goals':'🎯','VIP client':'⭐','Double income':'⚡','Your agency':'🏢','Your office':'#upBtn','Welcome back!':'💰','Welcome to Saltbrook':'👋'};
+const TITLE_IC={'Managers':'#mgrBtn','Shop':'#shopBtn','Goals':'🎯','VIP client':'⭐','Double income':'⚡','Your agency':'🏢','Office':'#upBtn','Welcome back!':'💰','Welcome to Saltbrook':'👋'};
 function sheet(title,color,body,live,lvl,icon){
   if(holdStop)holdStop();icon=icon||TITLE_IC[title]||'';
   const sc=$('#sheet'),prev=sc.querySelector('.sheet'),re=!sc.hidden&&prev&&prev.dataset.t===title,st=re?prev.scrollTop:0;
@@ -7299,12 +7463,15 @@ function sheet(title,color,body,live,lvl,icon){
   sc.innerHTML=`<div class="sheet${re?' re':''}" data-t="${esc(title)}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sh-head" style="--hc:${color};--hc2:${shade(color,-.14)}">${ic}<h2>${esc(title)}</h2>${lvl!=null?`<span class="lvl" id="shLvl">${lvl}</span>`:''}<button class="x" aria-label="Close">×</button></div><div class="sh-body">${body}</div></div>`;
   if(re)sc.querySelector('.sheet').scrollTop=st;
   sc.querySelector('.x').onclick=closeSheet;sc.onclick=e=>{if(e.target===sc)closeSheet()};
-  openSheet={live};if(live)live();
+  const os0=re&&openSheet?openSheet:null;openSheet={live,back:os0?os0.back:null,onClose:os0?os0.onClose:null};if(live)live();if(!re){sc._t0=sc._tl=performance.now();sc._tp=TAPP}
 }
 function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
-function afford(el,ok,kind){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'')}
-function needFunds(kind){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Clients are paying you, it won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200){toast('Not enough cash yet. Your agents are earning it now.','bad','💵');return}closeSheet();shopSheet(kind);toast(kind==='gems'?'Not enough diamonds. Grab some here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
-function closeSheet(){if(holdStop)holdStop();$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe()}
+function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
+function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200){toast('Not enough cash yet. Nearly there.','bad','💵');return}if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;if(inc>.01&&gap/inc<=60){toast(`Not enough cash. ${Math.max(1,Math.ceil(gap/inc))}s away.`,'bad','💵');return}}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
+function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
+// a quick double tap on a dock button never lands on the sheet that just slid up under the finger
+let TAPP=null;window.addEventListener('pointerdown',e=>{if(e.isTrusted&&!(e.target&&e.target.closest&&e.target.closest('#sheet .sheet')))TAPP={x:e.clientX,y:e.clientY}},true);
+['pointerdown','pointerup','click','touchstart','touchend','mousedown','mouseup'].forEach(ev=>window.addEventListener(ev,e=>{const sc=$('#sheet');if(!e.isTrusted||!sc||sc.hidden||!sc._t0)return;const t=e.target;if(!t||!t.closest||!t.closest('#sheet .sheet'))return;const n=performance.now(),p=e.changedTouches?e.changedTouches[0]:e,same=sc._tp&&p&&Math.hypot(p.clientX-sc._tp.x,p.clientY-sc._tp.y)<36&&n-sc._tl<450;if(n-sc._t0>320&&!same)return;sc._tl=n;e.stopImmediatePropagation();e.stopPropagation();if(e.cancelable)e.preventDefault()},{capture:true,passive:false}));
 // frame the room being managed in the clear strip between the HUD and the sheet, then fly back on close
 let camRet=null,camFrK=null;
 function frameRoom(k){if(A||!STN[k]||!STN[k].center)return;$('#sheet').classList.add('framed');requestAnimationFrame(()=>{const sh=$('#sheet .sheet');if(!sh||A)return;
@@ -7314,7 +7481,8 @@ function frameRoom(k){if(A||!STN[k]||!STN[k].center)return;$('#sheet').classList
     zm=clamp(cw*wpx/(span*innerWidth),1.3,2.6),u=cw/zm/innerWidth,dy=py-innerHeight/2,c=s.center.clone().addScaledVector(FWD,dy*u/SINE);
   flyTo(c.x,c.z,zm,.55)})}
 /* eslint-disable no-func-assign */
-stationSheet=(f=>k=>{f(k);frameRoom(k)})(stationSheet);boardSheet=(f=>()=>{f();frameRoom('board')})(boardSheet);unlockSheet=(f=>k=>{f(k);frameRoom(k)})(unlockSheet);
+stationSheet=(f=>k=>{f(k);if(openSheet)openSheet.back=()=>stationSheet(k);frameRoom(k)})(stationSheet);boardSheet=(f=>()=>{f();if(openSheet)openSheet.back=()=>boardSheet();frameRoom('board')})(boardSheet);unlockSheet=(f=>k=>{f(k);if(openSheet)openSheet.back=()=>S.st[k]&&S.st[k].on?stationSheet(k):unlockSheet(k);frameRoom(k)})(unlockSheet);
+addEventListener('resize',()=>{clearTimeout(window.__rfT);window.__rfT=setTimeout(()=>{const sc=$('#sheet');if(camFrK&&sc&&!sc.hidden&&sc.classList.contains('framed')){const k=camFrK;camFrK=null;frameRoom(k)}},150)});
 function unframe(){if(!camRet)return;const r=camRet;camRet=null;camFrK=null;if(!A)flyTo(r.x,r.z,r.zm,.5)}
 function holdBtn(el,fn){
   let t=null,iv=170,on=false;
@@ -7326,15 +7494,15 @@ function holdBtn(el,fn){
   el.addEventListener('contextmenu',e=>e.preventDefault());
   el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
 }
-function buyLevel(k){if(S.st[k].lv>=MAXLV)return false;const c=upCost(k);if(S.cash<c)return false;S.cash-=c;S.st[k].lv++;SND.fx(MILES.includes(S.st[k].lv)?'milestone':'upgrade');if(MILES.includes(S.st[k].lv)){addXP(10);toast(`${ST[k].name} hit level ${S.st[k].lv}! Income doubled and the room got an upgrade.`,'gold','✨');roomLook(k);roomFx(k,'×2 Room upgraded!')}refreshHUD();return true}
+function buyLevel(k){if(S.st[k].lv>=MAXLV)return false;const c=upCost(k);if(S.cash<c)return false;S.cash-=c;S.st[k].lv++;SND.fx(MILES.includes(S.st[k].lv)?'milestone':'upgrade');if(MILES.includes(S.st[k].lv)){addXP(10);toast(`${ST[k].name} level ${S.st[k].lv}! Income ×2 + new look.`,'gold','✨');roomLook(k);roomFx(k,'×2 income!')}refreshHUD();return true}
 function eqRowsHTML(k){return ITEMS[k].map(it=>`<div class="li" id="eq-${it.id}"><span class="eqi">${it.i}</span><div><h3>${it.n}</h3><p data-fx></p><div class="pips">${[1,2,3].map(i=>`<i data-pip="${i}"></i>`).join('')}</div></div><button class="mini" data-eq="${it.id}"></button></div>`).join('')}
 function boostsHTML(k){const sp=SPECIAL[k],mg=MGR[k];return `<div class="li gold"><span class="eqi" style="background:linear-gradient(#c89bff,#7c3fd6)">${GEMI()}</span><div><h3>${sp.n}</h3><p>${sp.fx}</p></div><button class="mini gem" id="spb"></button></div>
-  ${mg?`<div class="li" id="mgRow"><span class="eqi" style="background:#eadcff">👔</span><div><h3>Manager: ${mg.n}</h3><p>${mg.fx}</p></div><button class="mini gem" id="mgb"></button></div>`:''}<p style="font-size:12px;text-align:center">Diamond boosts are permanent and come with you when you move town.</p>`}
+  ${mg?`<div class="li" id="mgRow"><span class="eqi" style="background:#eadcff">👔</span><div><h3>Manager: ${mg.n}</h3><p>${mg.fx}</p></div><button class="mini gem" id="mgb"></button></div>`:''}<p style="font-size:12px;text-align:center">Diamond boosts are permanent, in every town.</p>`}
 function extrasLive(k){
   for(const it of ITEMS[k]){const row=$('#eq-'+it.id);if(!row)continue;const tier=eqT(k,it.id),btn=row.querySelector('button');
     row.querySelector('[data-fx]').textContent=tier<3?`${fxText(it.t,tier)} → ${fxText(it.t,tier+1)}`:fxText(it.t,tier);
     row.querySelectorAll('[data-pip]').forEach(p=>p.classList.toggle('on',+p.dataset.pip<=tier));
-    if(tier>=3){btn.textContent='Maxed';btn.className='mini ghost';btn.disabled=true;btn.dataset.need='';row.classList.add('done')}else{btn.textContent=fmt(eqCost(k,it));afford(btn,S.cash>=eqCost(k,it),'cash')}}
+    if(tier>=3){btn.textContent='Maxed';btn.className='mini ghost';btn.disabled=true;btn.dataset.need='';row.classList.add('done')}else{btn.textContent=fmt(eqCost(k,it));afford(btn,S.cash>=eqCost(k,it),'cash',eqCost(k,it))}}
   const sp=SPECIAL[k],mg=MGR[k],sb=$('#spb'),mb=$('#mgb');
   if(sb){if(S.sp[k]){sb.textContent='Owned';sb._h=null;sb.className='mini ghost';sb.disabled=true;sb.dataset.need=''}else{setH(sb,sp.g+GEMIC);afford(sb,S.gems>=sp.g,'gems')}}
   if(mb){if(S.mgr[k]){mb.textContent='Hired';mb._h=null;mb.className='mini ghost';mb.disabled=true;mb.dataset.need='';$('#mgRow').classList.add('done')}else{setH(mb,mg.g+GEMIC);afford(mb,S.gems>=mg.g,'gems')}}
@@ -7356,8 +7524,8 @@ function stationSheet(k){
       ${k==='auction'?'<button class="gbtn red" id="run"><span id="runl"></span><span class="price" id="runc"></span></button>':''}
       <div class="mile" id="mile"><div class="r"><span>Next milestone</span><b id="mt"></b></div><div class="mbar"><i id="mb"></i></div></div>
       <button class="gbtn hold" id="upg"><span>Upgrade<small id="ut"></small></span><span class="price" id="uc"></span></button>
-      <div class="hint">Tap or hold to upgrade fast</div>
-      <button class="gbtn blue" id="hire"><span id="hl">${k==='sales'?'Hire an agent<small>Opens another sales desk</small>':'Hire staff<small>Serve another client at once</small>'}</span><span class="price" id="hc"></span></button>
+      <div class="hint">Hold to upgrade fast</div>
+      <button class="gbtn blue" id="hire"><span id="hl">${k==='sales'?'Hire agent<small>+1 sales desk</small>':'Hire staff<small>+1 client at a time</small>'}</span><span class="price" id="hc"></span></button>
       <p style="font-size:13px;text-align:center">${D_.desc}</p>
     </div>
     <div class="pane" data-p="eq" hidden><div class="list">${eqRowsHTML(k)}</div></div>
@@ -7365,31 +7533,31 @@ function stationSheet(k){
   ()=>{
     if(!$('#sv'))return;
     $('#shLvl').textContent='Lv '+st.lv;$('#sv').textContent=fmt(value(k));if(D_.special){$('#stt').textContent=SEATS.filter(q=>q.k===k).length;$('#ss').textContent='×'+(1/wrCalm()).toFixed(1)}else{$('#stt').textContent=svcTime(k).toFixed(1)+'s';$('#ss').textContent=st.slots+'/'+slotMax(k)}
-    const nm=nextMile(st.lv),prev=MILES.filter(m=>m<=st.lv).pop()||1;$('#mile').hidden=!nm;if(nm){$('#mt').textContent=`Lv ${nm}: income ×2 + room upgrade`;$('#mb').style.width=((st.lv-prev)/(nm-prev)*100)+'%'}
-    if(st.lv>=MAXLV){$('#ut').textContent='This room is fully upgraded';$('#uc').textContent='MAX';afford($('#upg'),true);$('#upg').disabled=true}else{$('#ut').textContent=`${fmt(value(k))} → ${fmt(value(k,st.lv+1))} per client`;$('#uc').textContent=upCost(k)?fmt(upCost(k)):'FREE';afford($('#upg'),S.cash>=upCost(k),'cash')}
-    const h=$('#hire');h.hidden=!!D_.special;if(D_.special){}else if(st.slots<slotMax(k)){$('#hc').textContent=fmt(hireCost(k));$('#hc').hidden=false;afford(h,S.cash>=hireCost(k),'cash')}else{$('#hl').textContent='Fully staffed';$('#hc').hidden=true;afford(h,true);h.disabled=true}
-    if(k==='auction'){const n=aucCount();$('#runl').textContent=n?'Go to the next auction':'No auctions booked';$('#runc').textContent=n?n+' booked':'';$('#run').disabled=!n}
+    const nm=nextMile(st.lv),prev=MILES.filter(m=>m<=st.lv).pop()||1;$('#mile').hidden=!nm;if(nm){$('#mt').textContent=`Lv ${nm}: income ×2 + new look`;$('#mb').style.width=((st.lv-prev)/(nm-prev)*100)+'%'}
+    if(st.lv>=MAXLV){const mx_=roomMaxed(k);$('#ut').textContent=mx_?'Fully maxed':'Max out staff and equipment';$('#uc').textContent=mx_?'MAX':'Top level';afford($('#upg'),true);$('#upg').disabled=true}else{$('#ut').textContent=`${fmt(value(k))} → ${fmt(value(k,st.lv+1))} per client`;$('#uc').textContent=upCost(k)?fmt(upCost(k)):'FREE';afford($('#upg'),S.cash>=upCost(k),'cash',upCost(k))}
+    const h=$('#hire');h.hidden=!!D_.special;if(D_.special){}else if(st.slots<slotMax(k)){$('#hc').textContent=fmt(hireCost(k));$('#hc').hidden=false;afford(h,S.cash>=hireCost(k),'cash',hireCost(k))}else{$('#hl').textContent='Fully staffed';$('#hc').hidden=true;afford(h,true);h.disabled=true}
+    if(k==='auction'){const n=aucCount();$('#runl').textContent=n?'Run next auction':'No auctions booked';$('#runc').textContent=n?n+' booked':'';$('#run').disabled=!n}
     extrasLive(k);
   },'Lv '+st.lv,DEPT_IC[k]);
   const setTab=t=>{lastTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.pane').forEach(p=>p.hidden=p.dataset.p!==t)};
   document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.t));setTab(lastTab);
   holdBtn($('#upg'),()=>buyLevel(k));if(k==='auction')$('#run').onclick=()=>{if(aucCount())startAuction()};
-  $('#hire').onclick=()=>{const c=hireCost(k);if(st.slots>=slotMax(k)||S.cash<c)return;S.cash-=c;st.slots++;SND.fx('hire');syncStations();toast(k==='sales'?'New agent moved into their office.':'New staff member on the floor.','good');save();refreshHUD()};
+  $('#hire').onclick=()=>{const c=hireCost(k);if(st.slots>=slotMax(k)||S.cash<c)return;S.cash-=c;st.slots++;SND.fx('hire');syncStations();toast(k==='sales'?'New agent hired!':'New staff hired!','good');save();refreshHUD()};
   extrasWire(k);
 }
-function hireMgr(k){if(S.mgr[k])return;if(k==='shark'&&!S.vip){vipPassSheet();return}const cost=k==='shark'?0:MGR[k].g;if(S.gems<cost)return;if(k!=='shark'&&!S.st[k].on){toast(`Build the ${ST[k].name} first.`,'bad');return}S.gems-=cost;S.mgr[k]=1;syncStations();toast(`${MGR[k].n} is on the floor!`,'gold');save();refreshHUD()}
+function hireMgr(k){if(S.mgr[k])return;if(k==='shark'&&!S.vip){vipPassSheet();return}const cost=k==='shark'?0:MGR[k].g;if(S.gems<cost)return;if(k!=='shark'&&!S.st[k].on){toast(`Build the ${ST[k].name} first.`,'bad');return}S.gems-=cost;S.mgr[k]=1;syncStations();toast(`${MGR[k].n} hired!`,'gold');save();refreshHUD()}
 function unlockSheet(k){if(k==='board'){boardSheet();return}const D_=ST[k],c=unlockCost(k);
-  sheet(D_.name,D_.col,`<div class="li"><span class="eqi">${DEPT_IC[k]}</span><div><h3>Build the ${D_.name}</h3><p>${D_.desc}</p></div><span></span></div><button class="gbtn" id="ub"><span>Build it</span><span class="price">${fmt(c)}</span></button>`,()=>{afford($('#ub'),S.cash>=c,'cash')},null,DEPT_IC[k]);
+  sheet(D_.name,D_.col,`<div class="li"><span class="eqi">${DEPT_IC[k]}</span><div><h3>Build ${D_.name}</h3><p>${D_.desc}</p></div><span></span></div><button class="gbtn" id="ub"><span>Build</span><span class="price">${fmt(c)}</span></button>`,()=>{afford($('#ub'),S.cash>=c,'cash',c)},null,DEPT_IC[k]);
   $('#ub').onclick=()=>{unlock(k);closeSheet()}}
 function unlock(k){if(S.st[k].on)return;const c=unlockCost(k);if(S.cash<c){toast(`Need ${fmt(c)} to build ${ST[k].name}.`,'bad');return}SND.fx('build');S.cash-=c;S.st[k].on=true;syncStations();addXP(20);toast(`${ST[k].name} is open!`,'good');save();refreshHUD()}
 function upgradesSheet(){
   const ks=[...ORDER,'board'];
   const rows=ks.map(k=>`<div class="li" data-row="${k}" style="cursor:pointer"><span class="eqi">${DEPT_IC[k]}</span><div><h3></h3><p></p></div><button class="mini"></button></div>`).join('');
-  sheet('Your office','#2fa83d',`<div class="mile"><div class="r"><span>Rooms built in ${TW.n}</span><b id="rb"></b></div><div class="mbar"><i id="rbb"></i></div></div><div class="mile"><div class="r"><span>Rooms fully maxed</span><b id="rmx"></b></div><div class="mbar"><i id="rmxb"></i></div></div><div class="list">${rows}</div>`,()=>{
+  sheet('Office','#2fa83d',`<div class="mile"><div class="r"><span>Rooms built in ${TW.n}</span><b id="rb"></b></div><div class="mbar"><i id="rbb"></i></div></div><div class="mile"><div class="r"><span>Rooms maxed</span><b id="rmx"></b></div><div class="mbar"><i id="rmxb"></i></div></div><div class="list">${rows}</div>`,()=>{
     if(!$('#rb'))return;const n=roomsBuilt();$('#rb').textContent=n+' / '+roomsTotal();$('#rbb').style.width=(n/roomsTotal()*100)+'%';{const m=maxedN();$('#rmx').textContent=m+' / '+ORDER.length;$('#rmxb').style.width=(m/ORDER.length*100)+'%'}
     for(const k of ks){const r=document.querySelector(`[data-row="${k}"]`);if(!r)continue;const b=r.querySelector('button'),h3=r.querySelector('h3'),p=r.querySelector('p');
-      if(k==='board'){h3.textContent='Board Room';const bc=BOARD_COST*TW.cost;if(!boardAvail()){p.textContent='Opens in '+TOWNS[BOARD_TOWN].n;b.textContent='🔒';b.className='mini ghost';b.dataset.need='';b.disabled=false}else if(!S.board.on){p.textContent='Not built yet';b.textContent=fmt(bc);afford(b,S.cash>=bc,'cash')}else{p.textContent=Date.now()>=S.board.next?(hasMgrs()?'Meeting ready':'Needs a manager'):'Next meeting '+mmss(S.board.next-Date.now());b.textContent='Open';afford(b,true)}continue}
-      const st=S.st[k];if(!st.on){h3.textContent=ST[k].name;p.textContent='Not built yet';b.textContent=fmt(unlockCost(k));afford(b,S.cash>=unlockCost(k),'cash')}
+      if(k==='board'){h3.textContent='Board Room';const bc=BOARD_COST*TW.cost;if(!boardAvail()){p.textContent='Opens in '+TOWNS[BOARD_TOWN].n;b.textContent='🔒';b.className='mini ghost';b.dataset.need='';b.disabled=false}else if(!S.board.on){p.textContent='Not built yet';b.textContent=fmt(bc);afford(b,S.cash>=bc,'cash',bc)}else{p.textContent=Date.now()>=S.board.next?(hasMgrs()?'Meeting ready':'Needs a manager'):'Next meeting '+mmss(S.board.next-Date.now());b.textContent='Open';afford(b,true)}continue}
+      const st=S.st[k];if(!st.on){h3.textContent=ST[k].name;p.textContent='Not built yet';b.textContent=fmt(unlockCost(k));afford(b,S.cash>=unlockCost(k),'cash',unlockCost(k))}
       else{const mx=roomMaxed(k);h3.textContent=`${ST[k].name} · Lv ${st.lv}${mx?' ⭐':''}`;if(mx)p.textContent='Fully maxed';else p.textContent=ST[k].special?`${fmt(value(k))} per seated client · ${SEATS.filter(q=>q.k===k).length} seats`:`${fmt(value(k))} per client · ${st.slots} staff`;b.textContent='Open';afford(b,true)}}},null,'🏢');
   document.querySelectorAll('[data-row]').forEach(r=>r.onclick=()=>{const k=r.dataset.row;if(k==='board'){boardSheet();return}if(!S.st[k].on){unlockSheet(k);return}stationSheet(k)});
 }
@@ -7406,41 +7574,41 @@ const MPACKS=[
  {id:'growth',n:'Growth Trio',d:'Bec, Baz and Pam: more walk-ins and faster teams.',k:['marketing','coffee','admin'],p:'A$4.99',v:'A$6.49'},
  {id:'power',n:'Power Pair',d:'Rita and Harris: rent roll and the auction floor.',k:['pm','auction'],p:'A$4.99',v:'A$6.99'}];
 function buyMgrPack(id){const P=MPACKS.find(p=>p.id===id),fresh=P.k.filter(k=>!S.mgr[k]);if(!fresh.length)return;fresh.forEach(k=>S.mgr[k]=1);syncStations();vibFx('gold');SND.fx('gold');
-  const later=fresh.filter(k=>!S.st[k].on).length;toast(fresh.length>1?`${fresh.length} managers signed!${later?' They start as soon as their rooms are built.':''}`:`${MGR[fresh[0]].n} signed!`,'gold','👔');save();refreshHUD();if(tOpen()==='Managers')managersSheet()}
+  const later=fresh.filter(k=>!S.st[k].on).length;toast(fresh.length>1?`${fresh.length} managers hired!${later?' They start when their rooms open.':''}`:`${MGR[fresh[0]].n} hired!`,'gold','👔');save();refreshHUD();if(tOpen()==='Managers')managersSheet()}
 // what the missing managers would add to income right now (pure estimate: flips S.mgr temporarily)
 function mgrGain(keys){const miss=keys.filter(k=>!S.mgr[k]);if(!miss.length)return 0;const a=incomePerSec();miss.forEach(k=>S.mgr[k]=1);const b=incomePerSec();miss.forEach(k=>delete S.mgr[k]);return Math.max(0,b-a)}
 const mpkLeft=()=>MPACKS.filter(P=>P.k.some(k=>!S.mgr[k]));
-function mgrPacksHTML(){const left=mpkLeft();if(!left.length)return '';const from=left.map(P=>P.p).sort((a,b)=>parseFloat(a.slice(2))-parseFloat(b.slice(2)))[0];
+function mgrPacksHTML(){const left=mpkLeft();if(!left.length)return '';const from=mpkFrom(left);
   if(Date.now()<(S.mpkHide||0))return `<button class="mpk-mini" id="mpkShow"><span class="mpk-faces">${MGR7.slice(0,3).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Manager deals</b><small>from ${from}</small></span><i>›</i></button>`;
   const all=left.find(P=>P.id==='all'),rest=left.filter(P=>P.id!=='all'),miss=MGR7.filter(k=>!S.mgr[k]),g=mgrGain(miss);
   return `<div class="mpk-hero"><button class="mpk-x" id="mpkHide">Not now</button>
     <div class="mpk-faces">${miss.map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div>
     <b class="mpk-h">Double every room. For good.</b>
-    <small class="mpk-s">${miss.length===7?'All 7 managers':'Your last '+miss.length+' managers'}, hired today. They travel to every town and fill your Board Room.</small>
-    ${g>0?`<span class="mpk-gain">+${fmt(g)}/s to your income right now</span>`:''}
-    ${all?`<button class="gbtn gold mpk-b" data-bp="all"><span>Hire ${miss.length===7?'all 7':'them all'}</span><span class="price"><s>${all.v}</s>${all.p}</span></button>`:''}
-    ${rest.length?`<div class="mpk-row">${rest.map(P=>`<button class="mpk-chip" data-bp="${P.id}"><span class="mpk-faces">${P.k.map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><b>${P.n}</b><em>${P.p}</em></button>`).join('')}</div>`:''}</div>`}
+    <small class="mpk-s">${miss.length===7?'All 7 managers':'Your last '+miss.length+' managers'}. Every town, plus your Board Room.</small>
+    ${g>0?`<span class="mpk-gain">+${fmt(g)}/s income, now</span>`:''}
+    ${all?`<button class="gbtn gold mpk-b" data-bp="all"><span>Hire ${miss.length===7?'all 7':'them all'}</span><span class="price">${STORE.localised('mgr_all')?'':`<s>${all.v}</s>`}${mpkPrice(all)}</span></button>`:''}
+    ${rest.length?`<div class="mpk-row">${rest.map(P=>`<button class="mpk-chip" data-bp="${P.id}"><span class="mpk-faces">${P.k.map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><b>${P.n}</b><em>${mpkPrice(P)}</em></button>`).join('')}</div>`:''}</div>`}
 function mgrPacksLive(){}
-function wireMgrPacks(){document.querySelectorAll('[data-bp]').forEach(b=>b.onclick=()=>buyMgrPack(b.dataset.bp));
+function wireMgrPacks(){document.querySelectorAll('[data-bp]').forEach(b=>b.onclick=()=>STORE.tap(b,'mgr_'+b.dataset.bp));
   const re=()=>{const sh=$('#sheet .sheet'),st=sh?sh.scrollTop:0;managersSheet();const n=$('#sheet .sheet');if(n)n.scrollTop=st};
   const h=$('#mpkHide');if(h)h.onclick=()=>{S.mpkHide=Date.now()+864e5;save();re()};const sw=$('#mpkShow');if(sw)sw.onclick=()=>{S.mpkHide=0;save();re()}}
 function boardPitchHTML(locked,cta){const n=MGR7.filter(k=>S.mgr[k]).length;
   return `<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div>${locked?`<span class="br-lock">🔒 Opens in ${TOWNS[BOARD_TOWN].n}</span>`:''}</div>${cta||''}
-  <h3 class="br-h">Your managers run the show</h3><p class="br-p">Every ${S.vip?2:4} hours your managers meet here and you pick the strategy. It’s the biggest boost in the agency.</p>
+  <h3 class="br-h">Your managers run the show</h3><p class="br-p">They meet every ${S.vip?2:4} hours. You pick the strategy.</p>
   <div class="strats">${Object.keys(BOARD_OPTS).map(k=>{const o=BOARD_OPTS[k];return `<div><span>${o.i}</span><b>${o.n}</b><small>${boD(k,boardPow())}</small></div>`}).join('')}</div>
-  <div class="li"><span class="eqi">👔</span><div><h3>More managers, longer boosts</h3><p>Each extra manager at the table makes strategies last 15% longer and cash reviews pay 15% more. A full board of ${S.vip?8:7} runs strategies for <b>${durTxt(BOARD_DUR*(1+.15*((S.vip?8:7)-1)))}</b> instead of 1 hour.</p></div><span></span></div>
+  <div class="li"><span class="eqi">👔</span><div><h3>More managers, longer boosts</h3><p>+15% per extra manager. A full board of ${S.vip?8:7}: <b>${durTxt(BOARD_DUR*(1+.15*((S.vip?8:7)-1)))}</b> per strategy.</p></div><span></span></div>
   <div class="mile"><div class="r"><span>Managers hired</span><b>${n} / 7</b></div><div class="mbar"><i style="width:${n/7*100}%"></i></div></div>`}
 function boardSheet(){
   const B=S.board,cost=BOARD_COST*TW.cost;
-  if(!boardAvail()){sheet('Board Room','#5b4a9e',boardPitchHTML(true)+`<p class="br-p" style="font-size:12.5px">Hire managers now. They boost your rooms straight away, move with you to every town, and take their seats when the Board Room opens.</p><button class="gbtn purple center" id="bmeet"><span>Meet the managers</span><span class="price">👔</span></button><button class="gbtn ghost center" id="bok"><span>Got it</span></button>`,null,null,'📊');$('#bok').onclick=closeSheet;$('#bmeet').onclick=()=>managersSheet();return}
-  if(!B.on){sheet('Board Room','#5b4a9e',boardPitchHTML(false,`<button class="gbtn purple" id="bb" style="margin-top:10px"><span>Build the Board Room</span><span class="price">${fmt(cost)}</span></button>`)+`<button class="gbtn ghost center" id="bmeet"><span>Meet the managers</span></button>`,()=>{afford($('#bb'),S.cash>=cost,'cash')},null,'📊');
-    $('#bmeet').onclick=()=>managersSheet();$('#bb').onclick=()=>{if(S.cash<cost)return;S.cash-=cost;B.on=true;B.next=0;syncStations();toast(hasMgrs()?'Board Room is open! Hold your first meeting.':'Board Room is open! Hire a manager to run your meetings.','good');save();refreshHUD();boardSheet()};return}
+  if(!boardAvail()){sheet('Board Room','#5b4a9e',boardPitchHTML(true)+`<p class="br-p" style="font-size:12.5px">Hire managers now. They boost rooms today and take their seats later.</p><button class="gbtn purple center" id="bmeet"><span>See managers</span><span class="price">👔</span></button><button class="gbtn ghost center" id="bok"><span>Got it</span></button>`,null,null,'📊');$('#bok').onclick=closeSheet;$('#bmeet').onclick=()=>managersSheet();return}
+  if(!B.on){sheet('Board Room','#5b4a9e',boardPitchHTML(false,`<button class="gbtn purple" id="bb" style="margin-top:10px"><span>Build Board Room</span><span class="price">${fmt(cost)}</span></button>`)+`<button class="gbtn ghost center" id="bmeet"><span>See managers</span></button>`,()=>{afford($('#bb'),S.cash>=cost,'cash',cost)},null,'📊');
+    $('#bmeet').onclick=()=>managersSheet();$('#bb').onclick=()=>{if(S.cash<cost)return;S.cash-=cost;B.on=true;B.next=0;syncStations();toast(hasMgrs()?'Board Room open! First meeting ready.':'Board Room open! Hire a manager to meet.','good');save();refreshHUD();boardSheet()};return}
   const draw=()=>{const now=Date.now();
     if(now<B.next){const act=B.buff&&now<B.until;
-      sheet('Board Room','#5b4a9e',`${act?`<div class="li gold"><span class="eqi">${BOARD_OPTS[B.buff].i}</span><div><h3>${BOARD_OPTS[B.buff].n}</h3><p>${boD(B.buff,boardPow()).replace(/ for .*$/,'')}</p></div><b id="bl" style="font-family:var(--game);font-size:18px"></b></div>`:''}<div class="li" id="bmt" style="display:none"><span class="eqi">🗣️</span><div><h3>Meeting in progress</h3><p>Your managers are in the board room.</p></div><b id="bmtt" style="font-family:var(--game);font-size:18px"></b></div><p style="text-align:center">The board meets again in</p><div class="cd" id="bcd"></div><p style="text-align:center;font-size:12px">Meetings run for 5 minutes. Strategies last ${durTxt(BOARD_DUR*boardPow())}.</p>`,()=>{const n=Date.now(),e=$('#bcd');if(!e)return;e.textContent=mmss(B.next-n);const mt=$('#bmt');if(mt){const on=n<(B.mtg||0);mt.style.display=on?'':'none';if(on)$('#bmtt').textContent=mmss(B.mtg-n)}const l=$('#bl');if(l)l.textContent=mmss(B.until-n);if(n>=B.next)draw()},null,'📊');return}
-    if(!hasMgrs()){sheet('Board Room','#5b4a9e',`<div class="li"><span class="eqi">🪑</span><div><h3>The table is empty</h3><p>Board meetings are run by your managers. Hire at least one manager and they'll walk in and take a seat.</p></div><span></span></div><button class="gbtn purple" id="bmh"><span>See managers</span></button>`,null,null,'📊');$('#bmh').onclick=()=>managersSheet();return}
+      sheet('Board Room','#5b4a9e',`${act?`<div class="li gold"><span class="eqi">${BOARD_OPTS[B.buff].i}</span><div><h3>${BOARD_OPTS[B.buff].n}</h3><p>${boD(B.buff,boardPow()).replace(/ for .*$/,'')}</p></div><b id="bl" style="font-family:var(--game);font-size:18px"></b></div>`:''}<div class="li" id="bmt" style="display:none"><span class="eqi">🗣️</span><div><h3>Meeting in progress</h3><p>Managers are at the table.</p></div><b id="bmtt" style="font-family:var(--game);font-size:18px"></b></div><p style="text-align:center">Next meeting in</p><div class="cd" id="bcd"></div><p style="text-align:center;font-size:12px">Meetings: 5 min · Strategies: ${durTxt(BOARD_DUR*boardPow())}</p>`,()=>{const n=Date.now(),e=$('#bcd');if(!e)return;e.textContent=mmss(B.next-n);const mt=$('#bmt');if(mt){const on=n<(B.mtg||0);mt.style.display=on?'':'none';if(on)$('#bmtt').textContent=mmss(B.mtg-n)}const l=$('#bl');if(l)l.textContent=mmss(B.until-n);if(n>=B.next)draw()},null,'📊');return}
+    if(!hasMgrs()){sheet('Board Room','#5b4a9e',`<div class="li"><span class="eqi">🪑</span><div><h3>The table is empty</h3><p>Hire a manager to hold meetings.</p></div><span></span></div><button class="gbtn purple" id="bmh"><span>See managers</span></button>`,null,null,'📊');$('#bmh').onclick=()=>managersSheet();return}
     if(!B.opts)B.opts=shuffle(Object.keys(BOARD_OPTS)).slice(0,3);
-    sheet('Board meeting','#5b4a9e',`<p>The board is assembled. Pick this meeting's strategy.</p><div class="li"><span class="eqi">👔</span><div><h3>${mgrN()} manager${mgrN()>1?'s':''} at the table</h3><p>Strategies last <b>${durTxt(BOARD_DUR*boardPow())}</b>. Cash reviews pay ${Math.round(30*boardPow())} minutes of income.${mgrN()<(S.vip?8:7)?' Hire more managers to go further.':''}</p></div><span></span></div><div class="opts">${B.opts.map(o=>`<button class="opt" data-o="${o}"><span class="eqi">${BOARD_OPTS[o].i}</span><span><h3>${BOARD_OPTS[o].n}</h3><p>${boD(o,boardPow())}</p></span></button>`).join('')}</div>`,null,null,'📊');
+    sheet('Board meeting','#5b4a9e',`<p>Pick a strategy.</p><div class="li"><span class="eqi">👔</span><div><h3>${mgrN()} manager${mgrN()>1?'s':''} at the table</h3><p>Strategies: <b>${durTxt(BOARD_DUR*boardPow())}</b> · Cash review: ${Math.round(30*boardPow())} min of income${mgrN()<(S.vip?8:7)?'. More managers, more boost.':''}</p></div><span></span></div><div class="opts">${B.opts.map(o=>`<button class="opt" data-o="${o}"><span class="eqi">${BOARD_OPTS[o].i}</span><span><h3>${BOARD_OPTS[o].n}</h3><p>${boD(o,boardPow())}</p></span></button>`).join('')}</div>`,null,null,'📊');
     document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=b.dataset.o;B.opts=null;B.held=(B.held||0)+1;B.next=Date.now()+boardCD();
       if(o==='cash'){const c=Math.max(200,Math.round(incomePerSec()*1800*boardPow()));S.cash+=c;S.earned+=c;B.buff=null;B.mtg=Date.now()+MEET_DUR;toast(`Cash flow review: +${fmt(c)}`,'gold')}else{const du=BOARD_DUR*boardPow();B.buff=o;B.until=Date.now()+du;B.mtg=Date.now()+MEET_DUR;toast(`${BOARD_OPTS[o].n} is on for ${durTxt(du)}!`,'gold')}
       save();refreshHUD();draw()})};
@@ -7449,11 +7617,11 @@ function boardSheet(){
 // first time the Board Room is part of the office: fly over to it and explain what it's for, once
 function boardIntro(){S.boardIntro=1;save();if(BRD&&BRD.center){const zm=1.6,u=(cam.right-cam.left)/zm/innerWidth,t=BRD.center.clone().addScaledVector(FWD,-innerHeight*.27*u/SINE);flyTo(t.x,t.z,zm,1.1)}
   const cost=BOARD_COST*TW.cost,n=mgrN();
-  setTimeout(()=>sheet('New: the Board Room','#5b4a9e',`<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div></div>
-  <p class="br-p">This office has room for a Board Room. It’s where your managers meet to plan the agency’s next move.</p>
-  <div class="li"><span class="eqi">🏗️</span><div><h3>1. Build it</h3><p>It costs ${fmt(cost)}. Tap the “Build Board Room” sign in the empty room.</p></div><span></span></div>
-  <div class="li"><span class="eqi">👔</span><div><h3>2. Managers take a seat</h3><p>Every manager you hire sits at the table. ${n?`You have ${n} already.`:'Hire one from the Managers button.'} More managers make every strategy stronger.</p></div><span></span></div>
-  <div class="li"><span class="eqi">📈</span><div><h3>3. Pick a strategy</h3><p>Every ${S.vip?2:4} hours the board meets and you choose one: double Sales income, more walk-ins, every team faster, or an instant cash payout. It’s the biggest boost in the agency.</p></div><span></span></div>
+  setTimeout(()=>sheet('New: Board Room','#5b4a9e',`<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div></div>
+  <p class="br-p">Your managers meet here. You pick a big boost.</p>
+  <div class="li"><span class="eqi">🏗️</span><div><h3>1. Build it</h3><p>${fmt(cost)}. Tap the “Build Board Room” sign.</p></div><span></span></div>
+  <div class="li"><span class="eqi">👔</span><div><h3>2. Managers take a seat</h3><p>Every hire sits at the table. ${n?`You have ${n}.`:'Hire one from Managers.'} More = stronger.</p></div><span></span></div>
+  <div class="li"><span class="eqi">📈</span><div><h3>3. Pick a strategy</h3><p>Every ${S.vip?2:4} hours: ×2 Sales, more walk-ins, faster teams or instant cash.</p></div><span></span></div>
   <button class="gbtn purple center" id="bi1"><span>Got it</span></button>`,null,null,'📊'),900);
   setTimeout(()=>{const b=$('#bi1');if(b)b.onclick=()=>closeSheet()},950)}
 setInterval(()=>{if(!S||!S.started||S.boardIntro||!boardAvail()||S.board.on||S.tut<99||A||TU||document.body.classList.contains('sheet-on')||document.hidden)return;boardIntro()},2000);
@@ -7544,24 +7712,24 @@ ${st4(146,116,5,'#fff')}${st4(14,96,4,'#fff')}${st4(132,10,3.5,'#fff8d0')}${A.ex
 
 function managersSheet(){
   const cards=MGR_ORDER.map(k=>{const d=MGR[k];return `<div class="mg ${d.legend?'legend':''}" data-m="${k}">${mgrSVG(k)}<b>${d.n}</b><span class="dept">${k==='shark'?'Whole agency · <i class="vipt">VIP ONLY</i>':ST[k].name}</span><p>${d.fx}</p><button class="mini gem" data-h="${k}"></button></div>`}).join('');
-  const nh=MGR7.filter(k=>S.mgr[k]).length;const pk=mgrPacksHTML();sheet('Managers','#8b4ce0',`${pk}<div class="mg-cnt"><b>${nh}/7 hired</b><div class="mbar"><i style="width:${nh/7*100}%"></i></div></div><div class="mgrs">${cards}</div>${pk?'<div class="proto"><b>Prototype shop.</b> Deals are free here so you can test. At launch they go through Apple in-app purchases.</div>':''}`,()=>{mgrPacksLive();
+  const nh=MGR7.filter(k=>S.mgr[k]).length;const pk=mgrPacksHTML();sheet('Managers','#8b4ce0',`${pk}<div class="mg-cnt"><b>${nh}/7 hired</b><div class="mbar"><i style="width:${nh/7*100}%"></i></div></div><div class="mgrs">${cards}</div>${pk&&!STORE.native?'<div class="proto"><b>Prototype shop.</b> Deals are free here for testing. Real purchases at launch.</div>':''}`,()=>{mgrPacksLive();
     MGR_ORDER.forEach(k=>{const c=document.querySelector(`[data-m="${k}"]`);if(!c)return;const b=c.querySelector('button');c.classList.toggle('hired',!!S.mgr[k]);
-      if(k==='shark'&&!S.vip){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='👑 Join VIP to unlock';b._h=null}
-      else if(k==='shark'&&!S.mgr[k]){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='⭐ Hire free with VIP';b._h=null}
-      else if(S.mgr[k]){b.textContent=k!=='shark'&&!S.st[k].on?'Signed · starts when built':'Hired';b._h=null;b.className='mini ghost';b.disabled=true;b.dataset.need=''}
+      if(k==='shark'&&!S.vip){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='👑 Join VIP';b._h=null}
+      else if(k==='shark'&&!S.mgr[k]){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='⭐ Claim free';b._h=null}
+      else if(S.mgr[k]){b.textContent=k!=='shark'&&!S.st[k].on?'Hired · starts when built':'Hired';b._h=null;b.className='mini ghost';b.disabled=true;b.dataset.need=''}
       else if(k!=='shark'&&!S.st[k].on){b.textContent='Build first';b._h=null;b.className='mini ghost';b.disabled=true;b.dataset.need=''}
       else{b.className='mini gem';setH(b,MGR[k].g+GEMIC);afford(b,S.gems>=MGR[k].g,'gems')}})});
   document.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>hireMgr(b.dataset.h));wireMgrPacks();
 }
 let mapSel=null;
-const TOWN_IC=['🎣','🌾','🏘️','🏛️','🌊','🏔️','🌳','🧱','🏙️','🏝️','⛵','🫒','🔔','🍇','⛪','🏖️','🛥️','🌺','🏰','👑'];
+const TOWN_IC=['🎣','🌾','🏘️','🏛️','🌊','🏔️','🌳','🧱','🏙️','🏝️','⛵','🫒','🔔','🍇','⛪','🏖️','🛥️','🌺','🏰','🌅'];
 let mapW=null;
 function nextTown(){if(S.town===9&&S.ivLegacy)return 10;const k=ordT(S.town);return k>=0&&k<PROG.length-1?PROG[k+1]:-1}
 const vipTown=i=>i===9;
 const vipBlocked=i=>vipTown(i)&&!S.vip&&!S.vipVisited&&S.town!==9;
 function roomMaxed(k){const q=S.st[k];if(!q||!q.on||q.lv<MAXLV)return false;if(!ST[k].special&&q.slots<slotMax(k))return false;return (ITEMS[k]||[]).every(it=>eqT(k,it.id)>=3)}
 const maxedN=()=>ORDER.filter(roomMaxed).length;
-function townReq(i){return [{t:`Reach agency level ${TOWNS[i].lvl}`,s:`Level ${S.lvl}/${TOWNS[i].lvl}`,ok:S.lvl>=TOWNS[i].lvl,p:`You're level ${S.lvl}`},{t:`Build all ${roomsTotal()} rooms in ${TW.n}`,s:`Rooms ${roomsBuilt()}/${roomsTotal()}`,ok:roomsBuilt()>=roomsTotal(),p:`${roomsBuilt()} of ${roomsTotal()} built`},{t:`Max out every room: all levels, staff and equipment`,s:`Rooms maxed ${maxedN()}/${ORDER.length}`,ok:maxedN()>=ORDER.length,p:`${maxedN()} of ${ORDER.length} maxed`}]}
+function townReq(i){return [{t:`Reach agency level ${TOWNS[i].lvl}`,s:`Level ${S.lvl}/${TOWNS[i].lvl}`,ok:S.lvl>=TOWNS[i].lvl,p:`You're level ${S.lvl}`},{t:`Build all ${roomsTotal()} rooms`,s:`Rooms ${roomsBuilt()}/${roomsTotal()}`,ok:roomsBuilt()>=roomsTotal(),p:`${roomsBuilt()} of ${roomsTotal()} built`},{t:`Max every room but the Board Room`,s:`Maxed ${maxedN()}/${ORDER.length}`,ok:maxedN()>=ORDER.length,p:`${maxedN()} of ${ORDER.length} maxed`}]}
 const xfmt=v=>v>=1000?fmt(v).slice(1):String(v);
 const MAPPTS=[[48,244],[128,252],[208,242],[284,212],[214,168],[134,162],[58,124],[98,62],[182,52],[292,48]];
 function mapRoute(pts){const seg=[];for(let i=0;i<pts.length-1;i++){const p0=pts[i-1]||pts[i],p1=pts[i],p2=pts[i+1],p3=pts[i+2]||p2;
@@ -7618,10 +7786,10 @@ function mapSheet(){
   const stats=i>0?`<div class="mp-stats"><span>💵 <b>×${xfmt(t.inc)}</b><small>Income</small></span><span>🏷️ <b>×${xfmt(t.cost)}</b><small>Costs</small></span><span>⏳ <b>${Math.round(t.pat*100)}%</b><small>Patience</small></span><span>🏡 <b>×${t.price}</b><small>Home prices</small></span></div>`:'';
   let act='';
   if(reqs){act=`<div class="mp-req">${reqs.map(r=>`<span class="${r.ok?'ok':''}">${r.ok?'✅':'⬜'} ${r.s}</span>`).join('')}</div>`+
-    (vipBlocked(i)?`<div class="mp-vip"><b>👑 VIP members only</b><span>The finale: a private Maldives resort where every room is its own overwater villa.</span></div><button class="gbtn gold" id="vipIs"><span>${can?'Join VIP to move here':'See VIP'}</span><span class="price">👑</span></button>`:can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
+    (vipBlocked(i)?`<div class="mp-vip"><b>👑 VIP members only</b><span>The finale: a private island of overwater villas.</span></div><button class="gbtn gold" id="vipIs"><span>${can?'Join VIP to move':'See VIP'}</span><span class="price">👑</span></button>`:can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
         :`<div class="mp-btns"><button class="gbtn ghost" disabled><span>Not ready</span></button><button class="gbtn gem" id="mvg"><span>Unlock</span><span class="price">200${GEMIC}</span></button></div>`)}
   else if(NX>=0&&ordT(i)>ordT(NX)){const pv=PROG[ordT(i)-1],fly=worldOf(i)>worldOf(S.town)&&worldOf(pv)<worldOf(i);act=`<p class="mp-note">${fly?`Finish ${esc(TOWNS[pv].n)} to fly to ${WORLDS[worldOf(i)].n}.`:`Reach ${esc(TOWNS[pv].n)} first.`}</p>`}
-  else if(i===S.town&&NX<0)act=`<p class="mp-note">This is the final town. You've built an empire!</p>`;
+  else if(i===S.town&&NX<0)act=`<p class="mp-note">Final town. You built an empire!</p>`;
   else if(i===S.town&&mapW===0&&NX>=0&&worldOf(NX)===1)act=`<button class="gbtn gold" id="gow2"><span>See World 2 · Solmara</span><span class="price">✈️</span></button>`;
   sheet('World map','#1aa3a3',`<div class="wtabs">${tabs}</div><div class="mapw">${svg}</div>
    <div class="mpanel" style="--tc:${t.c}"><div class="mp-top"><span class="mp-ic">${TOWN_IC[i]}</span><div><small>${W_.n} · Town ${li+1} of ${WL.length} · ${t.d}</small><b>${esc(t.n)}</b></div><span class="mp-st">${status}</span></div>${stats}${act}</div>`,null,null,'🗺️');
@@ -7630,17 +7798,17 @@ function mapSheet(){
   document.querySelectorAll('.wtab').forEach(b=>b.onclick=()=>{const w=+b.dataset.w;if(w===mapW)return;mapW=w;mapSel=worldOf(S.town)===w?S.town:WORLDS[w].i0;mapSheet()});
   const mv=$('#mv');if(mv)mv.onclick=()=>confirmMove(i);
   const mg=$('#mvg');if(mg){afford(mg,S.gems>=200,'gems');mg.onclick=()=>{if(S.gems<200)return;confirmMove(i,true)}}
-  const vi=$('#vipIs');if(vi)vi.onclick=()=>vipPassSheet();const g2=$('#gow2');if(g2)g2.onclick=()=>{mapW=1;mapSel=10;mapSheet()};
+  const vi=$('#vipIs');if(vi)vi.onclick=()=>vipPassSheet(()=>{mapSel=i;mapSheet()});const g2=$('#gow2');if(g2)g2.onclick=()=>{mapW=1;mapSel=10;mapSheet()};
 }
 const mulTxt=v=>v<9.95?String(+v.toFixed(1)):xfmt(Math.round(v));
 function confirmMove(i,paid){if(vipBlocked(i)){vipPassSheet();return}const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
-  sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>Whitewashed villages, olive groves, wine valleys and superyacht marinas. Eleven new towns on the sun coast, ending on a private island.</p></div>`:''}<p>Your ${esc(TW.n)} office stays behind. In ${esc(t.n)} you open a new, empty office.</p>
-  <ul class="tips"><li><span>✓</span>You keep diamonds, managers, diamond specials, your VIP Pass, agency level and goals.</li><li><span>↺</span>Cash, rooms, staff, levels and equipment start again.</li><li><span>!</span>Clients pay ${mulTxt(t.inc/TW.inc)}× more, but everything costs ${mulTxt(t.cost/TW.cost)}× more${t.pat<TW.pat?' and clients are less patient':''}.</li></ul>
+  sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>11 new towns on the sun coast. Ends on a private island.</p></div>`:''}<p>New town, new empty office.</p>
+  <ul class="tips"><li><span>✓</span>Keep: diamonds, managers, diamond boosts, VIP, level, perks and goals.</li><li><span>↺</span>Reset: cash, rooms, staff, levels and equipment.</li><li><span>!</span>Income ×${mulTxt(t.inc/TW.inc)} · costs ×${mulTxt(t.cost/TW.cost)}${t.pat<TW.pat?' · less patient clients':''}</li></ul>
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,cross?'✈️':'🚚');
   $('#mv2').onclick=()=>{if(paid){if(S.gems<200){needFunds('gems');return}S.gems-=200}moveTown(i)};$('#mv3').onclick=()=>mapSheet()}
-function moveTown(i){const fromT=S.town;S.town=i;if(i!==9)S.ivLegacy=0;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Could not save on this device.','bad');S.town=fromT;return}
+function moveTown(i){const fromT=S.town;S.town=i;if(i!==9)S.ivLegacy=0;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Can’t save on this device.','bad');S.town=fromT;return}
   closeSheet();const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
-  if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive in your new town.','gold'),4500)}
+  if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive.','gold'),4500)}
 
 const GEM_PACKS=[{n:'Pouch',g:80,p:'A$1.99'},{n:'Handful',g:250,p:'A$4.99',b:'+25%'},{n:'Sack',g:600,p:'A$9.99',b:'+50%',tag:'Popular'},{n:'Chest',g:1400,p:'A$19.99',b:'+75%'},{n:'Vault',g:3500,p:'A$49.99',b:'+120%'},{n:'Mountain',g:9000,p:'A$99.99',b:'+180%',tag:'Best value'}];
 const CASH_PACKS=[{n:'Wallet of cash',h:.5,g:20},{n:'Briefcase of cash',h:2,g:60},{n:'Bucket of cash',h:6,g:150,tag:'Popular'},{n:'Truckload of cash',h:24,g:450},{n:'Bank vault',h:72,g:1100,tag:'Best value'},{n:'×2 income · 4 hours',boost:4,g:80}];
@@ -7670,17 +7838,17 @@ function cashArt(l){const bill=(x,y,r)=>`<g transform="translate(${x} ${y}) rota
    `<circle cx="40" cy="32" r="20" fill="#ffc83d" stroke="#c98a0c" stroke-width="3"/><text x="40" y="40" text-anchor="middle" font-family="'Lilita One',Arial,sans-serif" font-size="22" fill="#fff" stroke="#9a5d00" stroke-width="1">×2</text>`];
   return `<svg viewBox="0 0 80 60"><ellipse cx="40" cy="55" rx="24" ry="3.5" fill="rgba(0,0,0,.12)"/>${arts[l]}</svg>`}
 function shopSheet(focus){
-  const cashCards=CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'Double all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('');
-  const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${g.p}</button></div>`).join('');
+  const cashCards=CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'×2 all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('');
+  const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${STORE.price(STORE.gemKey(g),g.p)}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
-  ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">A$2.99</span></button></div></div>`}
-  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from A$9.99'}</span></button></div></div>
-  ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Hire your managers from ${mpkLeft().map(P=>P.p).sort()[0]}</small></span><i>›</i></button>`:''}
+  ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">${STORE.price('starter','A$2.99')}</span></button></div></div>`}
+  <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from '+STORE.price('vip','A$9.99')}</span></button></div></div>
+  ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Managers from ${mpkFrom(mpkLeft())}</small></span><i>›</i></button>`:''}
   <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCards}</div>
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
   <div class="shop-h"><h4>Extras</h4></div>
-  <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Rewards still pay out, no ad needed.</p></div><button class="mini" id="noads">${S.noAds?'Owned':'A$6.99'}</button></div>
-  <div class="proto"><b>Prototype shop.</b> Real-money items are free here so you can test. At launch they go through Apple in-app purchases.</div>`,()=>{
+  <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Keep every reward, skip the ads.</p></div><button class="mini" id="noads">${S.noAds?'Owned':STORE.price('noads','A$6.99')}</button></div>
+  <div class="proto"${STORE.native?' style="display:none"':''}><b>Prototype shop.</b> Real-money items are free here for testing. Real purchases at launch.</div>`,()=>{
     if(!$('#shCash'))return;$('#shCash').textContent=fmt(S.cash);$('#shGems').textContent=S.gems.toLocaleString('en-AU');
     CASH_PACKS.forEach((c,i)=>{const a=document.querySelector(`[data-amt="${i}"]`);if(a)a.textContent=c.boost?'4 hours':fmt(packCash(c.h));afford(document.querySelector(`[data-cp="${i}"]`),S.gems>=c.g,'gems')});
     const na=$('#noads');if(na&&S.noAds){na.textContent='Owned';na.className='mini ghost';na.disabled=true}},null,'#shopBtn');
@@ -7688,16 +7856,16 @@ function shopSheet(focus){
   document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cp,c=CASH_PACKS[i];if(S.gems<c.g)return;S.gems-=c.g;
     if(c.boost){S.boostUntil=Math.max(Date.now(),S.boostUntil)+c.boost*3600e3;toast('×2 income for 4 hours!','gold','⚡')}else{const v=packCash(c.h);S.cash+=v;toast(`${c.n}: +${fmt(v)}`,'good','💵');flyText(b,'+'+fmt(v))}
     bump('cp'+i);save();refreshHUD()});
-  document.querySelectorAll('[data-gp]').forEach(b=>b.onclick=()=>{const g=GEM_PACKS[+b.dataset.gp];S.gems+=g.g;bump('gp'+b.dataset.gp);flyText(b,'+'+g.g+' '+GEM);toast(`+${g.g.toLocaleString('en-AU')} diamonds`,'gold','gem');save();refreshHUD()});
-  const st=$('#starter');if(st)st.onclick=()=>{S.starter=true;S.gems+=300;S.cash+=packCash(6);S.boostUntil=Math.max(Date.now(),S.boostUntil)+2*3600e3;toast('Starter Pack unlocked!','gold','🎁');save();refreshHUD();shopSheet()};
+  document.querySelectorAll('[data-gp]').forEach(b=>b.onclick=()=>{const g=GEM_PACKS[+b.dataset.gp];STORE.tap(b,STORE.gemKey(g),()=>{bump('gp'+b.dataset.gp);flyText(b,'+'+g.g+' '+GEM)})});
+  const st=$('#starter');if(st)st.onclick=()=>STORE.tap(st,'starter',()=>shopSheet());
   $('#vipp').onclick=()=>vipPassSheet();{const sm=$('#shopMgr');if(sm)sm.onclick=()=>managersSheet()}
-  const na=$('#noads');if(na&&!S.noAds)na.onclick=()=>{S.noAds=true;toast('Ads removed.','good','🚫');save();refreshHUD()};
+  const na=$('#noads');if(na&&!S.noAds)na.onclick=()=>STORE.tap(na,'noads');
   if(focus){const t=document.getElementById(focus==='gems'?'shopGems':'shopCash');if(t){const sh=$('#sheet .sheet');setTimeout(()=>{sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}}
 }
 const cashPack=()=>Math.max(500,Math.round(incomePerSec()*3600));
 function boostSheet(){
-  if(boosted()){toast(`×2 boost already running: ${durTxt(S.boostUntil-Date.now())} left.`,'good','⏱️');return}
-  sheet('Double income','#3fb950',`<p>Watch a short ad to double all income for 30 minutes.</p><button class="gbtn" id="bo"><span>Start ×2 boost</span><span class="price">▶ 30 min</span></button>`);
+  if(boosted()){toast(`×2 running · ${durTxt(S.boostUntil-Date.now())} left`,'good','⏱️');return}
+  sheet('Double income','#3fb950',`<p>×2 income for 30 minutes. Watch a short ad.</p><button class="gbtn" id="bo"><span>Start ×2 boost</span><span class="price">▶ 30 min</span></button>`);
   $('#bo').onclick=()=>{closeSheet();rewarded(()=>{S.boostUntil=Date.now()+30*60*1000;toast('×2 income for 30 minutes!','good');save();refreshHUD()})};
 }
 // ================= SETTINGS =================
@@ -7720,7 +7888,7 @@ function profileSheet(){
     <div class="pf-lvl"><span>Level ${S.lvl}</span><div class="mbar"><i style="width:${lvP}%"></i></div><span>${Math.floor(S.xp).toLocaleString('en-AU')}/${xpNeed(S.lvl).toLocaleString('en-AU')} XP</span></div>
     <div class="pf-name"><input id="nm" maxlength="26" value="${esc(S.agency)}" autocomplete="off" aria-label="Agency name"><button class="mini" id="sv1">Rename</button></div>
   </div>
-  <h4 class="set-h">Your career</h4>
+  <h4 class="set-h">Your stats</h4>
   <div class="st-grid">${stat('💵','Total earned',fmt(S.earned||0))}${stat('🙋','Clients served',(S.served||0).toLocaleString('en-AU'))}${stat('🏡','Homes sold',(S.sold||0).toLocaleString('en-AU'))}${stat('🔨','Auctions run',(S.auctions||0).toLocaleString('en-AU'))}${stat('⭐','VIPs signed',(S.vips||0).toLocaleString('en-AU'))}${stat('🗺️','Towns moved',(S.towns||0))}</div>
   <h4 class="set-h">Sound</h4>
   <div class="set-card">
@@ -7730,77 +7898,78 @@ function profileSheet(){
   <h4 class="set-h">Display & feel</h4>
   <div class="set-card">
     <div class="set-row col"><div><b>Graphics</b><small id="gfxD">${GFXL[SET.gfx][1]}</small></div><div class="seg" role="radiogroup">${Object.keys(GFXL).map(k=>`<button class="${SET.gfx===k?'on':''}" data-g="${k}" role="radio" aria-checked="${SET.gfx===k}">${GFXL[k][0]}</button>`).join('')}</div></div>
-    <div class="set-row"><span class="sr-ic">💸</span><div><b>Money pop-ups</b><small>Show +$ above each sale</small></div>${sw('tgPop',SET.pops)}</div>
+    <div class="set-row"><span class="sr-ic">💸</span><div><b>Money pop-ups</b><small>Show +$ on each sale</small></div>${sw('tgPop',SET.pops)}</div>
     <div class="set-row"><span class="sr-ic">📳</span><div><b>Vibration</b><small>Buzz on upgrades and rewards</small></div>${sw('tgVib',SET.vib)}</div>
   </div>
   <h4 class="set-h">Purchases</h4>
   <div class="set-card">
-    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP Pass</b><small>${S.vip?'Active. Thanks for your support!':'Isla Verde, +25% income, 8h offline'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
-    <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">A$6.99</button>'}</div>
+    <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP</b><small>${S.vip?'Active. Thank you!':'Isla Verde, +25% income, 8h offline'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
+    <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">'+STORE.price('noads','A$6.99')+'</button>'}</div>
     <button class="gbtn ghost center" id="rsP"><span>Restore purchases</span></button>
   </div>
   <h4 class="set-h">Help</h4>
   <div class="set-card">
-    <button class="set-row link" id="tutR"><span class="sr-ic">🎓</span><div><b>Replay the tutorial</b><small>A quick tour of the basics</small></div><i>›</i></button>
+    <button class="set-row link" id="tutR"><span class="sr-ic">🎓</span><div><b>Replay tutorial</b><small>Quick tour of the basics</small></div><i>›</i></button>
     <button class="set-row link" id="howR"><span class="sr-ic">📖</span><div><b>How to play</b><small>Rooms, managers, auctions and towns</small></div><i>›</i></button>
   </div>
   <h4 class="set-h danger">Danger zone</h4>
-  <div class="set-card danger"><div class="set-row"><span class="sr-ic">⚠️</span><div><b>Start over</b><small id="rsT">Wipes your agency, every town, diamonds and managers.</small></div><button class="mini red" id="rs">Reset</button></div></div>
+  <div class="set-card danger"><div class="set-row"><span class="sr-ic">⚠️</span><div><b>Start over</b><small id="rsT">Wipes everything: towns, diamonds, managers.</small></div><button class="mini red" id="rs">Reset</button></div></div>
   <span class="ver-logo" role="img" aria-label="Agency Empire"></span><p class="ver">v0.30 prototype</p>`,null,null,'⚙️');
   const re=()=>{const sc=$('#sheet .sheet').scrollTop;profileSheet();$('#sheet .sheet').scrollTop=sc};
   $('#tgMus').onclick=()=>{SND.setMusic(!SND.pref.mus);re()};$('#tgSfx').onclick=()=>{SND.setSfx(!SND.pref.sfx);re()};
   $('#mvR').oninput=e=>SND.setVol('mv',e.target.value/100*.8);$('#svR').oninput=e=>SND.setVol('sv',e.target.value/100*.9);$('#svR').onchange=()=>SND.fx('coin');
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{SET.gfx=b.dataset.g;saveSet();applyGfx();re()});
   $('#tgPop').onclick=()=>{SET.pops=!SET.pops;saveSet();re()};$('#tgVib').onclick=()=>{SET.vib=!SET.vib;saveSet();vibFx('gold');re()};
-  const vb=$('#stVip');if(vb)vb.onclick=()=>vipPassSheet();const ab=$('#stAds');if(ab)ab.onclick=()=>{S.noAds=true;toast('Ads removed.','good','🚫');save();re()};
-  $('#rsP').onclick=()=>toast('Purchases restored. Anything you bought is active.','good','✅');
+  const vb=$('#stVip');if(vb)vb.onclick=()=>vipPassSheet();const ab=$('#stAds');if(ab)ab.onclick=()=>STORE.tap(ab,'noads',re);
+  $('#rsP').onclick=e=>STORE.restoreTap(e.currentTarget,re);
   $('#tutR').onclick=()=>{closeSheet();tutStart(true)};$('#howR').onclick=()=>howToSheet(profileSheet);
   $('#sv1').onclick=()=>{const v=$('#nm').value.trim();if(v&&v!==S.agency){S.agency=v;refreshLogo();save();refreshHUD();toast('New signage is up.','good','🪧');re()}};
-  let arm=0;$('#rs').onclick=()=>{arm++;if(arm===1){$('#rs').textContent='Sure?';$('#rsT').textContent='Tap Sure? to wipe everything. This can’t be undone.';$('#rs').classList.add('armed');setTimeout(()=>{if(arm===1&&$('#rs')){arm=0;$('#rs').textContent='Reset';$('#rs').classList.remove('armed');$('#rsT').textContent='Wipes your agency, every town, diamonds and managers.'}},4000);return}
-    WIPING=true;try{localStorage.removeItem(KEY)}catch(e){}if(window.__lshow)window.__lshow('Starting fresh…','Clearing the office');setTimeout(()=>location.reload(),500)};
+  let arm=0;$('#rs').onclick=()=>{arm++;if(arm===1){$('#rs').textContent='Sure?';$('#rsT').textContent='Tap Sure? to wipe it all. No undo.';$('#rs').classList.add('armed');setTimeout(()=>{if(arm===1&&$('#rs')){arm=0;$('#rs').textContent='Reset';$('#rs').classList.remove('armed');$('#rsT').textContent='Wipes everything: towns, diamonds, managers.'}},4000);return}
+    WIPING=true;try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'.bak')}catch(e){}if(window.__lshow)window.__lshow('Starting fresh…','Clearing the office');setTimeout(()=>location.reload(),500)};
 }
 function howToSheet(back){sheet('How to play','#2f6fd6',`<ul class="tips">
-  <li><span>🙋</span><div><b>Clients</b> walk in, wait, check in at Reception, then see a team. Every visit pays.</div></li>
-  <li><span>⬆️</span><div><b>Upgrade</b> rooms to earn more per client. Levels 10, 25, 50 and up double a room’s income.</div></li>
-  <li><span>👥</span><div><b>Hire staff</b> to serve more clients at once. Slow rooms make the queue walk out.</div></li>
-  <li><span>🏗️</span><div><b>Build rooms</b> as you grow. Each brings new clients and new income.</div></li>
-  <li><span>👔</span><div><b>Managers</b> boost a room for good and come with you to every town.</div></li>
-  <li><span>🔨</span><div><b>Auctions</b> come in two kinds. Your Auction Room runs in-room auctions all day for steady income. It also books big on-site auctions at homes around town: tap the hammer to run them live, and keep bids small to keep the crowd warm.</div></li>
-  <li><span>⭐</span><div><b>Reputation</b> rises with happy clients and brings more walk-ins.</div></li>
-  <li><span>🗺️</span><div><b>Move town</b> when you’ve hit the level, built every room and maxed each one out: levels, staff and equipment. Bigger towns pay more.</div></li></ul>
+  <li><span>🙋</span><div><b>Clients</b> check in at Reception, then see a team. Every visit pays.</div></li>
+  <li><span>⬆️</span><div><b>Upgrade</b> to earn more per client. Levels 10, 25, 50 and up: income ×2.</div></li>
+  <li><span>👥</span><div><b>Hire staff</b> to serve more at once. Slow rooms lose clients.</div></li>
+  <li><span>🏗️</span><div><b>Build rooms</b> for new clients and income.</div></li>
+  <li><span>👔</span><div><b>Managers</b> boost a room for good, in every town.</div></li>
+  <li><span>🔨</span><div><b>Auctions</b> run all day in the Auction Room. Big ones happen at homes: tap the hammer, keep bids small.</div></li>
+  <li><span>⭐</span><div><b>Reputation</b> grows with happy clients. More walk-ins.</div></li>
+  <li><span>🗺️</span><div><b>Move town</b> at the right level with every room maxed. Bigger towns pay more.</div></li></ul>
   <button class="gbtn center" id="howOk"><span>Got it</span></button>`,null,null,'📖');$('#howOk').onclick=()=>{if(typeof back==='function')back();else closeSheet()}}
 // ================= TUTORIAL =================
 const tLbl=k=>document.querySelector(`.lb[data-k="${k}"]`),tOpen=()=>{const e=$('#sheet .sheet');return e&&!$('#sheet').hidden?e.dataset.t:null};
 const tVis=e=>{if(!e)return null;const r=e.getBoundingClientRect();if(r.width<2||r.height<2||r.bottom<0||r.top>innerHeight||r.right<0||r.left>innerWidth)return null;return r};
 const TUT=[
-  {t:()=>`Hi boss, I’m Fran! Clients walk in, check in at <b>Reception</b>, then meet an agent in <b>Sales</b>. Every visit pays you.`,btn:'Show me',done:()=>tOpen()==='Reception'},
+  {t:()=>`Hi boss, I’m Fran! Every client visit pays you.`,btn:'Show me',done:()=>tOpen()==='Reception'},
   {t:()=>`Tap <b>Reception</b> to manage it.`,el:()=>tOpen()==='Reception'?null:tLbl('reception'),done:()=>tOpen()==='Reception'},
-  {keep:1,start:()=>{TU.l0=S.st.reception.lv},t:()=>tOpen()!=='Reception'?`Tap <b>Reception</b> to open it.`:tUpT('reception',`Tap <b>Upgrade</b>. This first one’s on the house! Each level earns more per client. Tip: <b>hold</b> the button to level up fast.`,`Tap <b>Upgrade</b>. Each level earns more per client. Tip: <b>hold</b> the button to level up fast.`),el:()=>tOpen()==='Reception'?(S.cash>=upCost('reception')?$('#upg'):null):tLbl('reception'),done:()=>S.st.reception.lv>(TU.l0||1)},
-  {t:()=>tOpen()?`Nice! Close this and tap <b>Sales</b>. They earn the most.`:`Now tap <b>Sales</b>. They earn the most.`,el:()=>tOpen()==='Sales'?null:tOpen()?$('#sheet .x'):tLbl('sales'),done:()=>tOpen()==='Sales'},
-  {keep:1,start:()=>{TU.l0=S.st.sales.lv},t:()=>tOpen()!=='Sales'?`Tap <b>Sales</b> to open it.`:tUpT('sales',`Tap <b>Upgrade</b>. This one’s free too!`,`Upgrade <b>Sales</b> now!`),el:()=>tOpen()==='Sales'?(S.cash>=upCost('sales')?$('#upg'):null):tLbl('sales'),done:()=>S.st.sales.lv>(TU.l0||1)},
-  {t:()=>{const r=S.qa.some(q=>{const I=qInfo(q);return I.cur>=I.n}),o=tOpen()==='Goals';return o?(r?`Tap <b>Claim</b> to collect the reward.`:`Your goals live here. Each one pays cash or diamonds. This one isn't done yet, so close this for now.`):r?`Your goal is done! Tap it to collect the reward.`:`This is your <b>goal</b>. Finish goals for cash and diamonds. Tap it when it turns green.`},
+  {keep:1,start:()=>{TU.l0=S.st.reception.lv},t:()=>tOpen()!=='Reception'?`Tap <b>Reception</b> to open it.`:tUpT('reception',`Tap <b>Upgrade</b>. This one’s free!`,`Tap <b>Upgrade</b>. <b>Hold</b> to go fast.`),el:()=>tOpen()==='Reception'?(S.cash>=upCost('reception')?$('#upg'):null):tLbl('reception'),done:()=>S.st.reception.lv>(TU.l0||1)},
+  {t:()=>tOpen()?`Nice! Close this, then tap <b>Sales</b>.`:`Now tap <b>Sales</b>, your top earner.`,el:()=>tOpen()==='Sales'?null:tOpen()?$('#sheet .x'):tLbl('sales'),done:()=>tOpen()==='Sales'},
+  {keep:1,start:()=>{TU.l0=S.st.sales.lv},t:()=>tOpen()!=='Sales'?`Tap <b>Sales</b> to open it.`:tUpT('sales',`Tap <b>Upgrade</b>. This one’s free too!`,`Tap <b>Upgrade</b>.`),el:()=>tOpen()==='Sales'?(S.cash>=upCost('sales')?$('#upg'):null):tLbl('sales'),done:()=>S.st.sales.lv>(TU.l0||1)},
+  {t:()=>{const r=S.qa.some(q=>{const I=qInfo(q);return I.cur>=I.n}),o=tOpen()==='Goals';return o?(r?`Tap <b>Claim</b> for your reward.`:`Goals pay cash or diamonds. Close this for now.`):r?`Goal done! Tap it to collect.`:`Your <b>goal</b>. Tap it when it turns green.`},
     el:()=>{if(tOpen()==='Goals'){const c=$('#ql button[data-q]:not([disabled])');return c||$('#sheet .x')}return tOpen()?$('#sheet .x'):$('#questBtn')},done:()=>{if(tOpen()==='Goals'&&TU)TU.gs=1;return (S.qc||0)>(S._tq||0)||!!(TU&&TU.gs&&!tOpen())},btn:'Next',start:()=>{S._tq=S.qc||0;if(TU)TU.gs=0}},
-  {t:()=>tOpen()==='Waiting Room'&&S.cash<unlockCost('waiting')?`Not quite enough yet. Clients are paying you, so close this and come back soon, or tap <b>Later</b>.`:S.cash>=unlockCost('waiting')?`You can afford a <b>Waiting Room</b>! Tap it to build. Seated clients stay calm and pay a little extra.`:`Next step: a <b>Waiting Room</b> for <b>${fmt(unlockCost('waiting'))}</b>. You have <b>${fmt(S.cash)}</b> and clients are paying you right now. Seated clients stay calm and pay a little extra.`,el:()=>tOpen()?(tOpen()==='Waiting Room'?(S.cash>=unlockCost('waiting')?$('#ub'):$('#sheet .x')):tOpen()==='Your office'?document.querySelector('[data-row=waiting] button'):$('#sheet .x')):S.cash<unlockCost('waiting')?null:(tVis(tLbl('waiting'))?tLbl('waiting'):$('#upBtn')),done:()=>S.st.waiting.on,btn:'Later'},
-  {free:1,t:()=>`That’s the tour! Drag to look around, pinch to zoom, and tap any room to manage it. The <b>Office</b> button lists every room. You’ve got this!`,done:()=>!!tOpen(),btn:'Let’s go!'}
+  {t:()=>tOpen()==='Waiting Room'&&S.cash<unlockCost('waiting')?`Almost there. Close this, or tap <b>Later</b>.`:S.cash>=unlockCost('waiting')?`Tap the <b>Waiting Room</b> to build it.`:`Next: <b>Waiting Room</b>, <b>${fmt(unlockCost('waiting'))}</b>. You have <b>${fmt(S.cash)}</b>.`,el:()=>tOpen()?(tOpen()==='Waiting Room'?(S.cash>=unlockCost('waiting')?$('#ub'):$('#sheet .x')):tOpen()==='Office'?document.querySelector('[data-row=waiting] button'):$('#sheet .x')):S.cash<unlockCost('waiting')?(tVis(tLbl('waiting'))?tLbl('waiting'):null):(tVis(tLbl('waiting'))?tLbl('waiting'):$('#upBtn')),done:()=>S.st.waiting.on,btn:'Later'},
+  {free:1,t:()=>`That’s the tour! Tap any room to manage it.`,done:()=>!!tOpen(),btn:'Let’s go!'}
 ];
-function tUpT(k,free,go){const c=upCost(k);return !c?free:S.cash>=c?go:`Save up <b>${fmt(c)}</b> to upgrade <b>${ST[k].name}</b>. You have <b>${fmt(S.cash)}</b> and clients are paying you right now.`}
+function tUpT(k,free,go){const c=upCost(k);return !c?free:S.cash>=c?go:`Upgrade costs <b>${fmt(c)}</b>. You have <b>${fmt(S.cash)}</b>.`}
 let TU=null;
 function tutEl(st){const e=st&&st.el?st.el():null,o=tOpen();if(e&&o&&!$('#sheet').contains(e))return $('#sheet .x');return e}
 const tutStray=st=>{const e=st&&st.el?st.el():null;return !!(e&&tOpen()&&!$('#sheet').contains(e))};
 // while the tour runs, only the highlighted control and the tour's own buttons respond
 function tutBlocks(e){if(!TU)return false;const d=$('#tut');if(!d||d.classList.contains('hide'))return false;const t=e.target;if(t&&t.closest&&t.closest('.tut-bub,#lvup'))return false;if(TUT[TU.i]&&TUT[TU.i].free)return false;
   const st=TUT[TU.i],el=tutEl(st);return !(el&&t&&(el===t||el.contains(t)))}
-['pointerdown','pointerup','pointermove','click','dblclick','touchstart','touchend','mousedown','mouseup','wheel','contextmenu'].forEach(ev=>window.addEventListener(ev,e=>{if(tutBlocks(e)){e.stopImmediatePropagation();e.stopPropagation();if(e.cancelable&&ev!=='pointermove')e.preventDefault()}},{capture:true,passive:false}));
+function tutNudge(t){if(!TU||!t||!t.closest||!t.closest('button,.lb,#sheet,.dock,.hud'))return;const n=performance.now();if(n-(TU.nz||0)<500)return;TU.nz=n;TU.last='';const d=$('#tut');if(!d)return;const b=d.querySelector('.tut-bub');b.classList.remove('tpop');void b.offsetWidth;b.classList.add('tpop');SND.fx('error')}
+['pointerdown','pointerup','pointermove','click','dblclick','touchstart','touchend','mousedown','mouseup','wheel','contextmenu'].forEach(ev=>window.addEventListener(ev,e=>{if(tutBlocks(e)){if(ev==='pointerdown')tutNudge(e.target);e.stopImmediatePropagation();e.stopPropagation();if(e.cancelable&&ev!=='pointermove')e.preventDefault()}},{capture:true,passive:false}));
 function tutStart(force){if(force)S.tut=0;if(S.tut==null||S.tut>=TUT.length)return;if(!$('#tut')){const d=document.createElement('div');d.id='tut';d.innerHTML=`<div class="tut-spot"></div><div class="tut-hand">👆</div><div class="tut-bub"><span class="tut-ava">${mgrSVG('reception')}</span><div class="tut-txt"><p></p><div class="tut-btns"><button class="tut-skip">Skip tour</button><button class="mini tut-next"></button></div></div><div class="tut-dots"></div></div>`;document.body.appendChild(d)}
   TU={i:-1};document.body.classList.add('tut-on');tutGo(S.tut);requestAnimationFrame(tutTick)}
 function tutGo(i){if(i>=TUT.length){tutEnd(true);return}S.tut=i;save();TU.i=i;const st=TUT[i];if(!st.keep&&tOpen())closeSheet();if(st.start)st.start();const d=$('#tut');d.classList.remove('hide');
   d.querySelector('.tut-next').textContent=st.btn||'';d.querySelector('.tut-next').style.display=st.btn?'':'none';d.querySelector('.tut-next').onclick=()=>{SND.fx('soft');tutGo(i+1)};
   d.querySelector('.tut-skip').onclick=()=>tutEnd(false);d.querySelector('.tut-dots').innerHTML=TUT.map((_,k)=>`<i class="${k<i?'d':k===i?'on':''}"></i>`).join('');TU.last='';
   const b=d.querySelector('.tut-bub');b.classList.remove('tpop');void b.offsetWidth;b.classList.add('tpop')}
-function tutEnd(done){document.body.classList.remove('tut-on');S.tut=99;save();const d=$('#tut');if(d)d.remove();TU=null;if(done)toast('Tour done! Follow your goals to grow.','gold','🎓')}
+function tutEnd(done){document.body.classList.remove('tut-on');S.tut=99;save();const d=$('#tut');if(d)d.remove();TU=null;if(done)toast('Tour done! Follow your goals.','gold','🎓')}
 function tutTick(){if(!TU)return;const d=$('#tut');if(!d){TU=null;return}const st=TUT[TU.i];
   if(st.done&&st.done()){SND.fx('claim');tutGo(TU.i+1);if(!TU)return;requestAnimationFrame(tutTick);return}
-  const txt=tutStray(st)?`Close this to carry on with the tour.`:st.t();if(txt!==TU.last){d.querySelector('.tut-txt p').innerHTML=txt;TU.last=txt}
+  let txt=tutStray(st)?`Close this to continue.`:st.t();if(TU.nz&&performance.now()-TU.nz<2500&&tutEl(st))txt=`<b>Tap the glowing spot.</b> `+txt;if(txt!==TU.last){d.querySelector('.tut-txt p').innerHTML=txt;TU.last=txt}
   const busy=!!A||(!$('#ad').hidden);d.classList.toggle('hide',busy);
   TU.tgt=tutEl(st);const r=tVis(TU.tgt),sp=d.querySelector('.tut-spot'),hd=d.querySelector('.tut-hand'),bub=d.querySelector('.tut-bub');
   if(r){const pad=8;sp.style.display='block';sp.style.transform=`translate(${r.left-pad}px,${r.top-pad}px)`;sp.style.width=(r.width+pad*2)+'px';sp.style.height=(r.height+pad*2)+'px';
@@ -7811,20 +7980,21 @@ function tutTick(){if(!TU)return;const d=$('#tut');if(!d){TU=null;return}const s
   d.classList.toggle('dim',!!r);requestAnimationFrame(tutTick)}
 function refreshLogo(){if(!logoMesh)return;const m=logoMesh.material.find(x=>x.map);m.map.dispose();m.map=logoTex();m.needsUpdate=true;HOUSES.forEach(h=>{const e=S.hs[h.id];setHouseSign(h,h.rival?'rival':e?e.s:null)})}
 function welcomeSheet(){
-  sheet('Welcome to Saltbrook','#2f6fd6',`<div class="logo-ban" role="img" aria-label="Agency Empire"></div><p>You've signed the lease on a little office by the harbour. Clients are already wandering in.</p>
+  sheet('Welcome to Saltbrook','#2f6fd6',`<div class="logo-ban" role="img" aria-label="Agency Empire"></div><p>Your first office, by the harbour. Clients are already here.</p>
   <label for="nm">Name your agency</label><input id="nm" maxlength="26" value="${esc(S.agency)}" autocomplete="off">
-  <ul class="tips"><li><span>1</span>Clients check in at Reception, then meet an agent in Sales. Build a Waiting Room to keep them calm while they queue.</li><li><span>2</span>Keep things moving or they walk out. Upgrade, hire and buy equipment. Hold Upgrade to level fast.</li><li><span>3</span>Build every room and max each one out (levels, staff and equipment), then move to the next town on the map.</li><li><span>4</span>Follow your Goals. Watch for VIP limos, and run auctions at homes around town.</li></ul>
+  <ul class="tips"><li><span>1</span>Clients check in at Reception, then see Sales.</li><li><span>2</span>Upgrade and hire to keep them moving.</li><li><span>3</span>Max every room, then move town.</li><li><span>4</span>Follow goals, sign VIPs, run auctions.</li></ul>
   <div class="wgo"><button class="gbtn center" id="go"><span>Open the doors</span></button></div>`);
   $('#sheet').onclick=null;$('#sheet .x').style.display='none';
   $('#go').onclick=()=>{const v=$('#nm').value.trim();if(v)S.agency=v;S.started=true;refreshLogo();save();refreshHUD();closeSheet();for(let i=0;i<3;i++)spawnClient();setTimeout(()=>tutStart(),600)};
 }
 const awayCap=()=>S.vip?8*3600:2*3600;
-function awayCheck(){const real=(Date.now()-S.lastSeen)/1000,secs=Math.min(real,awayCap());if(secs>60){const c=Math.round(incomePerSec()*secs*.5);if(c>0){awaySheet(real,c);return true}}return false}
-function awaySheet(secs,cash){
-  const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60);
-  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m. Your team kept the office running${secs>awayCap()?` (earnings count up to ${awayCap()/3600} hours away)`:''}.</p><div class="welcome">${fmt(cash)}</div>${secs>awayCap()?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${awayCap()/3600}h of your ${h}h ${m}m away counted${S.vip?'':' · 👑 VIP counts up to 8h'}</p>`:''}
+function awayCheck(){const P=S.awayCard&&S.awayCard.c>0?S.awayCard:null,real=Math.max(0,(Date.now()-S.lastSeen)/1000),secs=Math.min(real,awayCap());let c=secs>60?Math.round(incomePerSec()*secs*.5):0;if(!(c>0))c=0;if(P||c>0){awaySheet((P?P.s:0)+(c>0?real:0),(P?P.c:0)+c,(P?(P.n==null?Math.min(P.s,awayCap()):P.n):0)+(c>0?secs:0));return true}return false}
+function awaySheet(secs,cash,counted){counted=counted==null?Math.min(secs,awayCap()):counted;
+  S.awayCard={c:cash,s:secs,n:counted};S.lastSeen=Date.now();save();
+  const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),ch=Math.floor(counted/3600),cm=Math.floor(counted%3600/60),capped=counted<secs-60;
+  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m.</p><div class="welcome">${fmt(cash)}</div>${capped?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${ch?ch+'h ':''}${cm?cm+'m ':''}counted${S.vip?'':' · 👑 VIP: up to 8h'}</p>`:''}
   <button class="gbtn gold" id="c2"><span>Collect ×2<small>Watch an ad</small></span><span class="price">${fmt(cash*2)}</span></button><button class="gbtn" id="c1"><span>Collect</span><span class="price">${fmt(cash)}</span></button>`);
-  $('#c1').onclick=()=>{S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{S.awayPend=cash*2;save();closeSheet();rewarded(()=>{if(!S.awayPend)return;S.cash+=S.awayPend;S.earned+=S.awayPend;S.awayPend=0;save();refreshHUD()})};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
+  $('#c1').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.awayPend=cash*2;save();closeSheet();rewarded(()=>{if(!S.awayPend)return;S.cash+=S.awayPend;S.earned+=S.awayPend;S.awayPend=0;save();refreshHUD()})};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
 }
 
 // ================= HOUSES =================
@@ -7844,7 +8014,7 @@ function aucCount(){let n=0;for(const k in S.hs)if(S.hs[k].s==='auc')n++;return 
 function nextAucHouse(){return HOUSES.find(h=>S.hs[h.id]&&S.hs[h.id].s==='auc')}
 function freeHouse(){const f=HOUSES.filter(h=>!h.rival&&!S.hs[h.id]&&!(A&&A.h===h));return f.length?pick(f):null}
 function listHouse(){const n=Object.values(S.hs).filter(e=>e.s==='sale').length;if(n>=2+S.st.sales.slots)return;const h=freeHouse();if(!h)return;S.hs[h.id]={s:'sale',t:rnd(70,130)};S.listed++;setHouseSign(h,'sale');pop(h.top.clone(),'Listed!','gem')}
-function bookAuction(){const h=freeHouse();if(!h)return;S.hs[h.id]={s:'auc'};setHouseSign(h,'auc');syncHouseLabels();toast(`Auction booked at ${h.addr}. Tap the hammer to run it.`,'good')}
+function bookAuction(){const h=freeHouse();if(!h)return;S.hs[h.id]={s:'auc'};setHouseSign(h,'auc');syncHouseLabels();toast(`Auction booked at ${h.addr}. Tap 🔨 to run it.`,'good')}
 function syncHouseLabels(){HOUSES.forEach(h=>{const want=!!(S.hs[h.id]&&S.hs[h.id].s==='auc'&&!(A&&A.h===h));
   if(want&&!h.lab){const b=document.createElement('button');b.className='lb alert';b.textContent='🔨 Auction';b.onclick=e=>{e.stopPropagation();startAuction(h)};h.lab=addLabel(b,h.top.clone().setY(2.95),'house')}
   else if(!want&&h.lab){removeLabel(h.lab);h.lab=null}})}
@@ -7852,7 +8022,7 @@ function houseTick(dt){for(const id in S.hs){const e=S.hs[id],h=HOUSES[id];if(!h
   if(e.s==='sale'){e.t-=dt;if(e.t<=0){const b=Math.round(value('sales')*6);S.cash+=b;S.earned+=b;S.sold++;addXP(4);e.s='sold';e.t=30;setHouseSign(h,'sold');pop(h.top.clone().setY(3),'SOLD +'+fmt(b),'big')}}
   else if(e.s==='sold'){e.t-=dt;if(e.t<=0){delete S.hs[id];setHouseSign(h,null)}}}}
 function initHouses(){const pool=shuffle(HOUSES.slice());let r=0;for(const h of pool){if(r>=Math.min(2,Math.floor(HOUSES.length/4)))break;if(!S.hs[h.id]){h.rival=true;setHouseSign(h,'rival');r++}}
-  for(const id in S.hs){const h=HOUSES[id],e=S.hs[id];if(h&&e.live&&e.s==='auc'){const c=Math.round(value('auction')*25*.3*eqMul('auction','comm')*(M_('auction')?1.5:1));S.cash+=c;S.earned+=c;S.auctions++;addRep(-3,'Auction passed in');S.hs[id]={s:'sale',t:rnd(50,80)};setTimeout(()=>toast(`The auction at ${h.addr} stopped when the game closed, so it was passed in (+${fmt(c)}). It's listed for private sale.`,'bad','🔨'),1500)}if(h)setHouseSign(h,S.hs[id].s);else delete S.hs[id]}
+  for(const id in S.hs){const h=HOUSES[id],e=S.hs[id];if(h&&e.live&&e.s==='auc'){const c=Math.round(value('auction')*25*.3*eqMul('auction','comm')*(M_('auction')?1.5:1));S.cash+=c;S.earned+=c;S.auctions++;addRep(-3,'Auction passed in');S.hs[id]={s:'sale',t:rnd(50,80)};setTimeout(()=>toast(`+${fmt(c)} · ${h.addr} passed in when the game closed. Now for private sale.`,'bad','🔨'),1500)}if(h)setHouseSign(h,S.hs[id].s);else delete S.hs[id]}
   if(S._aq){for(let i=0;i<Math.min(3,S._aq);i++)bookAuction();delete S._aq}
   syncHouseLabels()}
 
@@ -7861,23 +8031,23 @@ const QUESTS=[
   {d:'Serve 10 clients',p:()=>S.served,n:10,r:{c:100}},
   {d:'Upgrade Reception to level 5',p:()=>S.st.reception.lv,n:5,r:{c:150}},
   {d:'Upgrade Sales to level 5',p:()=>S.st.sales.lv,n:5,r:{c:250}},
-  {d:'Hire a second sales agent',p:()=>S.st.sales.slots,n:2,r:{g:2}},
-  {d:'Build the Waiting Room',p:()=>+S.st.waiting.on,n:1,r:{c:200}},
-  {d:'Build the Marketing department',p:()=>+S.st.marketing.on,n:1,r:{c:400}},
+  {d:'Hire a 2nd sales agent',p:()=>S.st.sales.slots,n:2,r:{g:2}},
+  {d:'Build Waiting Room',p:()=>+S.st.waiting.on,n:1,r:{c:200}},
+  {d:'Build Marketing',p:()=>+S.st.marketing.on,n:1,r:{c:400}},
   {d:'List 3 homes for sale',p:()=>S.listed,n:3,r:{c:600}},
   {d:'Buy an equipment upgrade',p:()=>eqCount(),n:1,r:{g:2}},
-  {d:'Build the Coffee Bar',p:()=>+S.st.coffee.on,n:1,r:{c:900}},
+  {d:'Build Coffee Bar',p:()=>+S.st.coffee.on,n:1,r:{c:900}},
   {d:'Sign a VIP client',p:()=>S.vips,n:1,r:{g:3}},
   {d:'Reach agency level 5',p:()=>S.lvl,n:5,r:{c:1500}},
   {d:'Sell 5 homes',p:()=>S.sold,n:5,r:{c:2000}},
-  {d:'Become a Trusted agency (60 rep)',p:()=>S.rep,n:60,r:{g:3}},
+  {d:'Reach Trusted reputation (60)',p:()=>S.rep,n:60,r:{g:3}},
   {d:'Build Admin',p:()=>+S.st.admin.on,n:1,r:{c:2500}},
-  {d:'Build the Board Room',p:()=>+S.board.on,n:1,r:{g:3},req:()=>boardAvail()},
+  {d:'Build Board Room',p:()=>+S.board.on,n:1,r:{g:3},req:()=>boardAvail()},
   {d:'Hire a manager',p:()=>Object.keys(S.mgr).length,n:1,r:{g:3}},
   {d:'Hold a board meeting',p:()=>S.board.held||0,n:1,r:{c:3000},req:()=>boardAvail()&&S.board.on},
   {d:'Upgrade Sales to level 25',p:()=>S.st.sales.lv,n:25,r:{g:3}},
   {d:'Build Rentals',p:()=>+S.st.pm.on,n:1,r:{c:6000}},
-  {d:'Build the Auction Room',p:()=>+S.st.auction.on,n:1,r:{g:4}},
+  {d:'Build Auction Room',p:()=>+S.st.auction.on,n:1,r:{g:4}},
   {d:'Sell a home at auction',p:()=>S.aucSold,n:1,r:{c:15000}},
   {d:'Buy a diamond special',p:()=>Object.keys(S.sp).length,n:1,r:{g:3}},
   {d:'Earn $100K in total',p:()=>S.earned,n:1e5,r:{g:5},m:1},
@@ -7894,22 +8064,23 @@ function newQuest(){S.qlater=S.qlater||[];const li=S.qlater.findIndex(c=>!QUESTS
 function qInfo(q){if(q.c!=null){const Q=QUESTS[q.c];let r=Q.r;if(r.c){const fl=Math.round(incomePerSec()*60/100)*100;if(fl>r.c)r=Object.assign({},r,{c:fl})}return {d:Q.d,cur:Math.min(Q.p(),Q.n),n:Q.n,r,m:Q.m}}const G_=QGEN[q.g];return {d:G_.d(q.n),cur:clamp(G_.p()-q.base,0,q.n),n:q.n,r:q.r}}
 function ensureQuests(){S.qlater=S.qlater||[];S.qa=S.qa.filter(q=>{if(q.c!=null&&QUESTS[q.c]&&QUESTS[q.c].req&&!QUESTS[q.c].req()&&qInfo(q).cur<qInfo(q).n){if(!S.qlater.includes(q.c))S.qlater.push(q.c);return false}return q.c!=null?!!QUESTS[q.c]:!!QGEN[q.g]});while(S.qa.length<3)S.qa.push(newQuest())}
 function rwText(r){return [r.c?fmt(r.c):'',r.g?r.g+' '+GEM:''].filter(Boolean).join(' + ')}
-function claimQuest(i){const q=S.qa[i];if(!q)return;const I=qInfo(q);if(I.cur<I.n)return;S.qc=(S.qc||0)+1;SND.fx('claim');if(I.r.c){S.cash+=I.r.c}if(I.r.g)S.gems+=I.r.g;S.qa.splice(i,1);ensureQuests();toast(`Goal complete! +${rwText(I.r)}`,'gold',I.r.g&&!I.r.c?'gem':'🏆');save();refreshHUD()}
+function claimQuest(i){const q=S.qa[i];if(!q)return;const I=qInfo(q);if(I.cur<I.n)return;S.qc=(S.qc||0)+1;SND.fx('claim');if(I.r.c){S.cash+=I.r.c}if(I.r.g)S.gems+=I.r.g;S.qa.splice(i,1);ensureQuests();toast(`+${rwText(I.r)} · Goal complete!`,'gold',I.r.g&&!I.r.c?'gem':'🏆');save();refreshHUD()}
 function updateQuestHUD(){if(!S.qa.length)return;let idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});const ready=idx>=0;if(!ready)idx=0;const I=qInfo(S.qa[idx]);
   $('#questBtn').classList.toggle('ready',ready);$('#qTxt').textContent=ready?'Goal done! Tap to claim':I.d;$('#qBar').style.width=(I.cur/I.n*100)+'%';$('#qIc').textContent=ready?'🎁':'🎯'}
 const qNum=(I,v)=>I.m?fmt(v):Math.floor(v).toLocaleString('en-AU');
-function vipPassSheet(){
-  if(S.vip){sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div><div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>You're a VIP</h2><p>Lifetime perks are active${S.noAds?' and ads are gone':''}.</p></div><div class="vfeat on"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private Maldives resort where every room is an overwater villa</small></div></div>
+function vipPassSheet(ret){
+  if(S.vip){sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div><div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>You're a VIP</h2><p>Perks active${S.noAds?' · no ads':''}.</p></div><div class="vfeat on"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private island of overwater villas</small></div></div>
   <div class="vperks on"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span class="vmg">${mgrSVG('shark')}</span><b>The Shark manager</b><small>×1.5 every room</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>`,null,null,'👑');return}
   const sp=[[12,20],[86,14],[20,70],[80,62],[50,8],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
   sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div>${sp}<div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>Become a VIP</h2><p>Pay once. Keep it forever.</p></div>
-  <div class="vfeat"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private Maldives resort where every room is an overwater villa</small></div></div>
+  <div class="vfeat"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private island of overwater villas</small></div></div>
   <div class="vperks"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span class="vmg">${mgrSVG('shark')}</span><b>The Shark manager</b><small>×1.5 every room</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>
-  <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">A$9.99</span><em>All VIP perks, one payment</em></button>
-  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">A$14.99</span><em>All VIP perks. No ads, and ad rewards are instant</em></button></div>
-  <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'👑');
-  const buy=na=>{S.vip=true;if(na)S.noAds=true;syncStations();try{refreshLogo();for(const k in STN)(STN[k].staff||[]).forEach(vipTrim)}catch(e){}save();refreshHUD();closeSheet();toast(na?'Welcome to VIP! Ads are gone too.':'Welcome to VIP!','gold','👑');const b=$('#cashBtn');if(b)flyText(b,'+25%')};
-  $('#vp1').onclick=()=>buy(false);$('#vp2').onclick=()=>buy(true);
+  <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">${STORE.price('vip','A$9.99')}</span><em>All VIP perks, one payment</em></button>
+  <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">${STORE.price('vip_noads','A$14.99')}</span><em>All VIP perks. No ads, instant rewards</em></button></div>
+  <p class="vfine">One-time purchase. No subscription.</p>
+  <button class="gbtn ghost center" id="vpR"><span>Restore purchases</span></button>`,null,null,'👑');
+  const vpDone=()=>{closeSheet();if(typeof ret==='function'&&S.vip)ret()};$('#vp1').onclick=e=>STORE.tap(e.currentTarget,'vip',vpDone);$('#vp2').onclick=e=>STORE.tap(e.currentTarget,'vip_noads',vpDone);
+  $('#vpR').onclick=e=>STORE.restoreTap(e.currentTarget,()=>{if(S.vip)vipPassSheet()});
 }
 function repSheet(){
   const ladder=REPT.map((t,i)=>({t,i})).reverse().map(({t,i})=>`<div class="rl" data-rt="${i}" style="--c:${t.c}"><span class="rf">${t.f}</span><div class="rn"><b>${t.n}</b><small>${t.min}–${i<4?REPT[i+1].min-1:100} · ${t.d}</small></div><span class="rp" style="color:${t.inc>0?'var(--green-d)':t.inc<0?'var(--red)':'var(--muted)'}">${t.inc>0?'+':''}${Math.round(t.inc*100)}% 💰</span></div>`).join('');
@@ -7928,7 +8099,7 @@ function repSheet(){
     const h=S.repLog.length?S.repLog.map(e=>`<div class="li"><span class="eqi">${REP_IC(e.why)}</span><div><h3>${esc(e.why)}${(e.n||1)>1?`<span class="cnt">×${e.n}</span>`:''}</h3></div><b style="font-family:var(--game);font-size:16px;color:${e.d>0?'var(--green-d)':'var(--red)'}">${e.d>0?'+':''}${Math.abs(e.d)<10?e.d.toFixed(1):Math.round(e.d)}</b></div>`).join(''):'<p style="text-align:center;font-size:12px">Nothing yet. Keep clients happy!</p>';if($('#rlog')._h!==h){$('#rlog').innerHTML=h;$('#rlog')._h=h}},null,'⭐');
 }
 function questsSheet(){let sig='';
-  sheet('Goals','#ffb01f',`<p>Finish goals to earn cash and diamonds. A new goal appears each time you claim one.</p><div class="list" id="ql"></div>`,()=>{
+  sheet('Goals','#ffb01f',`<p>Goals pay cash and diamonds. Claim one, get a new one.</p><div class="list" id="ql"></div>`,()=>{
     const l=$('#ql');if(!l)return;const rows=S.qa.map((q,i)=>{const I=qInfo(q),done=I.cur>=I.n;return {I,done,i}});const ns=JSON.stringify(rows.map(r=>[r.I.d,Math.floor(r.I.cur),r.done]));if(ns===sig)return;sig=ns;
     l.innerHTML=rows.map(({I,done,i})=>`<div class="li ${done?'done':''}"><span class="eqi">${done?'✅':'🎯'}</span><div><h3>${esc(I.d)}</h3><div class="qbar"><i style="width:${I.cur/I.n*100}%"></i></div><p>${qNum(I,I.cur)} / ${qNum(I,I.n)} · Reward ${rwText(I.r)}</p></div><button class="mini${done?'':' ghost'}" data-q="${i}" ${done?'':'disabled'}>${done?'Claim':Math.floor(I.cur/I.n*100)+'%'}</button></div>`).join('');
     l.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{claimQuest(+b.dataset.q);sig=''})});
@@ -7997,8 +8168,8 @@ function ask(i){
 }
 function finishAuction(){
   if(!A||A.done)return;const L=A.L,h=A.h;let r;const base=value('auction')*25*eqMul('auction','comm')*(M_('auction')?1.5:1);
-  if(A.leader&&A.cur>=L.reserve){SND.fx('sold');const over=A.cur/L.reserve-1,comm=Math.round(base*1.5*(1+over*6)),g=over>=.1?2:over>=.05?1:0;S.cash+=comm;S.earned+=comm;S.gems+=g;addXP(20+Math.round(over*200));r={sold:true,price:A.cur,comm,g,over};addRep(3+Math.min(3,over*60),'Auction sold under the hammer');say(`SOLD! To the ${A.leader.n.toLowerCase()} for ${money(A.cur)}!`,'mkt')}
-  else if(A.leader&&A.leader.max>=L.reserve&&A.cur>=L.reserve*.93){SND.fx('sold');const comm=Math.round(base*.8);S.cash+=comm;S.earned+=comm;addXP(12);r={sold:true,post:true,price:L.reserve,comm,g:0,over:0};addRep(1,'Sold just after passing in');say('Passed in, but we did a deal straight after!','hot')}
+  if(A.leader&&A.cur>=L.reserve){SND.fx('sold');const over=A.cur/L.reserve-1,comm=Math.round(base*1.5*(1+over*6)),g=over>=.1?2:over>=.05?1:0;S.cash+=comm;S.earned+=comm;S.gems+=g;addXP(20+Math.round(over*200));r={sold:true,price:A.cur,comm,g,over};addRep(3+Math.min(3,over*60),'Auction sale');say(`SOLD! To the ${A.leader.n.toLowerCase()} for ${money(A.cur)}!`,'mkt')}
+  else if(A.leader&&A.leader.max>=L.reserve&&A.cur>=L.reserve*.93){SND.fx('sold');const comm=Math.round(base*.8);S.cash+=comm;S.earned+=comm;addXP(12);r={sold:true,post:true,price:L.reserve,comm,g:0,over:0};addRep(1,'Sold after passing in');say('Passed in, but we did a deal straight after!','hot')}
   else{SND.fx('pass');const comm=Math.round(base*.3);S.cash+=comm;S.earned+=comm;r={sold:false,price:A.cur,comm};addRep(-3,'Auction passed in');say('Passed in. We\'ll sell this one privately.')}
   S.auctions++;
   if(r.sold){S.aucSold++;S.sold++;S.hs[h.id]={s:'sold',t:45};setHouseSign(h,'sold');A.crowd.forEach((c,i)=>setTimeout(()=>{if(A)c.raise=1.5},i*90));
@@ -8014,22 +8185,22 @@ function drawAuction(){
   const el=$('#auc'),L=A.L;
   if(A.done){const r=A.done;
     el.innerHTML=`<div class="apanel"><div class="sticker${r.sold?'':' pass'}">${r.sold?'SOLD':'PASSED IN'}</div>
-    <p>${r.sold?(r.post?`Passed in at ${money(A.cur)}, but you talked the ${A.leader.n.toLowerCase()} up to the reserve straight after.`:`Sold under the hammer for ${money(r.price)}, ${r.over>.001?(Math.round(r.over*1000)/10)+'% over':'right on'} reserve.`):`Top bid of ${money(r.price)} missed the ${money(L.reserve)} reserve. It goes back on the market for a private sale.`}</p>
+    <p>${r.sold?(r.post?`Passed in at ${money(A.cur)}, then sold to the ${A.leader.n.toLowerCase()} at reserve.`:`Sold for ${money(r.price)} · ${r.over>.001?(Math.round(r.over*1000)/10)+'% over':'right on'} reserve`):`Top bid ${money(r.price)} missed the ${money(L.reserve)} reserve. Back on the market.`}</p>
     <div class="rg"><div><small>You earned</small><b>${fmt(r.comm)}</b></div><div><small>${r.sold&&r.g?'Diamonds':r.sold?'Sold for':'Top bid'}</small><b>${r.sold&&r.g?'+'+r.g+' '+GEM:fmt(r.sold&&r.post?Math.max(r.price||0,A.L.reserve):r.price)}</b></div></div>
-    <button class="gbtn gold center" id="ad2"><span>Back to the office</span></button></div>`;
+    <button class="gbtn gold center" id="ad2"><span>Back to office</span></button></div>`;
     $('#ad2').onclick=endAuction;return}
   const I=incs(),toR=clamp(A.cur/L.reserve,0,1),ld=A.leader,off=A.busy||!ld;
   el.innerHTML=`<div class="apanel">
   <div class="atop"><div><small><span class="aad">${esc(L.addr)}</span><span> · guide ${kfmt(L.value)}</span></small><div class="bid${A.bump?' bump':''}">${ld?money(A.cur):'—'}</div></div>
-  <div class="leadr">${ld?`<i style="background:${ld.c}"></i><span>${esc(ld.n)}</span>`:'<span>Waiting for an opening bid…</span>'}</div></div>
+  <div class="leadr">${ld?`<i style="background:${ld.c}"></i><span>${esc(ld.n)}</span>`:'<span>Waiting for a bid…</span>'}</div></div>
   <div class="stage"><span class="${A.mkt?'mkt':A.stage===0?'on':''}">${A.mkt?'On market':'Selling'}</span><span class="${A.stage===1?'on':''}">Going once</span><span class="${A.stage===2?'on':''}">Going twice</span></div>
   <div class="mt"><div class="r"><span>Reserve ${money(L.reserve)}</span><span>${A.mkt?'Reached':Math.floor(toR*100)+'%'}</span></div><div class="bar"><i style="width:${toR*100}%"></i></div></div>
   <div class="mt heat"><div class="r"><span>Crowd heat</span><span>${A.heat>65?'🔥 Buzzing':A.heat>35?'🙂 Warm':'🥶 Going cold'}</span></div><div class="bar"><i style="width:${A.heat}%"></i></div></div>
   <div class="act"><button class="inc" data-i="0" ${off?'disabled':''}>+${kfmt(I[0])}<small>Safe</small></button><button class="inc b2" data-i="1" ${off?'disabled':''}>+${kfmt(I[1])}<small>Steady</small></button><button class="inc b3" data-i="2" ${off?'disabled':''}>+${kfmt(I[2])}<small>Bold</small></button>
-  <button class="hammer${A.mkt?'':' pass'}" id="hm" ${off?'disabled':''}>${A.mkt?`SOLD! Knock it down at ${money(A.cur)}`:`Pass it in at ${money(A.cur)}`}</button></div><p style="font-size:11px;opacity:.7">Big jumps cool the crowd fast. Small bids keep them warm.</p></div>`;
+  <button class="hammer${A.mkt?'':' pass'}" id="hm" ${off?'disabled':''}>${A.mkt?`SOLD at ${money(A.cur)}!`:`Pass in at ${money(A.cur)}`}</button></div><p style="font-size:11px;opacity:.7">Small bids keep the crowd warm.</p></div>`;
   A.bump=false;
   el.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>ask(+b.dataset.i));
-  $('#hm').onclick=()=>{if(A.busy||!A.leader)return;const hb=$('#hm');if(!A.mkt&&!hb.dataset.sure){hb.dataset.sure=1;hb.textContent='Tap again to pass it in';setTimeout(()=>{if(hb.isConnected&&A&&!A.done){delete hb.dataset.sure;hb.textContent='Pass it in at '+money(A.cur)}},2600);return}finishAuction()};{const ap=el.querySelector('.apanel');if(ap&&A.drawn)ap.style.animation='none';A.drawn=true}
+  $('#hm').onclick=()=>{if(A.busy||!A.leader)return;const hb=$('#hm');if(!A.mkt&&!hb.dataset.sure){hb.dataset.sure=1;hb.textContent='Tap again to pass in';setTimeout(()=>{if(hb.isConnected&&A&&!A.done){delete hb.dataset.sure;hb.textContent='Pass in at '+money(A.cur)}},2600);return}finishAuction()};{const ap=el.querySelector('.apanel');if(ap&&A.drawn)ap.style.animation='none';A.drawn=true}
 }
 function stepAuctionFx(dt){
   for(const c of A.crowd){let walking=false;if(c.walk){const p=c.g.position,dx=c.walk.x-p.x,dz=c.walk.z-p.z,d=Math.hypot(dx,dz);if(d>.05){const m=Math.min(2.2*dt,d);p.x+=dx/d*m;p.z+=dz/d*m;walking=true}else{c.walk=null;c.g.rotation.y=Math.PI}}
@@ -8049,7 +8220,7 @@ canvas.addEventListener('pointerup',up_);canvas.addEventListener('pointercancel'
 canvas.addEventListener('wheel',e=>{e.preventDefault();if(A)return;zoom=clamp(zoom*(e.deltaY<0?1.1:.9),.75,2.6);placeCam()},{passive:false});
 const ray=new T.Raycaster(),ndc=new T.Vector2();
 function tap(x,y){if(A)return;ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
-$('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need)},true);
+$('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need,+b.dataset.cost||0)},true);
 $('#shopBtn').onclick=()=>shopSheet();$('#gemBtn').onclick=()=>shopSheet('gems');$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
 $('#vipPassBtn').onclick=()=>vipPassSheet();$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>shopSheet('cash');$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
 
@@ -8116,6 +8287,7 @@ const SND=(()=>{let ctx=null,out,mus,sfx,nz=null,timer=null,nextT=0,step=0,world
     unlock(){if(!init())return;if(ctx.state==='suspended')ctx.resume();startMusic()},
     fx(n){try{vibFx(n)}catch(e){}if(!ctx||!pref.sfx||!FX[n])return;try{FX[n]()}catch(e){}},
     setWorld(w){world=w},
+    hush(on){if(!ctx)return;try{on?ctx.suspend():ctx.resume()}catch(e){}},
     get pref(){return pref},
     setMusic(on){pref.mus=on;savePref();if(on){init();startMusic()}else stopMusic()},
     setSfx(on){pref.sfx=on;savePref();if(sfx)sfx.gain.value=on?pref.sv:0},
@@ -8165,12 +8337,12 @@ async function start(data){
   LP(75,'Hiring the team…');await yld();
   buildRooms();buildMeeting();buildManagers();buildTraffic();syncStations();fixQueues();
   LP(90,'Unlocking the doors…');await yld();
-  initHouses();ensureQuests();captureEnv();refreshHUD();
+  initHouses();ensureQuests();captureEnv();refreshHUD();STORE.init();
   renderer.render(scene,cam);await yld();
   if(window.__lhide)window.__lhide();else{const l=$('#loading');if(l)l.remove()}
   if(!S.started)welcomeSheet();
   else if(S.tut!=null&&S.tut<TUT.length)setTimeout(()=>tutStart(),900);
-  else{if(S.awayPend>0){const c=S.awayPend;S.cash+=c;S.earned+=c;S.awayPend=0;save();refreshHUD();setTimeout(()=>toast(`Your away earnings: +${fmt(c)}`,'gold','💵'),1200)}else if(!(data&&data.S))awayCheck();for(let i=0;i<4;i++)spawnClient()}
+  else{if(S.awayPend>0){const c=S.awayPend;S.cash+=c;S.earned+=c;S.awayPend=0;save();refreshHUD();setTimeout(()=>toast(`+${fmt(c)} away earnings`,'gold','💵'),1200)}else if(!(data&&data.S))awayCheck();for(let i=0;i<4;i++)spawnClient()}
   for(let i=0;i<8;i++)spawnPed(true)
   try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(e){}
   window.__dbg={sceneKinds:()=>{const m={};scene.children.forEach(o=>{const k=(o.type)+(o.children.length?'['+Math.min(o.children.length,40)+']':'')+(o.userData.rotor?'R':'');m[k]=(m[k]||0)+1});return JSON.stringify(m)},counts:()=>({scene:scene.children.length,lb:document.querySelectorAll('.lb').length,vis:visitors.length,toasts:document.querySelectorAll('.toast').length,pops:document.querySelectorAll('.pop,.fly').length}),setBal:(g,u,c)=>{UPG_G=g;UNL_M=u;UPC_M=c||1},fn:{stationSheet:k=>stationSheet(k),closeSheet:()=>closeSheet(),toast:(...a)=>toast(...a),tutStart:f=>tutStart(f),boardSheet:()=>boardSheet(),get S(){return S},cam:()=>({x:target.x,z:target.z,zm:zoom}),buyLevel,unlock,hireMgr,claimQuest,upCost,unlockCost,hireCost,slotMax,incomePerSec,qInfo,ST,ORDER,MGR,MGR_ORDER,townReq,roomsBuilt,value,svcTime,aucCount,signVIP,spawnRate,patMul,repTier,nextTown,TOWNS,ask,UPX:()=>UPX,ITEMS,eqCost,eqT,roomMaxed,maxedN,mapSheet,PROG,MAXLV,finishAuction,endAuction,startAuction,syncStations,save,get A(){return A},BOARD_COST},sim:(sec)=>{for(let t=0;t<sec;t+=.1){const dt=.1;clock+=dt;if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}stepVIP(dt);stepTraffic(dt);
@@ -8182,7 +8354,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(!AWAYP)
 // came back while busy (a panel open, an auction, the tour): hold the away time and show the card as soon as they're free
 setInterval(()=>{if(!AWAYP||!S||document.hidden||A||TU||document.body.classList.contains('sheet-on'))return;AWAYP=false;awayCheck();S.lastSeen=Date.now()},1000);addEventListener('pagehide',save);
 const fontsReady=(document.fonts&&document.fonts.load)?Promise.race([Promise.all([document.fonts.load('40px "Lilita One"'),document.fonts.load('800 20px Nunito')]),new Promise(r=>setTimeout(r,2500))]):Promise.resolve();
-function bootFail(e){console.error(e);const l=$('#loading');if(l){l.style.opacity='1';l.innerHTML='<div style="padding:28px;text-align:center;font:800 16px Nunito,sans-serif;color:#fff"><p style="margin:0 0 14px">Something went wrong while opening the office.</p><button id="bRetry" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#3fb950;color:#fff;margin:6px">Try again</button><button id="bReset" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#2b3445;color:#fff;margin:6px">Reset save</button></div>';$('#bRetry').onclick=()=>location.reload();$('#bReset').onclick=()=>{if(confirm('Delete your save and start again?')){try{localStorage.removeItem(KEY)}catch(_){}location.reload()}}}}
+function bootFail(e){console.error(e);const l=$('#loading');if(l){l.style.opacity='1';l.innerHTML='<div style="padding:28px;text-align:center;font:800 16px Nunito,sans-serif;color:#fff"><p style="margin:0 0 14px">Couldn’t open the office.</p><button id="bRetry" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#3fb950;color:#fff;margin:6px">Try again</button><button id="bReset" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#2b3445;color:#fff;margin:6px">Reset save</button></div>';$('#bRetry').onclick=()=>location.reload();$('#bReset').onclick=()=>{if(confirm('Delete your save and start again?')){try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'.bak')}catch(_){}location.reload()}}}}
 fontsReady.then(()=>{const hot=window.claude&&window.claude.hot;const go=d=>{try{const p=start(d);if(p&&p.catch)p.catch(bootFail)}catch(e){bootFail(e)}};if(hot&&hot.ready)hot.ready(go);else go((hot&&hot.data)||{})});
 })();
 </script>
