@@ -695,6 +695,13 @@ body.tut-on #upg+.hint{margin-top:10px}
 .noads-list{display:grid;gap:6px;margin:10px 0 12px}.noads-list div{background:#fff;border-radius:14px;padding:9px 12px;box-shadow:0 2px 0 var(--line);font-weight:800;font-size:13px;display:flex;gap:10px;align-items:center}.noads-list span{font-size:20px}
 .noads-up{display:block;width:100%;margin-top:8px;text-align:center;font-weight:800;font-size:13px;color:#7c3fd6;padding:8px}
 
+.nahero{background:radial-gradient(circle at 50% 34%,#e8573f,#5a1410 78%);box-shadow:0 3px 0 #3d0d0a}
+.nahero .vrays{background:repeating-conic-gradient(rgba(255,215,94,.18) 0 9deg,transparent 9deg 18deg)}
+.nahero .vcrown svg{width:84px;height:84px}
+.nahero h2{color:#fff;text-shadow:0 3px 0 #7a1a12}.nahero p{color:#ffe1dc}
+.vplans:has(> :only-child){grid-template-columns:1fr}
+.naplan{box-shadow:0 0 0 2px #f6d0ca,0 3px 0 #e3aaa1}.naplan small{color:#d33a2a}
+
 .sh-head .spk{display:none}.mg .vipt{white-space:nowrap;display:inline-block}
 @media (orientation:landscape) and (max-height:520px){.scrim.framed .sheet{max-height:calc(100% - 64px)}}@media (orientation:landscape){.sheet{clip-path:inset(0 round 26px 26px 0 0)}}
 </style>
@@ -7451,11 +7458,14 @@ const mpkPrice=P=>STORE.price('mgr_'+P.id,P.p);
 const mpkFrom=list=>{const P=list.slice().sort((a,b)=>parseFloat(a.p.slice(2))-parseFloat(b.p.slice(2)))[0];return P?mpkPrice(P):''};
 
 // ---- "No ads" button under the goal widget: a short sheet with the ad-free pack and the VIP upsell
-function adsSheet(){if(S.noAds)return;sheet('Remove ads','#e8443a',`<div class="noads-hero"><div class="big">🚫</div><h3>Play ad-free</h3></div>
-  <div class="noads-list"><div><span>⏸️</span>No ad breaks</div><div><span>🎁</span>Ad rewards are instant</div><div><span>♾️</span>One payment, for good</div></div>
-  <button class="gbtn gold" id="naBuy"><span>Remove ads</span><span class="price">${STORE.price('noads','A$6.99')}</span></button>
-  ${S.vip?'':`<button class="noads-up" id="naVip">👑 Or get VIP + no ads for ${STORE.price('vip_noads','A$14.99')}</button>`}`,null,null,'🚫');
-  const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',()=>{closeSheet();refreshHUD()});const v=$('#naVip');if(v)v.onclick=()=>vipPassSheet()}
+const NOADS_SVG='<svg viewBox="0 0 64 64"><rect x="6" y="13" width="52" height="38" rx="9" fill="#fff" stroke="#7a1a12" stroke-width="3"/><rect x="11" y="18" width="42" height="28" rx="5" fill="#fff"/><text x="32" y="41" text-anchor="middle" font-family="Lilita One,Arial Rounded MT Bold,Arial" font-size="22" font-weight="900" fill="#b42318">AD</text><path d="M12 54L52 10" stroke="#7a1a12" stroke-width="9" stroke-linecap="round"/><path d="M12 54L52 10" stroke="#ffd75e" stroke-width="4.5" stroke-linecap="round"/></svg>';
+function adsSheet(){if(S.noAds)return;const sp=[[12,22],[86,16],[18,72],[82,64],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
+  sheet('Remove ads','#e8443a',`<div class="vhero nahero"><div class="vrays"></div>${sp}<div class="vcrown">${NOADS_SVG}</div><h2>Play ad-free</h2><p>Pay once. No more ads.</p></div>
+  <div class="vperks naperks"><div><span>⏸️</span><b>No ad breaks</b><small>Never mid-game</small></div><div><span>🎁</span><b>Instant ×2 collect</b><small>No video to watch</small></div><div><span>♾️</span><b>Yours for good</b><small>Every town, forever</small></div><div><span>🇦🇺</span><b>Back the studio</b><small>Made in Australia</small></div></div>
+  <div class="vplans"><button class="vplan naplan" id="naBuy"><small>NO ADS</small><b>Lifetime</b><span class="vprice">${STORE.price('noads','A$6.99')}</span><em>Ad-free, one payment</em></button>
+  ${S.vip?'':`<button class="vplan best" id="naVip"><i class="vrib">BEST VALUE</i><small>VIP + NO ADS</small><b>Lifetime</b><span class="vprice">${STORE.price('vip_noads','A$14.99')}</span><em>Every VIP perk too</em></button>`}</div>
+  <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'🚫');
+  const done=()=>{closeSheet();refreshHUD()};const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',done);const v=$('#naVip');if(v)v.onclick=()=>STORE.tap(v,'vip_noads',done)}
 setTimeout(()=>{const b=document.getElementById('adsBtn');if(b)b.onclick=()=>adsSheet()},0);
 function playAd(cb){if(adBusy)return;adBusy=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;cb()}},1000)}
 function rewarded(cb){if(S.noAds)cb();else if(ADS.native)ADS.rewarded(cb);else playAd(cb)}

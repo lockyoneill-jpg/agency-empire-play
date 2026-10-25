@@ -8,7 +8,7 @@
   var sa=(navigator.standalone||(matchMedia&&matchMedia('(display-mode: standalone)').matches));
   if(sa&&!native){var fit=function(){var H=Math.max(screen.height,screen.width)===screen.height?screen.height:screen.width;if(innerHeight<H-2&&innerWidth<innerHeight){document.documentElement.style.height=H+'px';document.body&&(document.body.style.height=H+'px');window.scrollTo(0,0)}};
     addEventListener('load',fit);addEventListener('resize',function(){setTimeout(fit,60)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(fit,60)})}
-  window.AE_BUILD='25Oct 10:37';
+  window.AE_BUILD='25Oct 10:40';
   if(!native){
     if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
     return}
