@@ -1,5 +1,5 @@
 // Offline cache for the home-screen version. A new build gets a new version and replaces the old cache.
-const V='ae-3e491ebf7c',FILES=["./", "fonts/lilita-one-latin-400-normal.woff2", "fonts/nunito-latin-500-normal.woff2", "fonts/nunito-latin-600-normal.woff2", "fonts/nunito-latin-700-normal.woff2", "fonts/nunito-latin-800-normal.woff2", "fonts/nunito-latin-900-normal.woff2", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "index.html", "manifest.webmanifest", "native.js", "three.min.js"];
+const V='ae-5436fe5f86',FILES=["./", "fonts/lilita-one-latin-400-normal.woff2", "fonts/nunito-latin-500-normal.woff2", "fonts/nunito-latin-600-normal.woff2", "fonts/nunito-latin-700-normal.woff2", "fonts/nunito-latin-800-normal.woff2", "fonts/nunito-latin-900-normal.woff2", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "index.html", "manifest.webmanifest", "native.js", "three.min.js"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 // network first so a fresh build shows straight away when online; cache when offline
