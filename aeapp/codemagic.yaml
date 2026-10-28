@@ -1,0 +1,47 @@
+# Agency Empire → TestFlight. Point Codemagic at this file (aeapp/codemagic.yaml).
+# Secrets stay in Codemagic environment variables. Nothing in this file is a credential.
+workflows:
+  ios-testflight:
+    name: iOS TestFlight
+    max_build_duration: 90
+    instance_type: mac_mini_m2
+    environment:
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: digital.studioden.agencyempire
+      vars:
+        XCODE_WORKSPACE: aeapp/ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+        BUNDLE_ID: digital.studioden.agencyempire
+    scripts:
+      - name: Install npm dependencies
+        script: |
+          cd "$CM_BUILD_DIR/aeapp"
+          npm ci
+      - name: Bundle the game into the app
+        script: |
+          cd "$CM_BUILD_DIR/aeapp"
+          bash sync-www.sh
+          npx cap sync ios
+      - name: Stamp the AdMob app id
+        script: |
+          # Google's sample id if the variable is empty, so a first build still launches.
+          # Replace ADMOB_APP_ID_IOS with the real id (the one that contains ~) before review.
+          APP_ID="${ADMOB_APP_ID_IOS:-ca-app-pub-3940256099942544~1458002511}"
+          PLIST="$CM_BUILD_DIR/aeapp/ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier $APP_ID" "$PLIST"
+      - name: Build the IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true

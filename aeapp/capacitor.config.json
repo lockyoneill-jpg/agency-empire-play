@@ -1,0 +1,24 @@
+{
+  "appId": "digital.studioden.agencyempire",
+  "appName": "Agency Empire",
+  "webDir": "www",
+  "backgroundColor": "#051f3f",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#051f3f",
+    "preferredContentMode": "mobile"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#051f3f",
+      "showSpinner": false,
+      "launchShowDuration": 0
+    },
+    "StatusBar": {
+      "overlaysWebView": true,
+      "style": "DARK",
+      "backgroundColor": "#051f3f"
+    }
+  }
+}

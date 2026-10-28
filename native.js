@@ -2,6 +2,8 @@
 // storage when space runs low), restores it if the web copy has gone, and sets up the status bar.
 // On the web (home-screen version): registers the offline cache.
 (function(){
+  // portrait on the home-screen app and in the iOS build. Desktop browsers ignore the lock.
+  try{if(screen.orientation&&screen.orientation.lock){var lk=screen.orientation.lock('portrait');if(lk&&lk.catch)lk.catch(function(){})}}catch(e){}
   var KEY='agency-empire-v2';
   var C=window.Capacitor,native=!!(C&&C.isNativePlatform&&C.isNativePlatform());
   // iOS 26 home-screen apps can lay the page out a status bar short of the screen: if so, stretch to the real height
