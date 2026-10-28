@@ -1,5 +1,5 @@
 // Runs before the game. In the native app: keeps a copy of the save in the phone's app storage (iOS can clear web
-// storage when space runs low), restores it if the web copy has gone, and sets up the status bar.
+// storage when space runs low), restores it if the web copy has gone, and sets up the status bar, splash, and StoreKit.
 // On the web (home-screen version): registers the offline cache.
 (function(){
   var KEY='agency-empire-v2';
@@ -8,13 +8,25 @@
   var sa=(navigator.standalone||(matchMedia&&matchMedia('(display-mode: standalone)').matches));
   if(sa&&!native){var fit=function(){var H=Math.max(screen.height,screen.width)===screen.height?screen.height:screen.width;if(innerHeight<H-2&&innerWidth<innerHeight){document.documentElement.style.height=H+'px';document.body&&(document.body.style.height=H+'px');window.scrollTo(0,0)}};
     addEventListener('load',fit);addEventListener('resize',function(){setTimeout(fit,60)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(fit,60)})}
-  window.AE_BUILD='25Oct 10:43';
+  window.AE_BUILD='28Oct 2026';
+  try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(function(){})}catch(e){}
   if(!native){
     if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
     return}
   var P=C.Plugins||{},Prefs=P.Preferences;
   try{var SB=P.StatusBar;if(SB){SB.setOverlaysWebView&&SB.setOverlaysWebView({overlay:true});SB.setStyle&&SB.setStyle({style:'DARK'})}}catch(e){}
-  try{P.SplashScreen&&setTimeout(function(){P.SplashScreen.hide()},300)}catch(e){}
+  // hold the splash until the office has actually painted, then a failsafe
+  (function(){var gone=false;function hide(){if(gone)return;gone=true;try{P.SplashScreen&&P.SplashScreen.hide()}catch(e){}}
+    var iv=setInterval(function(){var l=document.getElementById('loading');if(!l||l.hidden){clearInterval(iv);hide()}},200);
+    setTimeout(hide,8000)})();
+  // StoreKit 2 (capacitor-plugin-cdv-purchase). The marker must exist before store.js picks a bridge.
+  // Loaded only in the app so the website never pulls the store script.
+  window.CdvPurchaseCapacitor={installed:true};
+  var ps=document.createElement('script');ps.src='vendor/cdv-purchase.js';ps.async=false;document.head.appendChild(ps);
+  // stay inside the app: http(s) links would open Safari chrome. mailto and in-app pages stay.
+  document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a');if(!a)return;var href=a.getAttribute('href')||'';
+    if(!href||href.indexOf('mailto:')===0||href.indexOf('#')===0||href.charAt(0)==='.'||href.indexOf('javascript:')===0)return;
+    if(/^https?:/i.test(href)){e.preventDefault()}},true);
   if(!Prefs)return;
   // mirror every save into native storage
   var set=Storage.prototype.setItem,rem=Storage.prototype.removeItem;
@@ -24,7 +36,4 @@
   var has=false;try{has=!!localStorage.getItem(KEY)}catch(e){}
   if(!has&&!sessionStorage.getItem('ae-restored')){
     Prefs.get({key:KEY}).then(function(r){if(r&&r.value){try{set.call(localStorage,KEY,r.value);sessionStorage.setItem('ae-restored','1');location.reload()}catch(e){}}}).catch(function(){})}
-  // light haptics on the big moments
-  var H=P.Haptics;if(H){var tick=function(){try{H.impact({style:'LIGHT'})}catch(e){}};
-    document.addEventListener('click',function(e){var b=e.target&&e.target.closest&&e.target.closest('button');if(b&&!b.disabled)tick()},true)}
 })();

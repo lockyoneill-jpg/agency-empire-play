@@ -1,0 +1,55 @@
+# Codemagic looks in the repo root by default. Point the app’s configuration file at aeapp/codemagic.yaml.
+# Secrets live in the Codemagic variable group `appstore_credentials`, never in this file.
+workflows:
+  ios-testflight:
+    name: Agency Empire iOS TestFlight
+    max_build_duration: 90
+    instance_type: mac_mini_m2
+    environment:
+      groups:
+        - appstore_credentials
+      vars:
+        BUNDLE_ID: digital.studioden.agencyempire
+        XCODE_SCHEME: App
+      xcode: latest
+      node: 22
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd aeapp
+          npm ci
+      - name: Bundle the game into the iOS project
+        script: |
+          cd aeapp
+          npm run cap:sync
+          node scripts/patch-ios.js
+      - name: Write the AdMob app id from the environment
+        script: |
+          cd aeapp
+          if [ -n "$ADMOB_APP_ID_IOS" ]; then
+            /usr/libexec/PlistBuddy -c "Set :GADApplicationIdentifier $ADMOB_APP_ID_IOS" ios/App/App/Info.plist
+          fi
+      - name: Fetch signing files with the App Store Connect API key
+        script: |
+          cd aeapp/ios/App
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          keychain add-certificates
+          xcode-project use-profiles
+      - name: Set the build number
+        script: |
+          cd aeapp/ios/App
+          agvtool new-version -all $((BUILD_NUMBER))
+      - name: Build the IPA
+        script: |
+          cd aeapp/ios/App
+          xcode-project build-ipa --workspace "App.xcworkspace" --scheme "$XCODE_SCHEME"
+    artifacts:
+      - aeapp/ios/App/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
