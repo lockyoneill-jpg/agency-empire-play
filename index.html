@@ -217,7 +217,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .mg.legend{background:linear-gradient(180deg,#fffaf0,#fff1c9);box-shadow:0 2px 0 #f2cf6e}
 .mg .mini{width:100%}
 .mg .vipt{font-style:normal;background:linear-gradient(180deg,#ffd75e,#f5a623);color:#5a3a00;padding:1px 6px;border-radius:6px;letter-spacing:.04em}
-.mini.vipb{background:linear-gradient(180deg,#ffd75e,#f5a623);color:#5a3a00;box-shadow:0 3px 0 #c98612}
+.mini.vipb{background:linear-gradient(180deg,#ffd75e,#f5a623);color:#5a3a00;box-shadow:0 3px 0 #c98612}.mini.gold{--a:#ffe27a;--b:#ffb01f;--d:#c98a0c;color:var(--ink);text-shadow:none}.qact{display:flex;flex-direction:column;gap:6px;align-items:stretch}.qact .mini{width:100%;text-align:center}a.set-row{text-decoration:none;color:inherit}
 .proto{background:linear-gradient(180deg,var(--hud1),var(--hud2));color:#fff;border-radius:16px;padding:10px 12px;font-size:12px;font-weight:700;line-height:1.4}
 .proto b{color:var(--gold)}
 .sh-body label{font-weight:900;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
@@ -230,7 +230,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .qbar{height:8px;border-radius:4px;background:#e3e9f2;overflow:hidden;margin:6px 0 3px}
 .qbar i{display:block;height:100%;background:linear-gradient(90deg,#6ee077,#2fa83d)}
 .opts{display:grid;gap:8px}
-.opt{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px;text-align:left;box-shadow:0 3px 0 var(--line)}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:12px;text-align:left;box-shadow:0 2px 0 var(--line)}
 .opt:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
 .opt h3{margin:0;font-family:var(--game);font-weight:400;font-size:17px}
 .opt p{margin:2px 0 0!important;font-size:12px}
@@ -253,7 +253,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 
 /* auction */
 #auc{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;pointer-events:none}
-.apanel{pointer-events:auto;width:100%;max-width:480px;background:linear-gradient(180deg,rgba(46,36,84,.95),rgba(24,18,46,.96));color:#fff;border-radius:24px 24px 0 0;border:2px solid rgba(255,255,255,.12);border-bottom:0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:9px;box-shadow:0 -8px 24px rgba(0,0,0,.25);animation:sup .25s ease-out}
+.apanel{pointer-events:auto;width:100%;max-width:480px;background:linear-gradient(180deg,rgba(46,36,84,.95),rgba(24,18,46,.96));color:#fff;border-radius:26px 26px 0 0;border:2px solid rgba(255,255,255,.12);border-bottom:0;padding:14px 14px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:9px;box-shadow:0 -10px 30px rgba(0,0,0,.22);animation:sup .25s ease-out}
 .apanel p{margin:0;text-align:center;font-weight:700;line-height:1.4;opacity:.92}
 .atop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
 .atop small{display:block;font-weight:900;font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:3px}
@@ -271,12 +271,12 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .mt .bar i{display:block;height:100%;background:var(--green);transition:width .3s}
 .mt.heat .bar i{background:linear-gradient(90deg,#59b6ff,var(--gold),var(--red))}
 .act{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:2px}
-.inc{--a:#5aa3ff;--b:#2f6fd6;--d:#1d4fa8;font-family:var(--game);font-size:19px;padding:11px 4px 9px;border-radius:14px;background:linear-gradient(180deg,var(--a),var(--b));box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 5px 0 var(--d);color:#fff;text-align:center}
+.inc{--a:#5aa3ff;--b:#2f6fd6;--d:#1d4fa8;font-family:var(--game);font-size:19px;padding:11px 4px 9px;border-radius:16px;background:linear-gradient(180deg,var(--a),var(--b));box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 5px 0 var(--d);color:#fff;text-align:center}
 .inc small{display:block;font-family:var(--body);font-weight:800;font-size:10px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
 .inc.b2{--a:#b384ff;--b:#7c3fd6;--d:#5b2aa3}
 .inc.b3{--a:#ff7a6b;--b:#e23a2c;--d:#a92a22}
 .inc:disabled{opacity:.45}
-.hammer{grid-column:1/-1;font-family:var(--game);font-size:19px;padding:12px;border-radius:14px;background:linear-gradient(#ffe27a,#ffb01f);color:var(--ink);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 var(--gold-d)}
+.hammer{grid-column:1/-1;font-family:var(--game);font-size:19px;padding:12px;border-radius:16px;background:linear-gradient(#ffe27a,#ffb01f);color:var(--ink);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 var(--gold-d)}
 .hammer.pass{background:linear-gradient(#dfe5ee,#c3cbd7);box-shadow:0 5px 0 #8e97a6}
 .hammer:disabled{opacity:.5}
 .sticker{align-self:center;background:var(--red);color:#fff;font-family:var(--game);font-size:50px;padding:2px 26px 6px;transform:rotate(-6deg);border-radius:12px;border:5px solid #fff;box-shadow:0 8px 0 rgba(0,0,0,.25);animation:slap .45s cubic-bezier(.2,1.6,.4,1);margin:4px 0}
@@ -292,7 +292,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .say.mkt{background:var(--green);color:#fff}.say.mkt::after{border-top-color:var(--green)}
 .bidb{background:var(--gold);color:var(--ink);font-family:var(--game);font-size:15px;padding:3px 9px;border-radius:10px;border:2px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.25)}
 .sheet.re{animation:none}
-.sh-head .dki{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 2px 0 rgba(255,255,255,.35),0 2px 0 rgba(0,0,0,.2)}
+.sh-head .dki{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex:none;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 2px 0 rgba(255,255,255,.35),0 2px 0 rgba(0,0,0,.2)}
 .sh-head .dki svg{width:26px;height:26px}
 .gbtn.cant{--a:#c3cbd7;--b:#a9b2c0;--d:#7d8796;color:#f2f4f7;text-shadow:none}
 .mini.cant{--a:#c3cbd7;--b:#a9b2c0;--d:#7d8796}
@@ -471,7 +471,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 /* settings */
 .set-h{margin:16px 4px 8px;font-family:var(--game);font-weight:400;font-size:17px;color:#1d2433}
 .set-h.danger{color:#c4352c}
-.set-card{background:#fff;border-radius:18px;box-shadow:0 3px 0 var(--line);padding:4px 12px;display:flex;flex-direction:column}
+.set-card{background:#fff;border-radius:18px;box-shadow:0 2px 0 var(--line);padding:4px 12px;display:flex;flex-direction:column}
 .set-card.pfc{padding:14px;gap:12px;background:linear-gradient(135deg,#22304a,#2f6fd6);color:#fff;box-shadow:0 4px 0 #142038}
 .set-card.danger{border:2px solid #f3c2bd}
 .pf-top{display:flex;gap:12px;align-items:center}
@@ -486,7 +486,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .pf-name input{flex:1;min-width:0;margin:0;border-radius:12px;padding:9px 12px;font-weight:800;border:0}
 .pf-name .mini{width:auto;padding:8px 14px}
 .st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.st2{background:#fff;border-radius:16px;box-shadow:0 3px 0 var(--line);padding:10px 6px 9px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
+.st2{background:#fff;border-radius:16px;box-shadow:0 2px 0 var(--line);padding:10px 6px 9px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1px}
 .st2 span{font-size:18px}.st2 b{font-family:var(--game);font-weight:400;font-size:17px;color:#1d2433;line-height:1.1}.st2 small{font-weight:800;font-size:10.5px;color:var(--muted)}
 .set-row{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #eef1f5;text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%;font:inherit;color:inherit}
 .set-row:last-child{border-bottom:0}
@@ -558,7 +558,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .lvup:not(.promo){background:none;pointer-events:none;place-items:start center;padding-top:calc(env(safe-area-inset-top,0px) + 236px)}
 .lvup:not(.promo) .lvc{pointer-events:auto}
 .lvup.out{animation:lvo .26s ease-in forwards}
-.lvc{position:relative;min-width:210px;max-width:min(320px,calc(100vw - 32px));background:#fff;border-radius:24px;padding:22px 22px 18px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.25);animation:lvp .45s cubic-bezier(.2,1.6,.4,1)}
+.lvc{position:relative;min-width:210px;max-width:min(320px,calc(100vw - 32px));background:#fff;border-radius:26px;padding:22px 22px 18px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.25);animation:lvp .45s cubic-bezier(.2,1.6,.4,1)}
 .lvup:not(.promo) .lvc{padding:14px 20px 12px;min-width:180px}
 .lvc small{display:block;font-family:var(--game);font-size:15px;color:var(--muted);margin-top:6px}
 .lvc h3{margin:2px 0 0;font-family:var(--game);font-weight:400;font-size:28px;color:var(--rc);line-height:1.05}
@@ -572,7 +572,7 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .lvr{display:flex;justify-content:center;gap:8px;margin-top:12px}
 .lvr span{font-family:var(--game);font-size:16px;padding:5px 12px;border-radius:12px;background:#f3f6fb;color:#1d2433}
 .lvr span:first-child{color:#2a5fa8}
-.lvok{margin-top:14px;width:100%;border:0;border-radius:14px;padding:11px;font-family:var(--game);font-size:18px;color:#fff;background:var(--rc);box-shadow:0 4px 0 color-mix(in srgb,var(--rc) 70%,#000);cursor:pointer}
+.lvok{margin-top:14px;width:100%;border:0;border-radius:16px;padding:12px 16px 13px;font-family:var(--game);font-size:18px;color:#fff;background:var(--rc);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 5px 0 color-mix(in srgb,var(--rc) 62%,#000);cursor:pointer}.lvok.ad{background:linear-gradient(180deg,#ffe27a,#ffb01f);color:var(--ink);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 5px 0 var(--gold-d)}.lvok:disabled{opacity:.72}.lvc .lvok+.lvok{margin-top:8px}
 .lvc>i{position:absolute;left:50%;top:18px;width:8px;height:12px;border-radius:2px;background:var(--c);opacity:0;animation:lvk .9s ease-out var(--d) forwards;transform:rotate(var(--a)) translateY(0)}
 @keyframes lvk{0%{opacity:1;transform:rotate(var(--a)) translateY(0)}100%{opacity:0;transform:rotate(var(--a)) translateY(-120px) rotate(200deg)}}
 @keyframes lvp{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
@@ -7130,9 +7130,9 @@ function levelUp(){const prev=rankOf(S.lvl-1),ri=rankOf(S.lvl),promo=ri>prev,cas
   celebrate(promo,ri,gems,cash)}
 function celebrate(promo,ri,gems,cash){const R=RANKS[ri];let el=$('#lvup');if(el)el.remove();el=document.createElement('div');el.id='lvup';el.className='lvup'+(promo?' promo':'');el.style.setProperty('--rc',R.c);
   const conf=Array.from({length:promo?26:14},(_,i)=>`<i style="--a:${(i*137)%360}deg;--d:${(i%5)*.06}s;--c:${['#ffc83d','#ff7eb6','#3fd0ff','#3fb950','#ffffff'][i%5]}"></i>`).join('');
-  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>new perk</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok" id="lvPerk">See perk</button></div>`
-    :`<div class="lvc">${conf}<div class="lvn"><b>${S.lvl}</b></div><small>Level up!</small><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div>${ri<RANKS.length-1?`<p class="lvnext">${RANKS[ri+1].l-S.lvl} level${RANKS[ri+1].l-S.lvl>1?'s':''} to ${RANKS[ri+1].e} ${RANKS[ri+1].n}</p>`:''}</div>`;
-  document.body.appendChild(el);const close=()=>{el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;const pb=el.querySelector('#lvPerk');if(pb)pb.onclick=e=>{e.stopPropagation();close();careerSheet()};if(!promo)setTimeout(close,2600);else setTimeout(close,7000)}
+  el.innerHTML=promo?`<div class="lvc">${conf}<div class="lvb">${R.e}</div><small>Promoted to</small><h3>${R.n}</h3><p class="lvl2">Level ${S.lvl}</p><p class="lvperk">${perkTxt(R.p)} <span>new perk</span></p><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div><button class="lvok ad" id="lvX2">Double reward</button><button class="lvok" id="lvPerk">See perk</button></div>`
+    :`<div class="lvc">${conf}<div class="lvn"><b>${S.lvl}</b></div><small>Level up!</small><div class="lvr"><span>+${gems} ${GEM}</span><span>+${fmt(cash)}</span></div>${ri<RANKS.length-1?`<p class="lvnext">${RANKS[ri+1].l-S.lvl} level${RANKS[ri+1].l-S.lvl>1?'s':''} to ${RANKS[ri+1].e} ${RANKS[ri+1].n}</p>`:''}<button class="lvok ad" id="lvX2">Double reward</button></div>`;
+  document.body.appendChild(el);let die=null;const close=()=>{clearTimeout(die);el.classList.add('out');setTimeout(()=>el.remove(),260)};el.onclick=close;const xb=el.querySelector('#lvX2');if(xb)xb.onclick=e=>{e.stopPropagation();clearTimeout(die);rewarded(()=>{S.gems+=gems;S.cash+=cash;S.earned=(S.earned||0)+cash;save();refreshHUD();toast(`Doubled: +${gems} ${GEM} · +${fmt(cash)}`,'gold','🎁');xb.disabled=true;xb.textContent='Doubled'})};const pb=el.querySelector('#lvPerk');if(pb)pb.onclick=e=>{e.stopPropagation();close();careerSheet()};die=setTimeout(close,promo?7000:6500)}
 const PKC={inc:'#2fa83d',walk:'#2f6fd6',pat:'#e0921a',cost:'#8b4ce0'};
 // one perk card per milestone: locked (level not reached), ready (buy with cash) or owned
 function perkCard(i){const r=RANKS[i],[k,v]=r.p,own=perkOwned(i),ready=!own&&S.lvl>=r.l,st=own?'own':ready?'ready':'lock';
@@ -7220,7 +7220,7 @@ function vipSheet(){
   if(!VIP||VIP.state!=='wait')return;if(S.vip){closeSheet();signVIP();return}const [who,prop]=VIP.who;
   sheet('VIP client','#d99a12',`<p><b>${esc(who)}</b> wants you to sell ${esc(prop)}.</p>
   <div class="welcome" style="color:#b07a00">${fmt(VIP.reward)}</div>
-  <button class="gbtn gold" id="vy"><span>Sign them<small>${ADS.native?'Short video':'Free ad in the prototype'}</small></span><span class="price">▶ Ad</span></button>
+  <button class="gbtn gold" id="vy"><span>Sign them<small>Short video</small></span><span class="price">▶ Ad</span></button>
   <button class="gbtn ghost center" id="vn"><span>No thanks</span></button>`);
   openSheet.vip=true;
   $('#vy').onclick=()=>{closeSheet();rewarded(signVIP)};
@@ -7301,7 +7301,7 @@ let adBusy=false;
 // ================= STORE + ADS =================
 // In the phone app (Capacitor) purchases go through StoreKit / Google Play (cordova-plugin-purchase v13) and ads through
 // AdMob (@capacitor-community/admob). On the web, in an artifact, or if a plugin is missing, everything stays simulated:
-// purchases are granted on the spot and the ad is the 3-second fake. See STORE_iap.md.
+// purchases are granted on the spot and the ad is the 3-second fake. Inside the iOS app a purchase is never granted unless StoreKit confirms it. See aeapp/STORE_iap.md and aeapp/PRODUCTS.md.
 //
 // ┌───────────────────────────── OWNER: FILL THESE IN ─────────────────────────────┐
 const STORE_CFG={
@@ -7314,8 +7314,9 @@ const STORE_CFG={
     testing:true,
     // Google's official TEST ad unit ids. Replace with your own from admob.google.com (Apps > Ad units).
     // Your AdMob APP ids (the ones with ~) go in aeapp/codemagic.yaml: ADMOB_APP_ID_IOS / ADMOB_APP_ID_ANDROID.
-    ios:{interstitial:'ca-app-pub-3940256099942544/4411468910',rewarded:'ca-app-pub-3940256099942544/1712485313'},
-    android:{interstitial:'ca-app-pub-3940256099942544/1033173712',rewarded:'ca-app-pub-3940256099942544/5224354917'}
+    // App ids (the ones with ~) are Google's samples. The real iOS app id is written into Info.plist at build time from ADMOB_APP_ID_IOS. See aeapp/codemagic.yaml.
+    ios:{app:'ca-app-pub-3940256099942544~1458002511',interstitial:'ca-app-pub-3940256099942544/4411468910',rewarded:'ca-app-pub-3940256099942544/1712485313'},
+    android:{app:'ca-app-pub-3940256099942544~3347511713',interstitial:'ca-app-pub-3940256099942544/1033173712',rewarded:'ca-app-pub-3940256099942544/5224354917'}
   }
 };
 // └────────────────────────────────────────────────────────────────────────────────┘
@@ -7325,7 +7326,8 @@ const ADS=(()=>{
   const AM=()=>{const C=window.Capacitor;return C&&C.Plugins&&C.Plugins.AdMob};
   const NATIVE=!!(CAPN&&AM());
   const ids=()=>STORE_CFG.admob[CAPN==='ios'?'ios':'android'];
-  let inited=null,att=null,CUR=null;
+  const testing=()=>!!STORE_CFG.admob.testing;
+  let inited=null,CUR=null,primed=null,askedTrack=false;
   function init(){if(!NATIVE)return Promise.resolve();if(inited)return inited;
     const on=(ev,f)=>{try{const r=AM().addListener(ev,f);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
     on('onRewardedVideoAdReward',()=>{if(CUR&&CUR.kind==='r')CUR.got=true});
@@ -7335,32 +7337,44 @@ const ADS=(()=>{
     on('interstitialAdDismissed',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
     on('interstitialAdFailedToShow',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
     on('interstitialAdFailedToLoad',()=>{if(CUR&&CUR.kind==='i')end(CUR)});
-    inited=Promise.resolve().then(()=>AM().initialize({initializeForTesting:!!STORE_CFG.admob.testing})).catch(()=>{});return inited}
-  // iOS App Tracking Transparency: asked once, right before the first ad (whatever the answer, ads still play)
-  function track(){if(att)return att;
-    att=CAPN!=='ios'?Promise.resolve():Promise.resolve().then(()=>AM().trackingAuthorizationStatus()).then(s=>s&&s.status==='notDetermined'?AM().requestTrackingAuthorization():null).catch(()=>{});
-    return att}
+    inited=consent().then(()=>AM().initialize({initializeForTesting:testing()})).catch(()=>{});
+    return inited}
+  // Google UMP: ask before any ad request. EU/UK (and anywhere the form is required) see it; everyone else gets a no-op.
+  function consent(){const am=AM();if(!am||!am.requestConsentInfo)return Promise.resolve();
+    return Promise.resolve(am.requestConsentInfo({})).then(info=>{
+      if(!info||!am.showConsentForm)return info;
+      const need=info.status==='REQUIRED'||(info.isConsentFormAvailable&&info.status==='UNKNOWN');
+      return need?am.showConsentForm():info}).catch(()=>{})}
+  // App Tracking Transparency, once, from a quiet moment in play. Never tied to an interstitial.
+  function askTrack(){if(!NATIVE||CAPN!=='ios'||askedTrack)return Promise.resolve();askedTrack=true;
+    const am=AM();if(!am||!am.trackingAuthorizationStatus)return Promise.resolve();
+    return Promise.resolve(am.trackingAuthorizationStatus()).then(s=>s&&s.status==='notDetermined'&&am.requestTrackingAuthorization?am.requestTrackingAuthorization():null).catch(()=>{})}
   const el=()=>$('#ad');let saved=null;
   function overlay(on){const a=el();if(!a)return;const h=a.querySelector('h2'),p=a.querySelector('p'),c=a.querySelector('.cdn');
     if(on){saved=[h.textContent,p.textContent];h.textContent='Loading ad…';p.textContent='Your reward lands when it ends.';if(c)c.style.visibility='hidden';a.hidden=false}
     else{a.hidden=true;if(saved){h.textContent=saved[0];p.textContent=saved[1];saved=null}if(c)c.style.visibility=''}}
-  function end(c,why){if(!c||c.done||CUR!==c)return;c.done=true;CUR=null;clearTimeout(c.to);adBusy=false;try{SND.hush(false)}catch(e){}
-    if(c.kind!=='r')return;overlay(false);
-    if(c.got){c.cb();return}
-    toast(why==='fail'?'No ad right now. Try again soon.':why==='slow'?'Ad took too long. Try again soon.':'Ad closed early. No reward.','bad','📺')}
-  // rewarded: the reward is only paid when AdMob says it was earned. Never leaves the screen stuck: every path ends in end().
-  function rewarded(cb){if(adBusy)return;adBusy=true;const c=CUR={kind:'r',cb,got:false,done:false};overlay(true);
+  function pause(on){window.__adPause=!!on}
+  function end(c,why){if(!c||c.done||CUR!==c)return;c.done=true;CUR=null;clearTimeout(c.to);adBusy=false;pause(false);try{SND.hush(false)}catch(e){}
+    if(c.kind==='i'){const d=c.doneCb;c.doneCb=null;if(d)d();prime();return}
+    overlay(false);
+    if(c.got){c.cb();prime();return}
+    if(c.onFail){c.onFail();prime();return}
+    toast(why==='fail'?'No ad right now. Try again soon.':why==='slow'?'Ad took too long. Try again soon.':'Ad closed early. No reward.','bad','📺');prime()}
+  // keep the next rewarded ad ready so a tap doesn't sit on "Loading"
+  function prime(){if(!NATIVE||primed||adBusy)return;
+    primed=init().then(()=>AM().prepareRewardVideoAd({adId:ids().rewarded,isTesting:testing()})).then(()=>true,()=>{primed=null;return false})}
+  function rewarded(cb,onFail){if(adBusy)return;adBusy=true;const c=CUR={kind:'r',cb,onFail,got:false,done:false};overlay(true);pause(true);
     c.to=setTimeout(()=>end(c,'slow'),60000);
-    init().then(track).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c,'slow'),20000);
-      return Promise.resolve(AM().prepareRewardVideoAd({adId:ids().rewarded,isTesting:!!STORE_CFG.admob.testing})).then(()=>{if(c.done)return;
-        clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}
-        return Promise.resolve(AM().showRewardVideoAd()).then(r=>{if(r)c.got=true})})}).catch(()=>end(c,'fail'))}
-  // interstitial for the 5-minute ad break: no reward, failures are silent
-  function inter(){if(adBusy)return;adBusy=true;const c=CUR={kind:'i',done:false};c.to=setTimeout(()=>end(c),60000);
-    init().then(track).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),20000);
-      return Promise.resolve(AM().prepareInterstitial({adId:ids().interstitial,isTesting:!!STORE_CFG.admob.testing})).then(()=>{if(c.done)return;
+    const prep=primed||init().then(()=>AM().prepareRewardVideoAd({adId:ids().rewarded,isTesting:testing()}));primed=null;
+    Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}
+      return Promise.resolve(AM().showRewardVideoAd()).then(r=>{if(r)c.got=true})}).catch(()=>end(c,'fail'))}
+  // full-screen break. done() always runs, including when the ad fails, so a town move is never stuck behind it.
+  function inter(done){if(adBusy){if(done)done();return}adBusy=true;const c=CUR={kind:'i',done:false,doneCb:done};pause(true);
+    c.to=setTimeout(()=>end(c),60000);
+    init().then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),20000);
+      return Promise.resolve(AM().prepareInterstitial({adId:ids().interstitial,isTesting:testing()})).then(()=>{if(c.done)return;
         clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}return AM().showInterstitial()})}).catch(()=>end(c))}
-  return {native:NATIVE,init,rewarded,inter};
+  return {native:NATIVE,init,rewarded,inter,askTrack,prime,consent};
 })();
 
 const STORE=(()=>{
@@ -7422,7 +7436,7 @@ const STORE=(()=>{
   // simulated purchase (web, artifact, or app without the plugin): granted on the spot, exactly like the prototype
   function sim(k){grant(k,false);return true}
   function buy(k){if(!cat()[k])return Promise.resolve(false);if(!NATIVE)return Promise.resolve(sim(k));
-    return ready().then(ok=>{if(!ok||!st)return sim(k);
+    return ready().then(ok=>{if(!ok||!st){iapError('The App Store isn’t ready, so this stays locked. Nothing was charged.');return false};
       const p=st.get(pid(k));
       if(p&&cat()[k].nc&&st.owned(pid(k))){if(!grant(k,false))toast('You already own this. It’s active.','good','✅');return true}
       if(!p||!p.canPurchase){toast(p?'Not available right now.':'Can’t reach the store. Check your connection.','bad');return false}
@@ -7438,7 +7452,7 @@ const STORE=(()=>{
   function restore(){
     const done='Purchases restored.';
     if(!NATIVE){toast(done,'good','✅');return Promise.resolve(true)}
-    return ready().then(ok=>{if(!ok||!st){toast(done,'good','✅');return true}
+    return ready().then(ok=>{if(!ok||!st){iapError('Purchases couldn’t be restored. The App Store isn’t answering, and nothing was changed.');return false}
       toast('Checking your purchases…','','🔄');RST=[];
       return Promise.resolve(st.restorePurchases()).then(err=>new Promise(r=>setTimeout(()=>r(err),1500))).then(err=>{
         const got=RST.concat(syncOwned()).filter((v,i,a)=>a.indexOf(v)===i);RST=null;
@@ -7469,14 +7483,18 @@ function adsSheet(){if(S.noAds)return;const sp=[[12,22],[86,16],[18,72],[82,64],
   <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'🚫');
   const done=()=>{closeSheet();refreshHUD()};const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',done);const v=$('#naVip');if(v)v.onclick=()=>STORE.tap(v,'vip_noads',done)}
 setTimeout(()=>{const b=document.getElementById('adsBtn');if(b)b.onclick=()=>adsSheet()},0);
-function playAd(cb){if(adBusy)return;adBusy=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;cb()}},1000)}
-function rewarded(cb){if(S.noAds)cb();else if(ADS.native)ADS.rewarded(cb);else playAd(cb)}
-// a short ad break every 5 minutes of play, from the third town on (never for VIP or ad-free players; it waits until nothing is open)
-let adPlay=0;const AD_EVERY=300;
-setInterval(()=>{if(!S||!S.started||document.hidden||S.noAds||S.vip||(S.town|0)<2||S.tut<99)return;adPlay++;
-  if(adPlay<AD_EVERY||adBusy||A||TU||document.body.classList.contains('sheet-on')||performance.now()-(window.SHUT||0)<4000)return;adPlay=0;if(ADS.native){ADS.inter();return}
-  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent;h.textContent='Ad break';p.textContent='Back in a moment. VIP removes ads.';
-  playAd(()=>{p.textContent=pt})},1000);
+function playAd(cb){if(adBusy)return;adBusy=true;window.__adPause=true;const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;window.__adPause=false;cb()}},1000)}
+function rewarded(cb,onFail){if(S.noAds){cb();return}if(ADS.native)ADS.rewarded(cb,onFail);else playAd(cb)}
+// full-screen breaks only at natural pauses: closing an auction result, and moving town (the ad finishes before the reload).
+// Same skips as before: VIP, ad-free, the first two towns, the tutorial, an open sheet, a live auction.
+function canInter(town){if(!S||!S.started||S.noAds||S.vip)return false;if(((town==null?S.town:town)|0)<2)return false;if(S.tut<99||adBusy||A||TU)return false;if(document.body.classList.contains('sheet-on'))return false;return true}
+function maybeBreak(done,town){done=done||function(){};if(!canInter(town)){done();return}if(ADS.native){ADS.inter(done);return}
+  const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent,ht=h.textContent;h.textContent='Ad break';p.textContent='Back in a moment. VIP removes ads.';
+  playAd(()=>{h.textContent=ht;p.textContent=pt;done()})}
+// tracking prompt once the office is quiet, not in the breath before an ad
+setInterval(()=>{if(!ADS.native||CAPN!=='ios'||!S||!S.started||S.tut<99||A||TU||adBusy||window.__adPause||document.hidden)return;if(document.body.classList.contains('sheet-on'))return;if(performance.now()<8000)return;ADS.askTrack()},2000);
+function iapError(msg){sheet('Couldn’t buy','#ef4a3c',`<p>${msg}</p><button class="gbtn center" id="iapOk"><span>OK</span></button>`,null,null,'🛒');const b=$('#iapOk');if(b)b.onclick=closeSheet}
+window.__iapError=iapError;
 
 // ================= SHEETS =================
 let openSheet=null,holdStop=null;
@@ -7631,7 +7649,7 @@ function boardSheet(){
     $('#bmeet').onclick=()=>managersSheet();$('#bb').onclick=()=>{if(S.cash<cost)return;S.cash-=cost;B.on=true;B.next=0;syncStations();toast(hasMgrs()?'Board Room open! First meeting ready.':'Board Room open! Hire a manager to meet.','good');save();refreshHUD();boardSheet()};return}
   const draw=()=>{const now=Date.now();
     if(now<B.next){const act=B.buff&&now<B.until;
-      sheet('Board Room','#5b4a9e',`${act?`<div class="li gold"><span class="eqi">${BOARD_OPTS[B.buff].i}</span><div><h3>${BOARD_OPTS[B.buff].n}</h3><p>${boD(B.buff,boardPow()).replace(/ for .*$/,'')}</p></div><b id="bl" style="font-family:var(--game);font-size:18px"></b></div>`:''}<div class="li" id="bmt" style="display:none"><span class="eqi">🗣️</span><div><h3>Meeting in progress</h3><p>Managers are at the table.</p></div><b id="bmtt" style="font-family:var(--game);font-size:18px"></b></div><p style="text-align:center">Next meeting in</p><div class="cd" id="bcd"></div><p style="text-align:center;font-size:12px">Meetings: 5 min · Strategies: ${durTxt(BOARD_DUR*boardPow())}</p>`,()=>{const n=Date.now(),e=$('#bcd');if(!e)return;e.textContent=mmss(B.next-n);const mt=$('#bmt');if(mt){const on=n<(B.mtg||0);mt.style.display=on?'':'none';if(on)$('#bmtt').textContent=mmss(B.mtg-n)}const l=$('#bl');if(l)l.textContent=mmss(B.until-n);if(n>=B.next)draw()},null,'📊');return}
+      sheet('Board Room','#5b4a9e',`${act?`<div class="li gold"><span class="eqi">${BOARD_OPTS[B.buff].i}</span><div><h3>${BOARD_OPTS[B.buff].n}</h3><p>${boD(B.buff,boardPow()).replace(/ for .*$/,'')}</p></div><b id="bl" style="font-family:var(--game);font-size:18px"></b></div>`:''}<div class="li" id="bmt" style="display:none"><span class="eqi">🗣️</span><div><h3>Meeting in progress</h3><p>Managers are at the table.</p></div><b id="bmtt" style="font-family:var(--game);font-size:18px"></b></div><p style="text-align:center">Next meeting in</p><div class="cd" id="bcd"></div><p style="text-align:center;font-size:12px">Meetings: 5 min · Strategies: ${durTxt(BOARD_DUR*boardPow())}</p><button class="gbtn gold" id="bskip"><span>Meet now<small>Short video</small></span><span class="price">▶ Skip</span></button>`,()=>{const n=Date.now(),e=$('#bcd');if(!e)return;e.textContent=mmss(B.next-n);const mt=$('#bmt');if(mt){const on=n<(B.mtg||0);mt.style.display=on?'':'none';if(on)$('#bmtt').textContent=mmss(B.mtg-n)}const l=$('#bl');if(l)l.textContent=mmss(B.until-n);if(n>=B.next)draw()},null,'📊');const sk=$('#bskip');if(sk)sk.onclick=()=>rewarded(()=>{B.next=Date.now();save();draw()});return}
     if(!hasMgrs()){sheet('Board Room','#5b4a9e',`<div class="li"><span class="eqi">🪑</span><div><h3>The table is empty</h3><p>Hire a manager to hold meetings.</p></div><span></span></div><button class="gbtn purple" id="bmh"><span>See managers</span></button>`,null,null,'📊');$('#bmh').onclick=()=>managersSheet();return}
     if(!B.opts)B.opts=shuffle(Object.keys(BOARD_OPTS)).slice(0,3);
     sheet('Board meeting','#5b4a9e',`<p>Pick a strategy.</p><div class="li"><span class="eqi">👔</span><div><h3>${mgrN()} manager${mgrN()>1?'s':''} at the table</h3><p>Strategies: <b>${durTxt(BOARD_DUR*boardPow())}</b> · Cash review: ${Math.round(30*boardPow())} min of income${mgrN()<(S.vip?8:7)?'. More managers, more boost.':''}</p></div><span></span></div><div class="opts">${B.opts.map(o=>`<button class="opt" data-o="${o}"><span class="eqi">${BOARD_OPTS[o].i}</span><span><h3>${BOARD_OPTS[o].n}</h3><p>${boD(o,boardPow())}</p></span></button>`).join('')}</div>`,null,null,'📊');
@@ -7833,8 +7851,9 @@ function confirmMove(i,paid){if(vipBlocked(i)){vipPassSheet();return}const t=TOW
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,cross?'✈️':'🚚');
   $('#mv2').onclick=()=>{if(paid){if(S.gems<200){needFunds('gems');return}S.gems-=200}moveTown(i)};$('#mv3').onclick=()=>mapSheet()}
 function moveTown(i){const fromT=S.town;S.town=i;if(i!==9)S.ivLegacy=0;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Can’t save on this device.','bad');S.town=fromT;return}
-  closeSheet();const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
-  if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive.','gold'),4500)}
+  closeSheet();const go=()=>{const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
+  if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive.','gold'),4500)};
+  maybeBreak(go,fromT)}
 
 const GEM_PACKS=[{n:'Pouch',g:80,p:'A$1.99'},{n:'Handful',g:250,p:'A$4.99',b:'+25%'},{n:'Sack',g:600,p:'A$9.99',b:'+50%',tag:'Popular'},{n:'Chest',g:1400,p:'A$19.99',b:'+75%'},{n:'Vault',g:3500,p:'A$49.99',b:'+120%'},{n:'Mountain',g:9000,p:'A$99.99',b:'+180%',tag:'Best value'}];
 const CASH_PACKS=[{n:'Wallet of cash',h:.5,g:20},{n:'Briefcase of cash',h:2,g:60},{n:'Bucket of cash',h:6,g:150,tag:'Popular'},{n:'Truckload of cash',h:24,g:450},{n:'Bank vault',h:72,g:1100,tag:'Best value'},{n:'×2 income · 4 hours',boost:4,g:80}];
@@ -7863,6 +7882,10 @@ function cashArt(l){const bill=(x,y,r)=>`<g transform="translate(${x} ${y}) rota
    `<rect x="14" y="10" width="52" height="44" rx="6" fill="#8a96a3"/><circle cx="40" cy="32" r="15" fill="#c3cbd7" stroke="#5e6b80" stroke-width="3"/><path d="M40 20v24M28 32h24" stroke="#5e6b80" stroke-width="3"/><circle cx="40" cy="32" r="4" fill="#ffc83d"/>${bill(62,48,-10)}`,
    `<circle cx="40" cy="32" r="20" fill="#ffc83d" stroke="#c98a0c" stroke-width="3"/><text x="40" y="40" text-anchor="middle" font-family="'Lilita One',Arial,sans-serif" font-size="22" fill="#fff" stroke="#9a5d00" stroke-width="1">×2</text>`];
   return `<svg viewBox="0 0 80 60"><ellipse cx="40" cy="55" rx="24" ry="3.5" fill="rgba(0,0,0,.12)"/>${arts[l]}</svg>`}
+const AD_FREE_MAX=3;
+function adFreeDay(){const d=new Date(),key=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();if(!S.adFree||S.adFree.d!==key)S.adFree={d:key,n:0};return S.adFree}
+function paintAdFree(){const F=adFreeDay(),left=Math.max(0,AD_FREE_MAX-(F.n||0)),lab=$('#adLeft'),g=$('#adGem'),c=$('#adCash');if(lab)lab.textContent=left?left+' left today':'Back tomorrow';if(c&&left)c.textContent='▶ '+fmt(Math.max(500,Math.round(incomePerSec()*600)));[g,c].forEach(b=>{if(!b)return;b.disabled=!left;if(!left)b.textContent='Done'})}
+function takeAdFree(kind){if(adFreeDay().n>=AD_FREE_MAX){paintAdFree();return}rewarded(()=>{const F=adFreeDay();if(F.n>=AD_FREE_MAX)return;F.n++;if(kind==='gem'){S.gems+=8;toast('+8 diamonds','gold','gem')}else{const v=Math.max(500,Math.round(incomePerSec()*600));S.cash+=v;S.earned=(S.earned||0)+v;toast('+'+fmt(v),'good','💵')}save();refreshHUD();if(tOpen()==='Shop')paintAdFree()})}
 function shopSheet(focus){
   const cashCards=CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'×2 all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('');
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${STORE.price(STORE.gemKey(g),g.p)}</button></div>`).join('');
@@ -7872,12 +7895,15 @@ function shopSheet(focus){
   ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Managers from ${mpkFrom(mpkLeft())}</small></span><i>›</i></button>`:''}
   <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCards}</div>
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
+  <div class="shop-h" id="shopFree"><h4>Free today</h4><span id="adLeft"></span></div>
+  <div class="li"><span class="eqi">💎</span><div><h3>Free diamonds</h3><p>Short video. Three a day, shared with cash.</p></div><button class="mini" id="adGem">▶ +8</button></div>
+  <div class="li"><span class="eqi">💵</span><div><h3>Free cash</h3><p>Same daily limit. Close the video and it pays nothing.</p></div><button class="mini" id="adCash">▶</button></div>
   <div class="shop-h"><h4>Extras</h4></div>
   <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Keep every reward, skip the ads.</p></div><button class="mini" id="noads">${S.noAds?'Owned':STORE.price('noads','A$6.99')}</button></div>
   <div class="proto"${STORE.native?' style="display:none"':''}><b>Prototype shop.</b> Real-money items are free here for testing. Real purchases at launch.</div>`,()=>{
     if(!$('#shCash'))return;$('#shCash').textContent=fmt(S.cash);$('#shGems').textContent=S.gems.toLocaleString('en-AU');
     CASH_PACKS.forEach((c,i)=>{const a=document.querySelector(`[data-amt="${i}"]`);if(a)a.textContent=c.boost?'4 hours':fmt(packCash(c.h));afford(document.querySelector(`[data-cp="${i}"]`),S.gems>=c.g,'gems')});
-    const na=$('#noads');if(na&&S.noAds){na.textContent='Owned';na.className='mini ghost';na.disabled=true}},null,'#shopBtn');
+    const na=$('#noads');if(na&&S.noAds){na.textContent='Owned';na.className='mini ghost';na.disabled=true};paintAdFree()},null,'#shopBtn');
   const bump=id=>{const el=document.getElementById(id);if(el){el.classList.remove('bought');void el.offsetWidth;el.classList.add('bought')}};
   document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cp,c=CASH_PACKS[i];if(S.gems<c.g)return;S.gems-=c.g;
     if(c.boost){S.boostUntil=Math.max(Date.now(),S.boostUntil)+c.boost*3600e3;toast('×2 income for 4 hours!','gold','⚡')}else{const v=packCash(c.h);S.cash+=v;toast(`${c.n}: +${fmt(v)}`,'good','💵');flyText(b,'+'+fmt(v))}
@@ -7886,7 +7912,8 @@ function shopSheet(focus){
   const st=$('#starter');if(st)st.onclick=()=>STORE.tap(st,'starter',()=>shopSheet());
   $('#vipp').onclick=()=>vipPassSheet();{const sm=$('#shopMgr');if(sm)sm.onclick=()=>managersSheet()}
   const na=$('#noads');if(na&&!S.noAds)na.onclick=()=>STORE.tap(na,'noads');
-  if(focus){const t=document.getElementById(focus==='gems'?'shopGems':'shopCash');if(t){const sh=$('#sheet .sheet');setTimeout(()=>{sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}}
+  const ag=$('#adGem');if(ag)ag.onclick=()=>takeAdFree('gem');const ac=$('#adCash');if(ac)ac.onclick=()=>takeAdFree('cash');paintAdFree();
+  if(focus){const t=document.getElementById(focus==='gems'?'shopGems':focus==='free'?'shopFree':'shopCash');if(t){const sh=$('#sheet .sheet');setTimeout(()=>{sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}}
 }
 const cashPack=()=>Math.max(500,Math.round(incomePerSec()*3600));
 function boostSheet(){
@@ -7937,10 +7964,13 @@ function profileSheet(){
   <div class="set-card">
     <button class="set-row link" id="tutR"><span class="sr-ic">🎓</span><div><b>Replay tutorial</b><small>Quick tour of the basics</small></div><i>›</i></button>
     <button class="set-row link" id="howR"><span class="sr-ic">📖</span><div><b>How to play</b><small>Rooms, managers, auctions and towns</small></div><i>›</i></button>
+    <a class="set-row link" href="privacy.html"><span class="sr-ic">🔒</span><div><b>Privacy policy</b><small>Ads, consent, purchases and saves</small></div><i>›</i></a>
+    <a class="set-row link" href="support.html"><span class="sr-ic">💬</span><div><b>Support</b><small>Help and a way to reach us</small></div><i>›</i></a>
+    <a class="set-row link" href="mailto:support@studioden.digital?subject=Agency%20Empire%20ad%20report"><span class="sr-ic">🚩</span><div><b>Report an ad</b><small>Tell us about a bad advert</small></div><i>›</i></a>
   </div>
   <h4 class="set-h danger">Danger zone</h4>
   <div class="set-card danger"><div class="set-row"><span class="sr-ic">⚠️</span><div><b>Start over</b><small id="rsT">Wipes everything: towns, diamonds, managers.</small></div><button class="mini red" id="rs">Reset</button></div></div>
-  <span class="ver-logo" role="img" aria-label="Agency Empire"></span><p class="ver">v0.30 prototype</p>`,null,null,'⚙️');
+  <span class="ver-logo" role="img" aria-label="Agency Empire"></span><p class="ver">v0.30</p>`,null,null,'⚙️');
   const re=()=>{const sc=$('#sheet .sheet').scrollTop;profileSheet();$('#sheet .sheet').scrollTop=sc};
   $('#tgMus').onclick=()=>{SND.setMusic(!SND.pref.mus);re()};$('#tgSfx').onclick=()=>{SND.setSfx(!SND.pref.sfx);re()};
   $('#mvR').oninput=e=>SND.setVol('mv',e.target.value/100*.8);$('#svR').oninput=e=>SND.setVol('sv',e.target.value/100*.9);$('#svR').onchange=()=>SND.fx('coin');
@@ -8020,7 +8050,7 @@ function awaySheet(secs,cash,counted){counted=counted==null?Math.min(secs,awayCa
   const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),ch=Math.floor(counted/3600),cm=Math.floor(counted%3600/60),capped=counted<secs-60;
   sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m.</p><div class="welcome">${fmt(cash)}</div>${capped?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${ch?ch+'h ':''}${cm?cm+'m ':''}counted${S.vip?'':' · 👑 VIP: up to 8h'}</p>`:''}
   <button class="gbtn gold" id="c2"><span>Collect ×2<small>Watch an ad</small></span><span class="price">${fmt(cash*2)}</span></button><button class="gbtn" id="c1"><span>Collect</span><span class="price">${fmt(cash)}</span></button>`);
-  $('#c1').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.awayPend=cash*2;save();closeSheet();rewarded(()=>{if(!S.awayPend)return;S.cash+=S.awayPend;S.earned+=S.awayPend;S.awayPend=0;save();refreshHUD()})};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
+  $('#c1').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{if(!S.awayCard)return;const base=cash;S.awayCard=null;S.awayPend=base;save();closeSheet();rewarded(()=>{if(!S.awayPend)return;const c=S.awayPend*2;S.cash+=c;S.earned+=c;S.awayPend=0;save();refreshHUD();toast(`+${fmt(c)} away earnings`,'gold','💵')},()=>{if(!S.awayPend)return;const c=S.awayPend;S.cash+=c;S.earned+=c;S.awayPend=0;save();refreshHUD();toast(`Ad skipped. Collected ${fmt(c)}.`,'','💵')})};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
 }
 
 // ================= HOUSES =================
@@ -8090,7 +8120,7 @@ function newQuest(){S.qlater=S.qlater||[];const li=S.qlater.findIndex(c=>!QUESTS
 function qInfo(q){if(q.c!=null){const Q=QUESTS[q.c];let r=Q.r;if(r.c){const fl=Math.round(incomePerSec()*60/100)*100;if(fl>r.c)r=Object.assign({},r,{c:fl})}return {d:Q.d,cur:Math.min(Q.p(),Q.n),n:Q.n,r,m:Q.m}}const G_=QGEN[q.g];return {d:G_.d(q.n),cur:clamp(G_.p()-q.base,0,q.n),n:q.n,r:q.r}}
 function ensureQuests(){S.qlater=S.qlater||[];S.qa=S.qa.filter(q=>{if(q.c!=null&&QUESTS[q.c]&&QUESTS[q.c].req&&!QUESTS[q.c].req()&&qInfo(q).cur<qInfo(q).n){if(!S.qlater.includes(q.c))S.qlater.push(q.c);return false}return q.c!=null?!!QUESTS[q.c]:!!QGEN[q.g]});while(S.qa.length<3)S.qa.push(newQuest())}
 function rwText(r){return [r.c?fmt(r.c):'',r.g?r.g+' '+GEM:''].filter(Boolean).join(' + ')}
-function claimQuest(i){const q=S.qa[i];if(!q)return;const I=qInfo(q);if(I.cur<I.n)return;S.qc=(S.qc||0)+1;SND.fx('claim');if(I.r.c){S.cash+=I.r.c}if(I.r.g)S.gems+=I.r.g;S.qa.splice(i,1);ensureQuests();toast(`+${rwText(I.r)} · Goal complete!`,'gold',I.r.g&&!I.r.c?'gem':'🏆');save();refreshHUD()}
+function claimQuest(i,mul){mul=mul>1?mul:1;const q=S.qa[i];if(!q)return;const I=qInfo(q);if(I.cur<I.n)return;S.qc=(S.qc||0)+1;SND.fx('claim');const cash=I.r.c?I.r.c*mul:0,gems=I.r.g?I.r.g*mul:0;if(cash)S.cash+=cash;if(gems)S.gems+=gems;S.qa.splice(i,1);ensureQuests();const rw=[cash?fmt(cash):'',gems?gems+' '+GEM:''].filter(Boolean).join(' + ');toast(`+${rw} · Goal complete!`,'gold',gems&&!cash?'gem':'🏆');save();refreshHUD()}
 function updateQuestHUD(){if(!S.qa.length)return;let idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});const ready=idx>=0;if(!ready)idx=0;const I=qInfo(S.qa[idx]);
   $('#questBtn').classList.toggle('ready',ready);$('#qTxt').textContent=ready?'Goal done! Tap to claim':I.d;$('#qBar').style.width=(I.cur/I.n*100)+'%';$('#qIc').textContent=ready?'🎁':'🎯'}
 const qNum=(I,v)=>I.m?fmt(v):Math.floor(v).toLocaleString('en-AU');
@@ -8127,8 +8157,9 @@ function repSheet(){
 function questsSheet(){let sig='';
   sheet('Goals','#ffb01f',`<p>Goals pay cash and diamonds. Claim one, get a new one.</p><div class="list" id="ql"></div>`,()=>{
     const l=$('#ql');if(!l)return;const rows=S.qa.map((q,i)=>{const I=qInfo(q),done=I.cur>=I.n;return {I,done,i}});const ns=JSON.stringify(rows.map(r=>[r.I.d,Math.floor(r.I.cur),r.done]));if(ns===sig)return;sig=ns;
-    l.innerHTML=rows.map(({I,done,i})=>`<div class="li ${done?'done':''}"><span class="eqi">${done?'✅':'🎯'}</span><div><h3>${esc(I.d)}</h3><div class="qbar"><i style="width:${I.cur/I.n*100}%"></i></div><p>${qNum(I,I.cur)} / ${qNum(I,I.n)} · Reward ${rwText(I.r)}</p></div><button class="mini${done?'':' ghost'}" data-q="${i}" ${done?'':'disabled'}>${done?'Claim':Math.floor(I.cur/I.n*100)+'%'}</button></div>`).join('');
-    l.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{claimQuest(+b.dataset.q);sig=''})});
+    l.innerHTML=rows.map(({I,done,i})=>`<div class="li ${done?'done':''}"><span class="eqi">${done?'✅':'🎯'}</span><div><h3>${esc(I.d)}</h3><div class="qbar"><i style="width:${I.cur/I.n*100}%"></i></div><p>${qNum(I,I.cur)} / ${qNum(I,I.n)} · Reward ${rwText(I.r)}</p></div><div class="qact">${done?`<button class="mini" data-q="${i}">Claim</button><button class="mini gold" data-qx="${i}">×2 ad</button>`:`<button class="mini ghost" data-q="${i}" disabled>${Math.floor(I.cur/I.n*100)}%</button>`}</div></div>`).join('');
+    l.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{if(b.disabled)return;claimQuest(+b.dataset.q);sig=''});
+    l.querySelectorAll('[data-qx]').forEach(b=>b.onclick=()=>{const i=+b.dataset.qx;document.querySelectorAll('#ql button').forEach(x=>{x.disabled=true});rewarded(()=>{claimQuest(i,2);questsSheet()},()=>{claimQuest(i,1);toast('Ad skipped. Claimed the usual reward.','','🏆');questsSheet()})})});
 }
 
 // ================= AUCTION =================
@@ -8213,8 +8244,10 @@ function drawAuction(){
     el.innerHTML=`<div class="apanel"><div class="sticker${r.sold?'':' pass'}">${r.sold?'SOLD':'PASSED IN'}</div>
     <p>${r.sold?(r.post?`Passed in at ${money(A.cur)}, then sold to the ${A.leader.n.toLowerCase()} at reserve.`:`Sold for ${money(r.price)} · ${r.over>.001?(Math.round(r.over*1000)/10)+'% over':'right on'} reserve`):`Top bid ${money(r.price)} missed the ${money(L.reserve)} reserve. Back on the market.`}</p>
     <div class="rg"><div><small>You earned</small><b>${fmt(r.comm)}</b></div><div><small>${r.sold&&r.g?'Diamonds':r.sold?'Sold for':'Top bid'}</small><b>${r.sold&&r.g?'+'+r.g+' '+GEM:fmt(r.sold&&r.post?Math.max(r.price||0,A.L.reserve):r.price)}</b></div></div>
-    <button class="gbtn gold center" id="ad2"><span>Back to office</span></button></div>`;
-    $('#ad2').onclick=endAuction;return}
+    ${r.doubled?'':`<button class="gbtn gold" id="auc2"><span>Double commission<small>Short video</small></span><span class="price">${fmt(r.comm*2)}</span></button>`}
+    <button class="gbtn center" id="ad2"><span>Back to office</span></button></div>`;
+    const ax=$('#auc2');if(ax)ax.onclick=()=>{const comm=r.comm;rewarded(()=>{if(!A||!A.done||A.done.doubled)return;S.cash+=comm;S.earned+=comm;A.done.comm=comm*2;A.done.doubled=true;save();refreshHUD();toast('Commission doubled.','gold','🔨');if(A)drawAuction()})};
+    $('#ad2').onclick=()=>{endAuction();maybeBreak()};return}
   const I=incs(),toR=clamp(A.cur/L.reserve,0,1),ld=A.leader,off=A.busy||!ld;
   el.innerHTML=`<div class="apanel">
   <div class="atop"><div><small><span class="aad">${esc(L.addr)}</span><span> · guide ${kfmt(L.value)}</span></small><div class="bid${A.bump?' bump':''}">${ld?money(A.cur):'—'}</div></div>
@@ -8248,7 +8281,7 @@ const ray=new T.Raycaster(),ndc=new T.Vector2();
 function tap(x,y){if(A)return;ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need,+b.dataset.cost||0)},true);
 $('#shopBtn').onclick=()=>shopSheet();$('#gemBtn').onclick=()=>shopSheet('gems');$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
-$('#vipPassBtn').onclick=()=>vipPassSheet();$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>shopSheet('cash');$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
+$('#vipPassBtn').onclick=()=>vipPassSheet();$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>questsSheet();$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>shopSheet('cash');$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
 
 // ================= AUDIO =================
 const SND=(()=>{let ctx=null,out,mus,sfx,nz=null,timer=null,nextT=0,step=0,world=0,lastCoin=0;
@@ -8326,6 +8359,7 @@ document.addEventListener('pointerdown',e=>{SND.unlock();const b=e.target.closes
 let last=0,spawnT=0,pedT=0,saveT=0,vipT=0,clock=0,ftA=0,ftN=0;
 let frameErr=0;function frame(now){try{frame_(now);frameErr=0}catch(e){frameErr++;if(frameErr<3)console.error(e);try{save()}catch(_){}if(frameErr<200)requestAnimationFrame(frame)}}
 function frame_(now){
+  if(window.__adPause){last=now;requestAnimationFrame(frame);return}
   const dt=Math.min(.1,(now-last)/1000||0);last=now;clock+=dt;
   if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}
   pedT+=dt;if(pedT>1.4){pedT=0;spawnPed()}
@@ -8363,7 +8397,7 @@ async function start(data){
   LP(75,'Hiring the team…');await yld();
   buildRooms();buildMeeting();buildManagers();buildTraffic();syncStations();fixQueues();
   LP(90,'Unlocking the doors…');await yld();
-  initHouses();ensureQuests();captureEnv();refreshHUD();STORE.init();
+  initHouses();ensureQuests();captureEnv();refreshHUD();STORE.init();if(ADS.prime)ADS.prime();
   renderer.render(scene,cam);await yld();
   if(window.__lhide)window.__lhide();else{const l=$('#loading');if(l)l.remove()}
   if(!S.started)welcomeSheet();
@@ -8371,7 +8405,7 @@ async function start(data){
   else{if(S.awayPend>0){const c=S.awayPend;S.cash+=c;S.earned+=c;S.awayPend=0;save();refreshHUD();setTimeout(()=>toast(`+${fmt(c)} away earnings`,'gold','💵'),1200)}else if(!(data&&data.S))awayCheck();for(let i=0;i<4;i++)spawnClient()}
   for(let i=0;i<8;i++)spawnPed(true)
   try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(e){}
-  window.__dbg={sceneKinds:()=>{const m={};scene.children.forEach(o=>{const k=(o.type)+(o.children.length?'['+Math.min(o.children.length,40)+']':'')+(o.userData.rotor?'R':'');m[k]=(m[k]||0)+1});return JSON.stringify(m)},counts:()=>({scene:scene.children.length,lb:document.querySelectorAll('.lb').length,vis:visitors.length,toasts:document.querySelectorAll('.toast').length,pops:document.querySelectorAll('.pop,.fly').length}),setBal:(g,u,c)=>{UPG_G=g;UNL_M=u;UPC_M=c||1},fn:{stationSheet:k=>stationSheet(k),closeSheet:()=>closeSheet(),toast:(...a)=>toast(...a),tutStart:f=>tutStart(f),boardSheet:()=>boardSheet(),get S(){return S},cam:()=>({x:target.x,z:target.z,zm:zoom}),buyLevel,unlock,hireMgr,claimQuest,upCost,unlockCost,hireCost,slotMax,incomePerSec,qInfo,ST,ORDER,MGR,MGR_ORDER,townReq,roomsBuilt,value,svcTime,aucCount,signVIP,spawnRate,patMul,repTier,nextTown,TOWNS,ask,UPX:()=>UPX,ITEMS,eqCost,eqT,roomMaxed,maxedN,mapSheet,PROG,MAXLV,finishAuction,endAuction,startAuction,syncStations,save,get A(){return A},BOARD_COST},sim:(sec)=>{for(let t=0;t<sec;t+=.1){const dt=.1;clock+=dt;if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}stepVIP(dt);stepTraffic(dt);
+  window.__dbg={sceneKinds:()=>{const m={};scene.children.forEach(o=>{const k=(o.type)+(o.children.length?'['+Math.min(o.children.length,40)+']':'')+(o.userData.rotor?'R':'');m[k]=(m[k]||0)+1});return JSON.stringify(m)},counts:()=>({scene:scene.children.length,lb:document.querySelectorAll('.lb').length,vis:visitors.length,toasts:document.querySelectorAll('.toast').length,pops:document.querySelectorAll('.pop,.fly').length}),setBal:(g,u,c)=>{UPG_G=g;UNL_M=u;UPC_M=c||1},fn:{stationSheet:k=>stationSheet(k),closeSheet:()=>closeSheet(),toast:(...a)=>toast(...a),tutStart:f=>tutStart(f),boardSheet:()=>boardSheet(),get S(){return S},cam:()=>({x:target.x,z:target.z,zm:zoom}),buyLevel,unlock,hireMgr,claimQuest,upCost,unlockCost,hireCost,slotMax,incomePerSec,qInfo,ST,ORDER,MGR,MGR_ORDER,townReq,roomsBuilt,value,svcTime,aucCount,signVIP,spawnRate,patMul,repTier,nextTown,TOWNS,ask,UPX:()=>UPX,ITEMS,eqCost,eqT,roomMaxed,maxedN,mapSheet,PROG,MAXLV,finishAuction,endAuction,startAuction,moveTown,maybeBreak,syncStations,save,get A(){return A},BOARD_COST},sim:(sec)=>{for(let t=0;t<sec;t+=.1){const dt=.1;clock+=dt;if(S.started&&!A){spawnT+=dt;const iv=1/spawnRate();while(spawnT>iv){spawnT-=iv;spawnClient()}stepStations(dt);houseTick(dt)}stepVIP(dt);stepTraffic(dt);
   for(const v of visitors){moveV(v,dt);if((v.state==='exit'||v.ped)&&atGoal(v)){scene.remove(v.g);removeLabel(v.bub);v.dead=true}}visitors=visitors.filter(v=>!v.dead);stepManagers(dt);if(gridDirty){gridDirty=false;rebuildGrid()}syncMeeting();if(BRD&&BRD.mtg&&BRD.mtg.on)stepMeeting(dt);if(A)stepAuctionFx(dt);if(S.vip){vipT+=dt;if(vipT>240){vipT=0;S.gems+=1}}}refreshHUD();updateLabels()},get VIP(){return VIP},VIPst:()=>VIP?VIP.state+'@'+VIP.L.position.x.toFixed(1)+','+VIP.L.position.y.toFixed(1):null,signVIP:()=>signVIP(),EXITS:()=>EXITS,CURB:()=>CURB,VIPSPOT:()=>VIPSPOT,setView:(x,z,zm)=>{target.set(x,0,z);zoom=zm;applyCam()},ANNEX:()=>ANNEX.map(a=>[a.k,a.r,a.nook]),GAPS:()=>GAPS,FRONTDOOR:()=>FRONTDOOR,SHARK:()=>SHARK_SEAT,fixQueues,qpos,OUTW:()=>OUTW,SND,vipSheet,vipPassSheet,addRep,boardSheet,MGRM,MGV,mwalk,managersSheet,DECO,FX,SPK,repSheet,roomLook,get cam(){return [target.x,target.z,zoom,cam.zoom,renderer.getPixelRatio()]},shopSheet,mapSheet,stationSheet,moveTown,get TW(){return TW},get S(){return S},get A(){return A},startVIP,visitors:()=>visitors,G,blk,cellOf,STN,syncStations,HOUSES,v2:{ROOMS:()=>ROOMS,PIECES:()=>PIECES,WALLITEMS,OBS,OUTW:()=>OUTW,PARTS,SEATS,BRD:()=>BRD,DOORS:()=>DOORS,BBOX:()=>BBOX,PL:()=>PL,findPath,floorY,mwalk,cam,scene,DIR,target,applyCam,placeCam,get zoom(){return zoom},set zoom(v){zoom=v},inFloor,roomAt,decoPlan,eqAnchors,SHARK:()=>SHARK_SEAT,qpos,WG},bookAuction,listHouse,startAuction,flyTo,ask,finishAuction,renderer};
   requestAnimationFrame(t=>{last=t;frame(t)});
 }
