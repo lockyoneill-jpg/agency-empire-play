@@ -74,6 +74,8 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 /* while a panel is open the room gets the screen: only cash, level and diamonds stay */
 body.sheet-on .hud .top2{opacity:0;transform:translateY(-10px);pointer-events:none}
 body.sheet-on .lb{opacity:0!important;pointer-events:none!important}
+body.sheet-on .lb.pop.big{opacity:1!important;z-index:56;animation:poprise 1.2s ease-out forwards}
+@keyframes poprise{from{margin-top:0}to{margin-top:-48px}}
 body.sheet-on .tut-bub.top{top:calc(env(safe-area-inset-top,0px) + 74px)}
 .col{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0}
 .col.r{align-items:flex-end}
