@@ -246,6 +246,20 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .cd{font-family:var(--game);font-size:34px;text-align:center;color:var(--purple-d)}
 .mapw{border-radius:18px;overflow:hidden;box-shadow:0 2px 0 var(--line);background:#8fd0ea}
 .mapw svg{display:block;width:100%;height:auto}
+/* short phones: the map gives up height so the town panel, including Unlock, stays on screen */
+@media (max-height:800px){
+  .sheet:has(.mapw){display:flex;flex-direction:column;overflow:hidden;max-height:calc(100dvh - env(safe-area-inset-top,0px) - 6px);padding-bottom:max(12px, env(safe-area-inset-bottom,0px))}
+  .sheet:has(.mapw) .sh-head{padding:10px 12px}
+  .sheet:has(.mapw) .sh-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding:8px 12px 0;overflow:hidden}
+  .sheet:has(.mapw) .wtabs{flex:none}
+  .sheet:has(.mapw) .mapw{flex:none;max-height:198px}
+  .sheet:has(.mapw) .mapw svg{width:100%;height:auto;max-height:198px}
+  .sheet:has(.mapw) .mpanel{flex:none;gap:6px;padding:8px 10px 8px}
+  .sheet:has(.mapw) .mp-ic{width:38px;height:38px;border-radius:12px;font-size:20px}
+  .sheet:has(.mapw) .mp-top b{font-size:19px}
+  .sheet:has(.mapw) .mp-stats span{padding:4px 2px}
+  .sheet:has(.mapw) .mpanel .gbtn{padding:8px 12px 9px;font-size:17px}
+}
 .pin{cursor:pointer}
 .pin .pulse{animation:pulse 1.6s ease-out infinite;transform-origin:center;transform-box:fill-box}
 @keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.8);opacity:0}}
