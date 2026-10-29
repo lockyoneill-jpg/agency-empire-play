@@ -112,8 +112,8 @@ body.sheet-on .tut-bub.top{top:calc(env(safe-area-inset-top,0px) + 74px)}
 .rbtn:active{transform:translateY(2px);box-shadow:inset 0 -2px 0 #c9d4e3,0 1px 0 #8fa0b8}
 .rbtn svg{width:28px;height:28px}
 .dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:10;width:calc(100% - 20px);max-width:460px;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 4px 7px;border-radius:24px}
-body.no-iap .dock{grid-template-columns:repeat(4,1fr)}
-body.no-iap #shopBtn,body.no-iap #vipPassBtn,body.no-iap #adsBtn,body.no-iap #gemBtn .plus{display:none!important}
+body.no-iap #vipPassBtn,body.no-iap #adsBtn,body.no-iap #gemBtn .plus{display:none!important}
+body.no-iap #shopBtn>span:last-child{font-size:11px;line-height:1.05;text-align:center}
 .dk{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-weight:900;font-size:11px;letter-spacing:.02em;position:relative;min-width:0}
 .dki{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 2px 0 rgba(255,255,255,.35),0 3px 0 rgba(0,0,0,.3);transition:transform .08s}
 .dki svg{width:28px;height:28px}
@@ -7318,7 +7318,7 @@ function updateTags(){
 let lastHud=0;
 function affordableMgrs(){return MGR_ORDER.filter(k=>!S.mgr[k]&&(k==='shark'?S.vip:S.gems>=MGR[k].g&&S.st[k].on)).length}
 function refreshHUD(){
-  $('#shopBtn').hidden=!IAP;$('#vipPassBtn').hidden=!IAP||!!S.vip;$('#adsBtn').hidden=!IAP||!!S.noAds||(S.tut|0)<99;if(!IAP){$('#gemBtn').setAttribute('aria-label','Diamonds');$('#cashBtn').setAttribute('aria-label','Cash')}$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
+  $('#vipPassBtn').hidden=!IAP||!!S.vip;$('#adsBtn').hidden=!IAP||!!S.noAds||(S.tut|0)<99;if(!IAP){const sb=$('#shopBtn');sb.hidden=false;sb.setAttribute('aria-label','Free rewards');const lab=sb.querySelector(':scope > span:last-child');if(lab&&!lab.dataset.rw){lab.dataset.rw='1';lab.innerHTML='Free<br>rewards'}const ic=sb.querySelector('.dki');if(ic)ic.classList.remove('shopi');$('#gemBtn').setAttribute('aria-label','Diamonds');$('#cashBtn').setAttribute('aria-label','Cash')}$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
   $('#agname').textContent=S.agency;$('#profileBtn').classList.toggle('vipg',!!S.vip);$('#town').textContent=`World ${worldOf(S.town)+1} · ${TW.n}`+(S.vip?' · VIP':'');
   $('#xpRing').setAttribute('stroke-dashoffset',(103.7*(1-clamp(S.xp/xpNeed(S.lvl),0,1))).toFixed(1));
   const ac=aucCount(),ad=$('#aucDot');ad.hidden=!ac;ad.textContent=ac;
@@ -7573,7 +7573,7 @@ setInterval(()=>{if(!CAPN||SET.remindAsked||SET.remind)return;if(Date.now()<REMI
 
 // ================= SHEETS =================
 let openSheet=null,holdStop=null;
-const TITLE_IC={'Managers':'#mgrBtn','Shop':'#shopBtn','Goals':'🎯','VIP client':'⭐','Double income':'⚡','Your agency':'🏢','Office':'#upBtn','Welcome back!':'💰','Welcome to Saltbrook':'👋'};
+const TITLE_IC={'Managers':'#mgrBtn','Shop':'#shopBtn','Free rewards':'#shopBtn','Goals':'🎯','VIP client':'⭐','Double income':'⚡','Your agency':'🏢','Office':'#upBtn','Welcome back!':'💰','Welcome to Saltbrook':'👋'};
 function sheet(title,color,body,live,lvl,icon){
   if(holdStop)holdStop();icon=icon||TITLE_IC[title]||'';
   const sc=$('#sheet'),prev=sc.querySelector('.sheet'),re=!sc.hidden&&prev&&prev.dataset.t===title,st=re?prev.scrollTop:0;
@@ -7586,7 +7586,7 @@ function sheet(title,color,body,live,lvl,icon){
 }
 function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
 function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
-function needFunds(kind,cost){SND.fx('error');if(TU||!IAP){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
+function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(!IAP){if(kind==='gems'){toast('Not enough diamonds yet.','bad','gem');return}toast('Not enough cash. Swap diamonds here.','bad','💵');const back_=openSheet&&openSheet.back;closeSheet();rewardsSheet('cash');if(back_&&openSheet)openSheet.onClose=back_;return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
 function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
 // Android back. Close the top sheet or modal. If nothing is open, minimise
 // instead of quitting. Welcome and away-earnings cards stay up (they have to
@@ -7974,11 +7974,36 @@ function cashArt(l){const bill=(x,y,r)=>`<g transform="translate(${x} ${y}) rota
    `<rect x="14" y="10" width="52" height="44" rx="6" fill="#8a96a3"/><circle cx="40" cy="32" r="15" fill="#c3cbd7" stroke="#5e6b80" stroke-width="3"/><path d="M40 20v24M28 32h24" stroke="#5e6b80" stroke-width="3"/><circle cx="40" cy="32" r="4" fill="#ffc83d"/>${bill(62,48,-10)}`,
    `<circle cx="40" cy="32" r="20" fill="#ffc83d" stroke="#c98a0c" stroke-width="3"/><text x="40" y="40" text-anchor="middle" font-family="'Lilita One',Arial,sans-serif" font-size="22" fill="#fff" stroke="#9a5d00" stroke-width="1">×2</text>`];
   return `<svg viewBox="0 0 80 60"><ellipse cx="40" cy="55" rx="24" ry="3.5" fill="rgba(0,0,0,.12)"/>${arts[l]}</svg>`}
-function shopSheet(focus){if(!IAP)return;
-  const cashCards=CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'×2 all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('');
+function cashCardsHTML(){return CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'×2 all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('')}
+const FREE_AD_HTML=`<div class="li gold" id="freeAd"><span class="eqi">📺</span><div><h3>Free from an ad</h3><p id="freeLeft"></p></div><div class="qact"><button class="mini gem" id="freeGem">5 diamonds</button><button class="mini" id="freeCash">Cash</button></div></div>`;
+function shopPacksLive(){
+  const cash=$('#shCash');if(cash)cash.textContent=fmt(S.cash);
+  const gems=$('#shGems');if(gems)gems.textContent=S.gems.toLocaleString('en-AU');
+  CASH_PACKS.forEach((c,i)=>{const a=document.querySelector(`[data-amt="${i}"]`);if(a)a.textContent=c.boost?'4 hours':fmt(packCash(c.h));afford(document.querySelector(`[data-cp="${i}"]`),S.gems>=c.g,'gems')});
+  const na=$('#noads');if(na&&S.noAds){na.textContent='Owned';na.className='mini ghost';na.disabled=true}
+}
+function wireCashPacks(){
+  const bump=id=>{const el=document.getElementById(id);if(el){el.classList.remove('bought');void el.offsetWidth;el.classList.add('bought')}};
+  document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cp,c=CASH_PACKS[i];if(S.gems<c.g)return;S.gems-=c.g;
+    if(c.boost){S.boostUntil=Math.max(Date.now(),S.boostUntil)+c.boost*3600e3;toast('×2 income for 4 hours!','gold','⚡')}else{const v=packCash(c.h);S.cash+=v;toast(`${c.n}: +${fmt(v)}`,'good','💵');flyText(b,'+'+fmt(v))}
+    bump('cp'+i);save();refreshHUD()});
+  return bump
+}
+// Same 3-a-day free ad as the shop: 5 diamonds or 10 minutes of cash, then the sheet reopens.
+function wireFreeAd(reopen){
+  const st=adShopState(),left=Math.max(0,3-(st.n|0)),fl=$('#freeLeft');if(fl)fl.textContent=left?left+' of 3 left today':'Back tomorrow';
+  const fg=$('#freeGem'),fc=$('#freeCash');
+  const arm=(b,run)=>{if(!b)return;b.disabled=!left;b.classList.toggle('ghost',!left);if(!left)return;b.onclick=()=>rewarded(()=>{const s=adShopState();if((s.n|0)>=3){toast('That’s the three for today.','bad');reopen();return}s.n=(s.n|0)+1;run();save();refreshHUD();reopen()})};
+  arm(fg,()=>{S.gems+=5;toast('+5 diamonds','gold','gem');flyText(fg,'+5')});
+  arm(fc,()=>{const v=Math.max(200,Math.round(incomePerSec()*600));S.cash+=v;S.earned+=v;toast('Free cash: +'+fmt(v),'good','💵');flyText(fc,'+'+fmt(v))})
+}
+function focusShopSection(focus){if(!focus)return;const t=document.getElementById(focus==='gems'?'shopGems':'shopCash');if(!t)return;const sh=$('#sheet .sheet');setTimeout(()=>{if(!sh)return;sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}
+function shopSheet(focus){
+  if(!IAP){rewardsSheet(focus==='gems'?null:focus);return}
+  const cashCards=cashCardsHTML();
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${STORE.price(STORE.gemKey(g),g.p)}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
-  <div class="li gold" id="freeAd"><span class="eqi">📺</span><div><h3>Free from an ad</h3><p id="freeLeft"></p></div><div class="qact"><button class="mini gem" id="freeGem">5 diamonds</button><button class="mini" id="freeCash">Cash</button></div></div>
+  ${FREE_AD_HTML}
   ${S.starter?'':`<div class="feat"><span class="ribbon">ONE TIME</span><div class="fart">${gemArt(3)}</div><div><h3>Starter Pack</h3><ul><li>💎 300 diamonds</li><li>💵 A bucket of cash</li><li>⚡ ×2 income for 2 hours</li></ul><button class="gbtn gold" id="starter"><span>Grab it</span><span class="price">${STORE.price('starter','A$2.99')}</span></button></div></div>`}
   <div class="feat vipf"><span class="ribbon">LIFETIME</span><div class="vipart fart">${CROWN_SVG}</div><div><h3>${S.vip?'VIP active':'VIP'}</h3><ul><li>🏝️ Isla Verde, VIP only</li><li>⭐ +25% income everywhere</li><li>🌙 8h offline earnings</li></ul><button class="gbtn" id="vipp"><span>${S.vip?'Active':'Join VIP'}</span><span class="price">${S.vip?'👑':'from '+STORE.price('vip','A$9.99')}</span></button></div></div>
   ${mpkLeft().length?`<button class="mpk-ban" id="shopMgr"><span class="mpk-faces">${MGR7.filter(k=>!S.mgr[k]).slice(0,4).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Double every room</b><small>Managers from ${mpkFrom(mpkLeft())}</small></span><i>›</i></button>`:''}
@@ -7986,24 +8011,23 @@ function shopSheet(focus){if(!IAP)return;
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
   <div class="shop-h"><h4>Extras</h4></div>
   <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Keep every reward, skip the ads.</p></div><button class="mini" id="noads">${S.noAds?'Owned':STORE.price('noads','A$6.99')}</button></div>
-  <div class="proto"${STORE.native?' style="display:none"':''}><b>Prototype shop.</b> Real-money items are free here for testing. Real purchases at launch.</div>`,()=>{
-    if(!$('#shCash'))return;$('#shCash').textContent=fmt(S.cash);$('#shGems').textContent=S.gems.toLocaleString('en-AU');
-    CASH_PACKS.forEach((c,i)=>{const a=document.querySelector(`[data-amt="${i}"]`);if(a)a.textContent=c.boost?'4 hours':fmt(packCash(c.h));afford(document.querySelector(`[data-cp="${i}"]`),S.gems>=c.g,'gems')});
-    const na=$('#noads');if(na&&S.noAds){na.textContent='Owned';na.className='mini ghost';na.disabled=true}},null,'#shopBtn');
-  const bump=id=>{const el=document.getElementById(id);if(el){el.classList.remove('bought');void el.offsetWidth;el.classList.add('bought')}};
-  document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cp,c=CASH_PACKS[i];if(S.gems<c.g)return;S.gems-=c.g;
-    if(c.boost){S.boostUntil=Math.max(Date.now(),S.boostUntil)+c.boost*3600e3;toast('×2 income for 4 hours!','gold','⚡')}else{const v=packCash(c.h);S.cash+=v;toast(`${c.n}: +${fmt(v)}`,'good','💵');flyText(b,'+'+fmt(v))}
-    bump('cp'+i);save();refreshHUD()});
+  <div class="proto"${STORE.native?' style="display:none"':''}><b>Prototype shop.</b> Real-money items are free here for testing. Real purchases at launch.</div>`,shopPacksLive,null,'#shopBtn');
+  const bump=wireCashPacks();
   document.querySelectorAll('[data-gp]').forEach(b=>b.onclick=()=>{const g=GEM_PACKS[+b.dataset.gp];STORE.tap(b,STORE.gemKey(g),()=>{bump('gp'+b.dataset.gp);flyText(b,'+'+g.g+' '+GEM)})});
-  const st=$('#starter');if(st)st.onclick=()=>STORE.tap(st,'starter',()=>shopSheet());
+  const starter=$('#starter');if(starter)starter.onclick=()=>STORE.tap(starter,'starter',()=>shopSheet());
   $('#vipp').onclick=()=>vipPassSheet();{const sm=$('#shopMgr');if(sm)sm.onclick=()=>managersSheet()}
   const na=$('#noads');if(na&&!S.noAds)na.onclick=()=>STORE.tap(na,'noads');
-  (function(){const st=adShopState(),left=Math.max(0,3-(st.n|0)),fl=$('#freeLeft');if(fl)fl.textContent=left?left+' of 3 left today':'Back tomorrow';
-    const fg=$('#freeGem'),fc=$('#freeCash');
-    const arm=(b,run)=>{if(!b)return;b.disabled=!left;b.classList.toggle('ghost',!left);if(!left)return;b.onclick=()=>rewarded(()=>{const s=adShopState();if((s.n|0)>=3){toast('That’s the three for today.','bad');shopSheet();return}s.n=(s.n|0)+1;run();save();refreshHUD();shopSheet()})};
-    arm(fg,()=>{S.gems+=5;toast('+5 diamonds','gold','gem');flyText(fg,'+5')});
-    arm(fc,()=>{const v=Math.max(200,Math.round(incomePerSec()*600));S.cash+=v;S.earned+=v;toast('Free cash: +'+fmt(v),'good','💵');flyText(fc,'+'+fmt(v))})})();
-  if(focus){const t=document.getElementById(focus==='gems'?'shopGems':'shopCash');if(t){const sh=$('#sheet .sheet');setTimeout(()=>{sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}}
+  wireFreeAd(()=>shopSheet(focus));
+  focusShopSection(focus)
+}
+// Android ads-only launch: the dock slot where Shop was. Hidden once IAP_ENABLED.android is true, because the shop already contains both of these.
+function rewardsSheet(focus){
+  if(IAP){shopSheet(focus);return}
+  sheet('Free rewards','#2fb38a',`${FREE_AD_HTML}
+  <div class="shop-h" id="shopCash"><h4>Cash</h4><span>Paid with diamonds</span></div><div class="sgrid">${cashCardsHTML()}</div>`,shopPacksLive,null,'#shopBtn');
+  wireCashPacks();
+  wireFreeAd(()=>rewardsSheet(focus));
+  focusShopSection(focus)
 }
 const cashPack=()=>Math.max(500,Math.round(incomePerSec()*3600));
 function boostSheet(){
@@ -8383,8 +8407,8 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();if(A)return;zoom=clamp(zo
 const ray=new T.Raycaster(),ndc=new T.Vector2();
 function tap(x,y){if(A)return;ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need,+b.dataset.cost||0)},true);
-$('#shopBtn').onclick=()=>{if(IAP)shopSheet()};$('#gemBtn').onclick=()=>{if(IAP)shopSheet('gems')};$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
-$('#vipPassBtn').onclick=()=>{if(IAP)vipPassSheet()};$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>{if(IAP)shopSheet('cash')};$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
+$('#shopBtn').onclick=()=>{if(IAP)shopSheet();else rewardsSheet()};$('#gemBtn').onclick=()=>{if(IAP)shopSheet('gems')};$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
+$('#vipPassBtn').onclick=()=>{if(IAP)vipPassSheet()};$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>{if(IAP)shopSheet('cash');else rewardsSheet('cash')};$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
 
 // ================= AUDIO =================
 const SND=(()=>{let ctx=null,out,mus,sfx,nz=null,timer=null,nextT=0,step=0,world=0,lastCoin=0;
