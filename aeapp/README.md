@@ -1,4 +1,4 @@
-# Agency Empire for iOS and Android
+# Idle Realtor for iOS and Android
 
 The playable game stays at the repo root and on GitHub Pages from `main`. This folder is the Capacitor app. It copies those static files into the bundle. There is no `server.url`, so the app does not load the website. `main` is not changed by the Android project.
 

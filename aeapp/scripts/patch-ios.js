@@ -15,8 +15,9 @@ function setString(key, value) {
   else plist = plist.replace('</dict>\n</plist>', '\t' + block + '\n</dict>\n</plist>');
 }
 setString('GADApplicationIdentifier', 'ca-app-pub-0000000000000000~0000000000');
-setString('NSUserTrackingUsageDescription', 'This lets Agency Empire show ads that fit a property tycoon, instead of random ones. The game plays the same if you say no.');
-setString('CFBundleDisplayName', 'Agency Empire');
+setString('NSUserTrackingUsageDescription', 'This lets Idle Realtor show ads that fit a property tycoon, instead of random ones. The game plays the same if you say no.');
+setString('CFBundleDisplayName', 'Idle Realtor');
+setString('CFBundleName', 'Idle Realtor');
 if (!plist.includes('<key>UIRequiresFullScreen</key>')) {
   plist = plist.replace('</dict>\n</plist>', '\t<key>UIRequiresFullScreen</key>\n\t<true/>\n</dict>\n</plist>');
 }

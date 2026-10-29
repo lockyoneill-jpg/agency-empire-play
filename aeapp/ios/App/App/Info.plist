@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Agency Empire</string>
+	<string>Idle Realtor</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>Idle Realtor</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -64,7 +64,7 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-0000000000000000~0000000000</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This lets Agency Empire show ads that fit a property tycoon, instead of random ones. The game plays the same if you say no.</string>
+	<string>This lets Idle Realtor show ads that fit a property tycoon, instead of random ones. The game plays the same if you say no.</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>SKAdNetworkItems</key>
