@@ -24,6 +24,68 @@
   if(sa&&!native){var fit=function(){var H=Math.max(screen.height,screen.width)===screen.height?screen.height:screen.width;if(innerHeight<H-2&&innerWidth<innerHeight){document.documentElement.style.height=H+'px';document.body&&(document.body.style.height=H+'px');window.scrollTo(0,0)}};
     addEventListener('load',fit);addEventListener('resize',function(){setTimeout(fit,60)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(fit,60)})}
   window.AE_BUILD='28Oct 2026';
+  // Settings shows this. The rate prompt is offered at most once for this string.
+  window.AE_VER='0.31';
+  // Hosted copies are not on the live site yet (privacy.html is not on main).
+  // The app still knows these URLs so a future link is not a dead tap.
+  window.AE_LEGAL={
+    terms:'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+    privacy:'https://lockyoneill-jpg.github.io/agency-empire-play/privacy.html',
+    support:'https://lockyoneill-jpg.github.io/agency-empire-play/support.html'
+  };
+  window.AEOpenExternal=function(href){
+    if(!href)return 'ignore';
+    var h=String(href);
+    if(h.indexOf('mailto:')===0||h.indexOf('#')===0||h.charAt(0)==='.'||h.indexOf('javascript:')===0)return 'ignore';
+    if(h==='privacy.html'||h==='support.html')return 'local';
+    if(!/^https?:/i.test(h))return 'ignore';
+    var bare=h.split('#')[0];
+    var L=window.AE_LEGAL;
+    if(bare===L.terms||bare===L.privacy||bare===L.support)return 'browser';
+    return 'blocked';
+  };
+  window.AERouteLink=function(href, opts){
+    opts=opts||{};
+    var native=opts.native;
+    if(native==null){var C=window.Capacitor;native=!!(C&&C.isNativePlatform&&C.isNativePlatform());}
+    var kind=window.AEOpenExternal(href);
+    if(!native)return {kind:kind, action:'web'};
+    if(kind==='browser'){
+      var plugs=opts.plugins||(window.Capacitor&&window.Capacitor.Plugins)||{};
+      var B=plugs.Browser;
+      if(B&&B.open){try{var p=B.open({url:String(href).split('#')[0], presentationStyle:'fullscreen'});if(p&&p.catch)p.catch(function(){});}catch(e){}return {kind:kind, action:'browser'};}
+      return {kind:kind, action:'browser-missing'};
+    }
+    if(kind==='blocked')return {kind:kind, action:'blocked'};
+    if(kind==='local')return {kind:kind, action:'overlay'};
+    return {kind:kind, action:'passthrough'};
+  };
+  // Pure gate for the native rate prompt. The game fills `s`. Web always fails closed.
+  window.AEReviewRules=function(s){
+    s=s||{};
+    if(!s.native)return {ok:false, why:'web'};
+    if(!s.started)return {ok:false, why:'not-started'};
+    if(s.hidden)return {ok:false, why:'hidden'};
+    if(s.pending!=='sale'&&s.pending!=='town')return {ok:false, why:'no-event'};
+    if(s.reviewFor&&s.reviewFor===s.version)return {ok:false, why:'already'};
+    if((s.tut|0)<99||s.tutOn)return {ok:false, why:'tutorial'};
+    if(s.sheet||s.doc)return {ok:false, why:'sheet'};
+    if(s.ad||s.auc)return {ok:false, why:'busy'};
+    if((s.sessions|0)<2&&(s.playMs|0)<600000)return {ok:false, why:'new'};
+    var now=s.now||0;
+    if(s.lastIap&&now-s.lastIap<60000)return {ok:false, why:'iap'};
+    if(s.lastBuy&&now-s.lastBuy<60000)return {ok:false, why:'purchase'};
+    if(s.lastAd&&now-s.lastAd<60000)return {ok:false, why:'ad'};
+    return {ok:true, why:s.pending};
+  };
+  window.AEReviewAsk=function(s, plug, commit){
+    var r=window.AEReviewRules(s);
+    if(!r.ok)return r;
+    if(!plug||typeof plug.requestReview!=='function')return {ok:false, why:'no-plugin'};
+    try{if(commit)commit();}catch(e){return {ok:false, why:'save'};}
+    try{var p=plug.requestReview();if(p&&p.catch)p.catch(function(){});}catch(e){}
+    return {ok:true, why:r.why};
+  };
   try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(function(){})}catch(e){}
   if(!native){
     if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
@@ -57,10 +119,12 @@
     window.CdvPurchaseCapacitor={installed:true};
     var ps=document.createElement('script');ps.src='vendor/cdv-purchase.js';ps.async=false;document.head.appendChild(ps);
   }
-  // stay inside the app: http(s) links would open Safari chrome. mailto and in-app pages stay.
+  // Stay inside the app. Terms, and the hosted privacy and support URLs, open in the
+  // in-app browser (Safari view on iPhone, Custom Tabs on Android). Every other http(s) link is blocked.
   document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a');if(!a)return;var href=a.getAttribute('href')||'';
-    if(!href||href.indexOf('mailto:')===0||href.indexOf('#')===0||href.charAt(0)==='.'||href.indexOf('javascript:')===0)return;
-    if(/^https?:/i.test(href)){e.preventDefault()}},true);
+    var route=window.AERouteLink(href,{native:true,plugins:P});
+    if(route.action==='blocked'||route.action==='browser'||route.action==='browser-missing')e.preventDefault();
+  },true);
   if(!Prefs)return;
   // mirror every save into native storage
   var set=Storage.prototype.setItem,rem=Storage.prototype.removeItem;
