@@ -31,12 +31,26 @@ No secrets belong in this repo. It is public.
 
 ## Android
 
-Same bundle id, portrait only, phones only. Google Play Billing uses `capacitor-plugin-cdv-purchase` with the product ids in `PRODUCTS.md`. A purchase is granted only after Play confirms it. Ads use the Android test unit ids already in `STORE_CFG.admob.android`, and UMP consent runs before the first ad request, the same calls as iOS. The launcher icon is the 1024 artwork. The splash is the same navy as iOS (`#051f3f`).
+Same bundle id, portrait only, phones only. The first Play build is ads only. Purchases are off until you flip the one flag below. When that flag is on, Google Play Billing uses `capacitor-plugin-cdv-purchase` with the product ids in `PRODUCTS.md`. A purchase is granted only after Play confirms it. Ads use the Android test unit ids already in `STORE_CFG.admob.android`, and UMP consent runs before the first ad request, the same calls as iOS. The launcher icon is the 1024 artwork. The splash is the same navy as iOS (`#051f3f`).
+
+### Turn Android purchases on
+
+`IAP_ENABLED` in `native.js` (repo root) is the only switch. `android` is `false` for this launch. iOS stays `true`. The website is not in that table.
+
+Set `android` to `true` to bring the shop back in full: VIP, remove ads, diamond packs, manager packs, Isla Verde, The Shark, and Restore purchases. Then put the purchase plugin back into the Android build:
+
+```bash
+cd aeapp
+npm run cap:sync:android
+npm run android:patch
+```
+
+`cap sync` adds `capacitor-plugin-cdv-purchase`. `patch-android.js` reads the same `android` flag. It leaves the plugin in the project when the flag is `true`, and removes it when the flag is `false`, so Play Billing does not start during the ads-only launch.
 
 Native points worth mentioning if Play asks what the app does on the device:
 
 - The game is bundled on the device and plays with no network. There is no browser chrome and no `server.url`.
-- Purchases go through Google Play Billing. Nothing is granted if Billing is missing or slow. Restore turns on non-consumables Play reports as owned.
+- Purchases stay off while `IAP_ENABLED.android` is `false`. After that flag is `true` and the sync steps above have been run, purchases go through Google Play Billing. Nothing is granted if Billing is missing or slow. Restore turns on non-consumables Play reports as owned.
 - Haptics, the system share sheet, and opt-in local notifications use the same in-game switches as iOS.
 - The layout uses the status bar and the gesture-navigation inset. The splash and status bar are native. The activity is portrait.
 
