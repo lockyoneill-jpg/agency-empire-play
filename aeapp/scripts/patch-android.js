@@ -22,11 +22,20 @@ if (!xml.includes('com.google.android.gms.ads.APPLICATION_ID')) {
 fs.writeFileSync(manifestPath, xml);
 console.log('Android project patched: portrait, phone screens, AdMob app id present.');
 
-// IAP_ENABLED.android is false (see native.js). cap sync puts the purchase plugin
-// back into the generated Gradle files and capacitor.plugins.json. Strip it so
-// Android startup never loads Play Billing. When that flag flips to true, stop
-// stripping these lines.
+// Reads IAP_ENABLED.android from native.js, the same switch the game uses.
+// While it is false, cap sync must not leave the purchase plugin in the Android
+// app, or Play Billing starts with the process. Flipping that one flag to true
+// and running cap sync, then this patch, puts the plugin back.
+function iapAndroidEnabled() {
+  const src = fs.readFileSync(path.join(__dirname, '..', '..', 'native.js'), 'utf8');
+  const m = src.match(/var IAP_ENABLED=\{[^}]*android:\s*(true|false)/);
+  return !!(m && m[1] === 'true');
+}
 function stripPurchasePlugin() {
+  if (iapAndroidEnabled()) {
+    console.log('IAP_ENABLED.android is true. Purchase plugin stays in the Android build.');
+    return;
+  }
   const gradleFiles = [
     path.join(__dirname, '..', 'android', 'app', 'capacitor.build.gradle'),
     path.join(__dirname, '..', 'android', 'capacitor.settings.gradle')
