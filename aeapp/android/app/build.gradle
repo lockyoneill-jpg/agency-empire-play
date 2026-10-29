@@ -7,7 +7,10 @@ android {
         applicationId "digital.studioden.agencyempire"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        // Codemagic sets BUILD_NUMBER. Each Play upload has to be higher than the last.
+        // A local build with no BUILD_NUMBER stays at 1.
+        def playBuild = System.getenv("BUILD_NUMBER")
+        versionCode (playBuild != null && playBuild.isInteger()) ? playBuild.toInteger() : 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
