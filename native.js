@@ -26,6 +26,21 @@
     return}
   var P=C.Plugins||{},Prefs=P.Preferences;
   try{var SB=P.StatusBar;if(SB){SB.setOverlaysWebView&&SB.setOverlaysWebView({overlay:true});SB.setStyle&&SB.setStyle({style:'DARK'})}}catch(e){}
+  // Newer Android forces edge-to-edge, and the WebView often reports
+  // env(safe-area-inset-top) as 0 while the status bar still covers the top.
+  // The money bar uses max(env, --ae-sat). If the env inset is missing, reserve 24px.
+  // iOS already supplies the env inset, so this runs on Android only.
+  if(plat==='android'){
+    var pinStatus=function(){
+      var probe=document.createElement('div');
+      probe.style.cssText='position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px)';
+      (document.body||document.documentElement).appendChild(probe);
+      var measured=0;try{measured=parseFloat(getComputedStyle(probe).paddingTop)||0}catch(e){}
+      probe.remove();
+      if(measured<20)document.documentElement.style.setProperty('--ae-sat','24px');
+    };
+    if(document.body)pinStatus();else document.addEventListener('DOMContentLoaded',pinStatus);
+  }
   // hold the splash until the office has actually painted, then a failsafe
   (function(){var gone=false;function hide(){if(gone)return;gone=true;try{P.SplashScreen&&P.SplashScreen.hide()}catch(e){}}
     var iv=setInterval(function(){var l=document.getElementById('loading');if(!l||l.hidden){clearInterval(iv);hide()}},200);

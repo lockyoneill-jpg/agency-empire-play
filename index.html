@@ -68,7 +68,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .hud{position:fixed;left:0;right:0;pointer-events:none;z-index:10;padding:0 max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left))}
 .hud *{pointer-events:auto}
 .hud .row,.hud .col,.hud .spacer{pointer-events:none}
-.hud.top{top:calc(env(safe-area-inset-top,0px) + 8px);display:flex;flex-direction:column;gap:8px}
+.hud.top{top:calc(max(env(safe-area-inset-top,0px), var(--ae-sat, 0px)) + 8px);display:flex;flex-direction:column;gap:8px}
 .row{display:flex;align-items:center;gap:8px}
 .row.top2{align-items:flex-start;transition:opacity .2s,transform .2s}
 /* while a panel is open the room gets the screen: only cash, level and diamonds stay */
