@@ -7588,6 +7588,18 @@ function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
 function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
 function needFunds(kind,cost){SND.fx('error');if(TU||!IAP){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
 function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
+// Android back. Close the top sheet or modal. If nothing is open, minimise
+// instead of quitting. Welcome and away-earnings cards stay up (they have to
+// be answered). A live auction is left running. iOS never registers this.
+function closeTopModal(){
+  const doc=$('#docv');if(doc&&!doc.hidden){doc.hidden=true;const f=doc.querySelector('iframe');if(f)f.src='about:blank';return true}
+  const lv=$('#lvup');if(lv){lv.classList.add('out');setTimeout(()=>lv.remove(),260);return true}
+  const sc=$('#sheet');if(sc&&!sc.hidden){const name=(sc.querySelector('.sheet')||{}).dataset.t;if(name==='Welcome to Saltbrook'||name==='Welcome back!')return false;closeSheet();return true}
+  if(TU){tutEnd(false);return true}
+  if(A&&A.done){endAuction();return true}
+  return false}
+function androidBack(){if(closeTopModal())return;const App=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(App&&App.minimizeApp){try{const p=App.minimizeApp();if(p&&p.catch)p.catch(()=>{})}catch(e){}}}
+if(CAPN==='android'){const App=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(App&&App.addListener){try{const p=App.addListener('backButton',()=>{try{androidBack()}catch(e){}});if(p&&p.catch)p.catch(()=>{})}catch(e){}}}
 // a quick double tap on a dock button never lands on the sheet that just slid up under the finger
 let TAPP=null;window.addEventListener('pointerdown',e=>{if(e.isTrusted&&!(e.target&&e.target.closest&&e.target.closest('#sheet .sheet')))TAPP={x:e.clientX,y:e.clientY}},true);
 ['pointerdown','pointerup','click','touchstart','touchend','mousedown','mouseup'].forEach(ev=>window.addEventListener(ev,e=>{const sc=$('#sheet');if(!e.isTrusted||!sc||sc.hidden||!sc._t0)return;const t=e.target;if(!t||!t.closest||!t.closest('#sheet .sheet'))return;const n=performance.now(),p=e.changedTouches?e.changedTouches[0]:e,same=sc._tp&&p&&Math.hypot(p.clientX-sc._tp.x,p.clientY-sc._tp.y)<36&&n-sc._tl<450;if(n-sc._t0>320&&!same)return;sc._tl=n;e.stopImmediatePropagation();e.stopPropagation();if(e.cancelable)e.preventDefault()},{capture:true,passive:false}));
