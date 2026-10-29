@@ -412,6 +412,8 @@ body.auc-on .hud,body.auc-on .dock{display:none}
 .vplan em{font-style:normal;font-size:10.5px;font-weight:800;color:var(--muted);margin-top:6px;line-height:1.25}
 .vrib{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#e8443a;color:#fff;font-style:normal;font-family:var(--game);font-size:11px;padding:3px 10px;border-radius:9px;white-space:nowrap;box-shadow:0 2px 0 #a92a22}
 .vfine{text-align:center;font-size:11px!important;color:var(--muted);margin-top:12px!important}
+.legal{text-align:center;font-size:12px;font-weight:800;color:var(--muted);margin:4px 6px 0;line-height:1.45}
+.legal button{font:inherit;font-weight:900;color:#1d4fa8;background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
 .wtabs{display:flex;gap:6px;background:#e3e9f1;padding:4px;border-radius:14px;margin-bottom:-2px}.wtab{flex:1;border-radius:11px;padding:6px 6px;background:transparent;text-align:center;font:inherit;color:var(--ink);cursor:pointer;border:0}
 .wtab b{font-family:var(--game);font-weight:400;font-size:13.5px;color:#7a869a;white-space:nowrap}
 .wtab.on{background:#fff;box-shadow:0 2px 0 var(--line)}.wtab.on b{color:var(--wc)}
@@ -966,7 +968,7 @@ const KEY='agency-empire-v2';
 let S;
 function fresh(){
   const st={};for(const k of ORDER)st[k]={on:ST[k].unlock===0,lv:1,slots:1};
-  return {v:3,agency:'Brick & Key Realty',cash:30,gems:20,xp:0,lvl:1,st,mgr:{},eq:{},sp:{},vip:false,boostUntil:0,lastSeen:Date.now(),started:false,earned:0,served:0,auctions:0,walkouts:0,vipIn:70,vips:0,tipWalk:false,hs:{},listed:0,sold:0,aucSold:0,qa:[],qn:0,qg:0,qc:0,qlater:[],tut:0,board:{on:false,next:0,buff:null,until:0,opts:null,held:0},town:0,towns:0,rep:50,repLog:[],perks:[]};
+  return {v:3,agency:'Brick & Key Realty',cash:30,gems:20,xp:0,lvl:1,st,mgr:{},eq:{},sp:{},vip:false,boostUntil:0,lastSeen:Date.now(),started:false,earned:0,served:0,auctions:0,walkouts:0,vipIn:70,vips:0,tipWalk:false,hs:{},listed:0,sold:0,aucSold:0,qa:[],qn:0,qg:0,qc:0,qlater:[],tut:0,board:{on:false,next:0,buff:null,until:0,opts:null,held:0},town:0,towns:0,rep:50,repLog:[],perks:[],sessions:0,playMs:0,reviewFor:'',reviewWhy:''};
 }
 function migrate(s){
   if(!s||typeof s!=='object')return null;s.st=s.st&&typeof s.st==='object'?s.st:{};if(s.tut==null)s.tut=s.started?99:0;
@@ -7409,7 +7411,7 @@ const ADS=(()=>{
   function overlay(on){const a=el();if(!a)return;const h=a.querySelector('h2'),p=a.querySelector('p'),c=a.querySelector('.cdn');
     if(on){saved=[h.textContent,p.textContent];h.textContent='Loading ad…';p.textContent='Your reward lands when it ends.';if(c)c.style.visibility='hidden';a.hidden=false}
     else{a.hidden=true;if(saved){h.textContent=saved[0];p.textContent=saved[1];saved=null}if(c)c.style.visibility=''}}
-  function end(c,why){if(!c||c.done||CUR!==c)return;c.done=true;CUR=null;clearTimeout(c.to);adBusy=false;pause(false);try{SND.hush(false)}catch(e){}
+  function end(c,why){if(!c||c.done||CUR!==c)return;c.done=true;CUR=null;clearTimeout(c.to);adBusy=false;pause(false);stampAd();try{SND.hush(false)}catch(e){}
     const go=c.doneCb;c.doneCb=null;
     if(c.kind==='i'){interReady=false;preloadInter();if(go)go();return}
     overlay(false);rewardReady=false;preloadReward();
@@ -7421,13 +7423,13 @@ const ADS=(()=>{
     init().then(()=>{if(c.done)return;if(!canAds){end(c,'fail');return}
       const prep=rewardReady?Promise.resolve():AM().prepareRewardVideoAd({adId:ids().rewarded,isTesting:!!STORE_CFG.admob.testing});
       rewardReady=false;
-      return Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}lastBreak=Date.now();
+      return Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}stampAd();
         return Promise.resolve(AM().showRewardVideoAd()).then(r=>{if(r)c.got=true})})}).catch(()=>end(c,'fail'))}
   function inter(){return new Promise(resolve=>{if(adBusy){resolve();return}adBusy=true;const c=CUR={kind:'i',done:false,doneCb:resolve};pause(true);c.to=setTimeout(()=>end(c),60000);
     init().then(()=>{if(c.done)return;if(!canAds){end(c);return}
       const prep=interReady?Promise.resolve():AM().prepareInterstitial({adId:ids().interstitial,isTesting:!!STORE_CFG.admob.testing});
       interReady=false;
-      return Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}lastBreak=Date.now();return AM().showInterstitial()})}).catch(()=>end(c))})}
+      return Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}stampAd();return AM().showInterstitial()})}).catch(()=>end(c))})}
   return {native:NATIVE,init,rewarded,inter,preloadReward};
 })();
 
@@ -7453,7 +7455,7 @@ const STORE=(()=>{
       if(q){P.k.forEach(m=>{S.mgr[m]=1});syncStations()}else buyMgrPack(P.id);return true}
     const g=GEM_PACKS.find(x=>gemKey(x)===k);if(!g)return false;
     S.gems+=g.g;if(!q)toast(`+${g.g.toLocaleString('en-AU')} diamonds`,'gold','gem');return true}
-  function grant(k,q){const r=give(k,q);if(r){save();refreshHUD()}return r}
+  function grant(k,q){const r=give(k,q);if(r){if(!q)stampIap();save();refreshHUD()}return r}
 
   // ---- native store (cordova-plugin-purchase v13)
   let CP=null,st=null,readyP=null,RST=null;const WAIT={};
@@ -7489,7 +7491,7 @@ const STORE=(()=>{
   const real=()=>!!st;
   // simulated purchase (web, artifact, or app without the plugin): granted on the spot, exactly like the prototype
   function sim(k){grant(k,false);return true}
-  function buy(k){if(!IAP)return Promise.resolve(false);if(!cat()[k])return Promise.resolve(false);if(!NATIVE)return Promise.resolve(sim(k));
+  function buy(k){if(!IAP)return Promise.resolve(false);if(!cat()[k])return Promise.resolve(false);stampIap();if(!NATIVE)return Promise.resolve(sim(k));
     return ready().then(ok=>{if(!ok||!st){storeDown();return false}
       const p=st.get(pid(k));
       if(p&&cat()[k].nc&&st.owned(pid(k))){if(!grant(k,false))toast('You already own this. It’s active.','good','✅');return true}
@@ -7505,6 +7507,7 @@ const STORE=(()=>{
           if(WAIT[k]===w)w.t=setTimeout(()=>{if(WAIT[k]===w)settle(k,false)},90000)},()=>fail(null))})})}
   function restore(){
     if(!IAP)return Promise.resolve(false);
+    stampIap();
     const done='Purchases restored.';
     if(!NATIVE){toast(done,'good','✅');return Promise.resolve(true)}
     return ready().then(ok=>{if(!ok||!st){storeDown('restore');return false}
@@ -7520,9 +7523,9 @@ const STORE=(()=>{
   const localised=k=>price(k,null)!=null;
   // a buy button: disabled while the store sheet is up (app only); ok() runs after a confirmed purchase
   function tap(btn,k,ok){if(!IAP)return;if(btn&&btn._iap)return;const pr=buy(k);if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
-    pr.then(r=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false}if(r&&ok&&(!NATIVE||!btn||btn.isConnected))ok()})}
+    pr.then(r=>{stampIap();if(NATIVE&&btn){btn._iap=0;btn.disabled=false}if(r&&ok&&(!NATIVE||!btn||btn.isConnected))ok()})}
   function restoreTap(btn,after){if(!IAP)return;if(btn&&btn._iap)return;if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
-    restore().then(()=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false;if(after&&btn.isConnected)after()}})}
+    restore().then(()=>{stampIap();if(NATIVE&&btn){btn._iap=0;btn.disabled=false;if(after&&btn.isConnected)after()}})}
   function storeDown(kind){if(!IAP)return;vibFx('error');
     const restore=kind==='restore',shop=CAPN==='android'?'Google Play':'The App Store';
     sheet('Store','#e8443a',`<div class="li"><span class="eqi">🛒</span><div><h3>${restore?'Couldn’t restore':'Purchase didn’t go through'}</h3><p>${restore?shop+' didn’t answer, so nothing was restored. Check your connection and try again.':shop+' didn’t answer, so you weren’t charged and nothing was unlocked.'}</p></div></div><button class="gbtn ghost center" id="sdOk"><span>OK</span></button>`,null,null,'🛒');
@@ -7540,14 +7543,22 @@ function adsSheet(){if(!IAP||S.noAds)return;const sp=[[12,22],[86,16],[18,72],[8
   <div class="vperks naperks"><div><span>⏸️</span><b>No ad breaks</b><small>Never mid-game</small></div><div><span>🎁</span><b>Instant ×2 collect</b><small>No video to watch</small></div><div><span>♾️</span><b>Yours for good</b><small>Every town, forever</small></div><div><span>📶</span><b>Plays offline</b><small>No ads to load</small></div></div>
   <div class="vplans"><button class="vplan naplan" id="naBuy"><small>NO ADS</small><b>Lifetime</b><span class="vprice">${STORE.price('noads','A$6.99')}</span><em>Ad-free, one payment</em></button>
   ${S.vip?'':`<button class="vplan best" id="naVip"><i class="vrib">BEST VALUE</i><small>VIP + NO ADS</small><b>Lifetime</b><span class="vprice">${STORE.price('vip_noads','A$14.99')}</span><em>Every VIP perk too</em></button>`}</div>
-  <p class="vfine">One-time purchase. No subscription.</p>`,null,null,'🚫');
-  const done=()=>{closeSheet();refreshHUD()};const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',done);const v=$('#naVip');if(v)v.onclick=()=>STORE.tap(v,'vip_noads',done)}
+  <p class="vfine">One-time purchase. No subscription.</p>${legalLine('ads')}`,null,null,'🚫');
+  const done=()=>{closeSheet();refreshHUD()};const b=$('#naBuy');b.onclick=()=>STORE.tap(b,'noads',done);const v=$('#naVip');if(v)v.onclick=()=>STORE.tap(v,'vip_noads',done);wireLegal('ads')}
 setTimeout(()=>{const b=document.getElementById('adsBtn');if(b)b.onclick=()=>adsSheet()},0);
 let lastBreak=0;
-function playAd(cb){if(adBusy)return;adBusy=true;window.AE_AD=true;try{SND.hush(true)}catch(e){}const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;window.AE_AD=false;try{SND.hush(false)}catch(e){}lastBreak=Date.now();try{cb()}catch(e){}}},1000)}
+try{const t=+sessionStorage.getItem('ae-ad');if(t>0)lastBreak=t}catch(e){}
+try{const t=+sessionStorage.getItem('ae-iap');if(t>0)window.LASTIAP=t}catch(e){}
+function stampAd(){lastBreak=Date.now();try{sessionStorage.setItem('ae-ad',String(lastBreak))}catch(e){}}
+function stampIap(){window.LASTIAP=Date.now();try{sessionStorage.setItem('ae-iap',String(window.LASTIAP))}catch(e){}}
+function reviewSnap(){const adEl=document.getElementById('ad'),doc=document.getElementById('docv');
+  return {native:!!CAPN,started:!!(S&&S.started),hidden:!!document.hidden,tut:S?S.tut:0,tutOn:!!(typeof TU!=='undefined'&&TU)||document.body.classList.contains('tut-on'),sheet:document.body.classList.contains('sheet-on'),doc:!!(doc&&!doc.hidden),ad:!!(adBusy||window.AE_AD||(adEl&&!adEl.hidden)),auc:!!A,reviewFor:(S&&S.reviewFor)||'',version:window.AE_VER||'0.31',sessions:(S&&S.sessions)||0,playMs:(S&&S.playMs)||0,lastIap:window.LASTIAP||0,lastBuy:window.LASTBUY||0,lastAd:lastBreak||0,now:Date.now(),pending:(S&&S.reviewWhy)||''}}
+function noteReview(why){if(!CAPN||!S||(why!=='sale'&&why!=='town'))return;const ver=window.AE_VER||'0.31';if((S.reviewFor||'')===ver||S.reviewWhy===why)return;S.reviewWhy=why;save()}
+function maybeReview(){if(!CAPN||!S||!window.AEReviewAsk)return;const plug=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.InAppReview;const snap=reviewSnap();window.AEReviewAsk(snap,plug,function(){S.reviewFor=snap.version;S.reviewWhy='';save()})}
+function playAd(cb){if(adBusy)return;adBusy=true;window.AE_AD=true;try{SND.hush(true)}catch(e){}const el=$('#ad');el.hidden=false;let n=3;$('#adN').textContent=n;const t=setInterval(()=>{n--;if(n>0){$('#adN').textContent=n}else{clearInterval(t);el.hidden=true;adBusy=false;window.AE_AD=false;try{SND.hush(false)}catch(e){}stampAd();try{cb()}catch(e){}}},1000)}
 function rewarded(cb,onFail){if(S.noAds){cb();return}if(ADS.native)ADS.rewarded(cb,onFail);else playAd(cb)}
 function interOk(){if(!S||!S.started||document.hidden||adBusy||window.AE_AD)return false;if(S.noAds||S.vip)return false;if((S.town|0)<2)return false;if((S.tut|0)<99||TU)return false;if(A&&!A.done)return false;if(document.body.classList.contains('sheet-on'))return false;if(Date.now()-lastBreak<45000)return false;return true}
-function afterBreak(done){if(!interOk()){done();return}lastBreak=Date.now();const fin=()=>{try{done()}catch(e){}};
+function afterBreak(done){if(!interOk()){done();return}stampAd();const fin=()=>{try{done()}catch(e){}};
   if(ADS.native){const p=ADS.inter();if(p&&p.then)p.then(fin,fin);else fin();return}
   const p=$('#ad p'),h=$('#ad h2'),pt=p.textContent,ht=h.textContent;h.textContent='Ad break';p.textContent='Back in a moment.';
   playAd(()=>{h.textContent=ht;p.textContent=pt;fin()})}
@@ -7588,7 +7599,7 @@ function sheet(title,color,body,live,lvl,icon){
 function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
 function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
 function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(!IAP){if(kind==='gems'){toast('Not enough diamonds yet.','bad','gem');return}toast('Not enough cash. Swap diamonds here.','bad','💵');const back_=openSheet&&openSheet.back;closeSheet();rewardsSheet('cash');if(back_&&openSheet)openSheet.onClose=back_;return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
-function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
+function closeSheet(){if(holdStop)holdStop();const sc0=$('#sheet'),nm=sc0&&sc0.querySelector('.sheet')&&sc0.querySelector('.sheet').dataset.t;if(nm==='Shop'||nm==='VIP'||nm==='Remove ads'||nm==='Store')stampIap();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
 // Android back. Close the top sheet or modal. If nothing is open, minimise
 // instead of quitting. Welcome and away-earnings cards stay up (they have to
 // be answered). A live auction is left running. iOS never registers this.
@@ -7696,6 +7707,11 @@ function upgradesSheet(){
 
 // ---- Board Room pitch + manager packs (the managers are the agency's big purchase)
 const MGR7=MGR_ORDER.filter(k=>k!=='shark');
+function paintMgrHired(){const n=MGR7.filter(k=>S.mgr[k]).length,w=(n/7*100)+'%';
+  const c=document.querySelector('#sheet .mg-cnt b');if(c)c.textContent=n+'/7 hired';
+  const bar=document.querySelector('#sheet .mg-cnt .mbar i');if(bar)bar.style.width=w;
+  const b=document.getElementById('mgrMileN');if(b)b.textContent=n+' / 7';
+  const i=document.getElementById('mgrMileB');if(i)i.style.width=w}
 const mgrN=()=>MGR_ORDER.filter(k=>M_(k)&&(k==='shark'||S.st[k].on)).length;
 const boardPow=()=>1+.15*Math.max(0,mgrN()-1);
 const boD=(o,p)=>!(p>1.001)?BOARD_OPTS[o].d:BOARD_OPTS[o].d.replace('1 hour',durTxt(BOARD_DUR*(p||1))).replace('30 minutes',Math.round(30*(p||1))+' minutes');
@@ -7729,11 +7745,11 @@ function boardPitchHTML(locked,cta){const n=MGR7.filter(k=>S.mgr[k]).length;
   <h3 class="br-h">Your managers run the show</h3><p class="br-p">They meet every ${S.vip?2:4} hours. You pick the strategy.</p>
   <div class="strats">${Object.keys(BOARD_OPTS).map(k=>{const o=BOARD_OPTS[k];return `<div><span>${o.i}</span><b>${o.n}</b><small>${boD(k,boardPow())}</small></div>`}).join('')}</div>
   <div class="li"><span class="eqi">👔</span><div><h3>More managers, longer boosts</h3><p>+15% per extra manager. A full board of ${S.vip?8:7}: <b>${durTxt(BOARD_DUR*(1+.15*((S.vip?8:7)-1)))}</b> per strategy.</p></div><span></span></div>
-  <div class="mile"><div class="r"><span>Managers hired</span><b>${n} / 7</b></div><div class="mbar"><i style="width:${n/7*100}%"></i></div></div>`}
+  <div class="mile"><div class="r"><span>Managers hired</span><b id="mgrMileN">${n} / 7</b></div><div class="mbar"><i id="mgrMileB" style="width:${n/7*100}%"></i></div></div>`}
 function boardSheet(){
   const B=S.board,cost=BOARD_COST*TW.cost;
-  if(!boardAvail()){sheet('Board Room','#5b4a9e',boardPitchHTML(true)+`<p class="br-p" style="font-size:12.5px">Hire managers now. They boost rooms today and take their seats later.</p><button class="gbtn purple center" id="bmeet"><span>See managers</span><span class="price">👔</span></button><button class="gbtn ghost center" id="bok"><span>Got it</span></button>`,null,null,'📊');$('#bok').onclick=closeSheet;$('#bmeet').onclick=()=>managersSheet();return}
-  if(!B.on){sheet('Board Room','#5b4a9e',boardPitchHTML(false,`<button class="gbtn purple" id="bb" style="margin-top:10px"><span>Build Board Room</span><span class="price">${fmt(cost)}</span></button>`)+`<button class="gbtn ghost center" id="bmeet"><span>See managers</span></button>`,()=>{afford($('#bb'),S.cash>=cost,'cash',cost)},null,'📊');
+  if(!boardAvail()){sheet('Board Room','#5b4a9e',boardPitchHTML(true)+`<p class="br-p" style="font-size:12.5px">Hire managers now. They boost rooms today and take their seats later.</p><button class="gbtn purple center" id="bmeet"><span>See managers</span><span class="price">👔</span></button><button class="gbtn ghost center" id="bok"><span>Got it</span></button>`,()=>{paintMgrHired()},null,'📊');$('#bok').onclick=closeSheet;$('#bmeet').onclick=()=>managersSheet();return}
+  if(!B.on){sheet('Board Room','#5b4a9e',boardPitchHTML(false,`<button class="gbtn purple" id="bb" style="margin-top:10px"><span>Build Board Room</span><span class="price">${fmt(cost)}</span></button>`)+`<button class="gbtn ghost center" id="bmeet"><span>See managers</span></button>`,()=>{afford($('#bb'),S.cash>=cost,'cash',cost);paintMgrHired()},null,'📊');
     $('#bmeet').onclick=()=>managersSheet();$('#bb').onclick=()=>{if(S.cash<cost)return;S.cash-=cost;B.on=true;B.next=0;syncStations();toast(hasMgrs()?'Board Room open! First meeting ready.':'Board Room open! Hire a manager to meet.','good');save();refreshHUD();boardSheet()};return}
   const draw=()=>{const now=Date.now();
     if(now<B.next){const act=B.buff&&now<B.until;
@@ -7844,7 +7860,7 @@ ${st4(146,116,5,'#fff')}${st4(14,96,4,'#fff')}${st4(132,10,3.5,'#fff8d0')}${A.ex
 
 function managersSheet(){
   const cards=MGR_ORDER.map(k=>{const d=MGR[k];return `<div class="mg ${d.legend?'legend':''}" data-m="${k}">${mgrSVG(k)}<b>${d.n}</b><span class="dept">${k==='shark'?'Whole agency · <i class="vipt">VIP ONLY</i>':ST[k].name}</span><p>${d.fx}</p><button class="mini gem" data-h="${k}"></button></div>`}).join('');
-  const nh=MGR7.filter(k=>S.mgr[k]).length;const pk=mgrPacksHTML();sheet('Managers','#8b4ce0',`${pk}<div class="mg-cnt"><b>${nh}/7 hired</b><div class="mbar"><i style="width:${nh/7*100}%"></i></div></div><div class="mgrs">${cards}</div>${pk&&!STORE.native?'<div class="proto"><b>Prototype shop.</b> Deals are free here for testing. Real purchases at launch.</div>':''}`,()=>{mgrPacksLive();
+  const nh=MGR7.filter(k=>S.mgr[k]).length;const pk=mgrPacksHTML();sheet('Managers','#8b4ce0',`${pk}<div class="mg-cnt"><b>${nh}/7 hired</b><div class="mbar"><i style="width:${nh/7*100}%"></i></div></div><div class="mgrs">${cards}</div>${pk&&!STORE.native?'<div class="proto"><b>Prototype shop.</b> Deals are free here for testing. Real purchases at launch.</div>':''}`,()=>{mgrPacksLive();paintMgrHired();
     MGR_ORDER.forEach(k=>{const c=document.querySelector(`[data-m="${k}"]`);if(!c)return;const b=c.querySelector('button');c.classList.toggle('hired',!!S.mgr[k]);
       if(k==='shark'&&!S.vip&&!IAP){b.disabled=true;b.dataset.need='';b.className='mini ghost';b.textContent='Not available';b._h=null}
       else if(k==='shark'&&!S.vip){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='👑 Join VIP';b._h=null}
@@ -7942,7 +7958,7 @@ function confirmMove(i,paid){if(vipBlocked(i)){if(!IAP){toast('That town isn’t
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mvShare"><span>Share the move</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,cross?'✈️':'🚚');
   $('#mv2').onclick=()=>{if(paid){if(S.gems<200){needFunds('gems');return}S.gems-=200}moveTown(i)};$('#mvShare').onclick=()=>shareMilestone(`${S.agency} is packing up for ${t.n}. Agency Empire.`);$('#mv3').onclick=()=>mapSheet()}
 function moveTown(i){const fromT=S.town;S.town=i;if(i!==9)S.ivLegacy=0;if(i===9)S.vipVisited=true;S.towns=(S.towns||0)+1;S.cash=Math.ceil(30*TOWNS[i].cost);for(const k of ORDER)S.st[k]={on:ST[k].unlock===0,lv:1,slots:1};S.eq={};S.hs={};S.board={on:false,next:0,buff:null,until:0,opts:null,held:S.board.held||0};S.arrived=Date.now();mapSel=null;mapW=null;if(!save()){toast('Can’t save on this device.','bad');S.town=fromT;return}
-  closeSheet();const go=()=>{const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
+  noteReview('town');closeSheet();const go=()=>{const fly=worldOf(i)!==worldOf(fromT);try{localStorage.setItem('ae-move',JSON.stringify({to:i,fly,at:Date.now()}))}catch(e){}
     if(window.__lshow)window.__lshow(fly?`✈️ Flying to ${TOWNS[i].n}…`:`🚚 Moving to ${TOWNS[i].n}…`,'Packing up the office',worldOf(i)>=1);else toast(`Moving to ${TOWNS[i].n}…`,'gold');setTimeout(()=>{try{location.reload()}catch(e){}},1100);setTimeout(()=>toast('Reopen the game to arrive.','gold'),4500)};
   afterBreak(go)}
 
@@ -7997,6 +8013,12 @@ function wireFreeAd(reopen){
   arm(fc,()=>{const v=Math.max(200,Math.round(incomePerSec()*600));S.cash+=v;S.earned+=v;toast('Free cash: +'+fmt(v),'good','💵');flyText(fc,'+'+fmt(v))})
 }
 function focusShopSection(focus){if(!focus)return;const t=document.getElementById(focus==='gems'?'shopGems':'shopCash');if(!t)return;const sh=$('#sheet .sheet');setTimeout(()=>{if(!sh)return;sh.scrollTo({top:t.offsetTop-70,behavior:'smooth'});const g=t.nextElementSibling;if(g){g.classList.add('flash');setTimeout(()=>g.classList.remove('flash'),1300)}},120)}
+function legalLine(id){if(!IAP||CAPN==='android')return '';
+  return `<p class="legal">Purchases follow Apple’s <button type="button" id="${id}Terms">Terms of Use</button> and our <button type="button" id="${id}Priv">Privacy Policy</button>.</p>`}
+function wireLegal(id){const t=document.getElementById(id+'Terms');if(t)t.onclick=()=>openTerms();const p=document.getElementById(id+'Priv');if(p)p.onclick=()=>openDoc('privacy.html','Privacy')}
+function openTerms(){const url=window.AE_LEGAL&&window.AE_LEGAL.terms;if(!url)return;
+  if(CAPN&&window.AERouteLink){const r=window.AERouteLink(url,{native:true});if(r.action==='browser'||r.action==='browser-missing')return}
+  window.open(url,'_blank','noopener')}
 function shopSheet(focus){
   if(!IAP){rewardsSheet(focus==='gems'?null:focus);return}
   const cashCards=cashCardsHTML();
@@ -8010,12 +8032,14 @@ function shopSheet(focus){
   <div class="shop-h" id="shopGems"><h4>Diamonds</h4><span>Bigger packs, bigger bonus</span></div><div class="sgrid">${gemCards}</div>
   <div class="shop-h"><h4>Extras</h4></div>
   <div class="li"><span class="eqi">🚫</span><div><h3>Remove ads</h3><p>Keep every reward, skip the ads.</p></div><button class="mini" id="noads">${S.noAds?'Owned':STORE.price('noads','A$6.99')}</button></div>
+  ${legalLine('shop')}
   <div class="proto"${STORE.native?' style="display:none"':''}><b>Prototype shop.</b> Real-money items are free here for testing. Real purchases at launch.</div>`,shopPacksLive,null,'#shopBtn');
   const bump=wireCashPacks();
   document.querySelectorAll('[data-gp]').forEach(b=>b.onclick=()=>{const g=GEM_PACKS[+b.dataset.gp];STORE.tap(b,STORE.gemKey(g),()=>{bump('gp'+b.dataset.gp);flyText(b,'+'+g.g+' '+GEM)})});
   const starter=$('#starter');if(starter)starter.onclick=()=>STORE.tap(starter,'starter',()=>shopSheet());
   $('#vipp').onclick=()=>vipPassSheet();{const sm=$('#shopMgr');if(sm)sm.onclick=()=>managersSheet()}
   const na=$('#noads');if(na&&!S.noAds)na.onclick=()=>STORE.tap(na,'noads');
+  wireLegal('shop');
   wireFreeAd(()=>shopSheet(focus));
   focusShopSection(focus)
 }
@@ -8085,12 +8109,13 @@ function profileSheet(){
     <button class="set-row link" id="howR"><span class="sr-ic">📖</span><div><b>How to play</b><small>Rooms, managers, auctions and towns</small></div><i>›</i></button>
     <button class="set-row link" id="privR"><span class="sr-ic">🔒</span><div><b>Privacy policy</b><small>Ads, saves and purchases</small></div><i>›</i></button>
     <button class="set-row link" id="supR"><span class="sr-ic">💬</span><div><b>Support</b><small>Help and contact</small></div><i>›</i></button>
+    ${IAP&&CAPN!=='android'?`<button class="set-row link" id="termsR"><span class="sr-ic">📄</span><div><b>Terms of Use</b><small>Apple’s standard terms for purchases</small></div><i>›</i></button>`:''}
     <a class="set-row link" id="repAd" href="mailto:${STORE_CFG.support}?subject=Agency%20Empire%20ad%20report"><span class="sr-ic">🚩</span><div><b>Report an ad</b><small>Email us about a bad ad</small></div><i>›</i></a>
     <button class="set-row link" id="stShare"><span class="sr-ic">📤</span><div><b>Share your agency</b><small>Level ${S.lvl} · ${esc(TW.n)}</small></div><i>›</i></button>
   </div>
   <h4 class="set-h danger">Danger zone</h4>
   <div class="set-card danger"><div class="set-row"><span class="sr-ic">⚠️</span><div><b>Start over</b><small id="rsT">Wipes everything: towns, diamonds, managers.</small></div><button class="mini red" id="rs">Reset</button></div></div>
-  <span class="ver-logo" role="img" aria-label="Agency Empire"></span><p class="ver">v0.31</p>`,null,null,'⚙️');
+  <span class="ver-logo" role="img" aria-label="Agency Empire"></span><p class="ver">v${esc(window.AE_VER||'0.31')}</p>`,null,null,'⚙️');
   const re=()=>{const sc=$('#sheet .sheet').scrollTop;profileSheet();$('#sheet .sheet').scrollTop=sc};
   $('#tgMus').onclick=()=>{SND.setMusic(!SND.pref.mus);re()};$('#tgSfx').onclick=()=>{SND.setSfx(!SND.pref.sfx);re()};
   $('#mvR').oninput=e=>SND.setVol('mv',e.target.value/100*.8);$('#svR').oninput=e=>SND.setVol('sv',e.target.value/100*.9);$('#svR').onchange=()=>SND.fx('coin');
@@ -8100,6 +8125,7 @@ function profileSheet(){
   const rp=$('#rsP');if(rp)rp.onclick=e=>STORE.restoreTap(e.currentTarget,re);
   $('#tutR').onclick=()=>{closeSheet();tutStart(true)};$('#howR').onclick=()=>howToSheet(profileSheet);
   $('#privR').onclick=()=>openDoc('privacy.html','Privacy');$('#supR').onclick=()=>openDoc('support.html','Support');
+  const tr=$('#termsR');if(tr)tr.onclick=()=>openTerms();
   $('#stShare').onclick=()=>shareMilestone(`${S.agency} is level ${S.lvl} in ${TW.n}. Agency Empire.`);
   const rm=$('#tgRem');if(rm)rm.onclick=()=>{if(SET.remind){SET.remind=false;saveSet();cancelReminders();re()}else remindEnable().then(()=>re())};
   $('#sv1').onclick=()=>{const v=$('#nm').value.trim();if(v&&v!==S.agency){S.agency=v;refreshLogo();save();refreshHUD();toast('New signage is up.','good','🪧');re()}};
@@ -8258,8 +8284,9 @@ function vipPassSheet(ret){
   <div class="vplans"><button class="vplan" id="vp1"><small>VIP</small><b>Lifetime</b><span class="vprice">${STORE.price('vip','A$9.99')}</span><em>All VIP perks, one payment</em></button>
   <button class="vplan best" id="vp2"><i class="vrib">BEST VALUE</i><small>VIP + No ads</small><b>Lifetime</b><span class="vprice">${STORE.price('vip_noads','A$14.99')}</span><em>All VIP perks. No ads, instant rewards</em></button></div>
   <p class="vfine">One-time purchase. No subscription.</p>
+  ${legalLine('vip')}
   <button class="gbtn ghost center" id="vpR"><span>Restore purchases</span></button>`,null,null,'👑');
-  const vpDone=()=>{closeSheet();if(typeof ret==='function'&&S.vip)ret()};$('#vp1').onclick=e=>STORE.tap(e.currentTarget,'vip',vpDone);$('#vp2').onclick=e=>STORE.tap(e.currentTarget,'vip_noads',vpDone);
+  const vpDone=()=>{closeSheet();if(typeof ret==='function'&&S.vip)ret()};$('#vp1').onclick=e=>STORE.tap(e.currentTarget,'vip',vpDone);$('#vp2').onclick=e=>STORE.tap(e.currentTarget,'vip_noads',vpDone);wireLegal('vip');
   $('#vpR').onclick=e=>STORE.restoreTap(e.currentTarget,()=>{if(S.vip)vipPassSheet()});
 }
 function repSheet(){
@@ -8356,7 +8383,7 @@ function finishAuction(){
   if(r.sold){S.aucSold++;S.sold++;S.hs[h.id]={s:'sold',t:45};setHouseSign(h,'sold');A.crowd.forEach((c,i)=>setTimeout(()=>{if(A)c.raise=1.5},i*90));
     for(let i=0;i<12;i++)setTimeout(()=>{if(A)pop(V3(h.x+rnd(-2.2,2.2),rnd(1.6,3.2),h.zf+rnd(.4,2.6)),pick(['🎉','🎊','$','✨']),'big')},i*110);pop(h.top.clone().setY(3.3),'+'+fmt(r.comm),'big')}
   else{S.hs[h.id]={s:'sale',t:rnd(50,80)};setHouseSign(h,'sale')}
-  A.done=r;save();refreshHUD();setTimeout(()=>{if(A)drawAuction()},700);
+  A.done=r;save();refreshHUD();if(r.sold)noteReview('sale');setTimeout(()=>{if(A)drawAuction()},700);
 }
 // nobody calling for more bids? the auctioneer moves it along: going once, going twice, then the hammer
 setInterval(()=>{if(!A||A.done||A.busy||!A.leader||document.hidden)return;if(!A.lastTap)A.lastTap=Date.now();if(Date.now()-A.lastTap<7000)return;A.lastTap=Date.now();
@@ -8515,6 +8542,7 @@ function frame_(now){
 async function start(data){
   const LP=(v,m)=>{try{window.__lp&&window.__lp(v,m)}catch(e){}},yld=()=>new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));
   S=(data&&data.S)?migrate(data.S):(load()||fresh());
+  S.sessions=(S.sessions||0)+1;
   TW=TOWNS[S.town]||TOWNS[0];WT=WTH[worldOf(S.town)];WLD=worldOf(S.town);WSI=S.town<6?0:(S.town<16&&S.town!==9)?1:2;ENV=Object.assign({},ENV_DEF,ENVS[S.town]||{});applyGfx();
   LP(45,'Laying out the office…');await yld();
   applyEnvLight();planLayout();sizeGrid();genWalls();SND.setWorld(WLD);resize();placeCam();
@@ -8538,14 +8566,24 @@ async function start(data){
   requestAnimationFrame(t=>{last=t;frame(t)});
 }
 addEventListener('resize',()=>{resize();placeCam()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(!AWAYP)save();try{scheduleReminders()}catch(e){}return}try{cancelReminders()}catch(e){}if(!S||!S.started)return;if((Date.now()-S.lastSeen)/1000>120){if(A||TU||document.body.classList.contains('sheet-on')){AWAYP=true;return}awayCheck()}if(!AWAYP)S.lastSeen=Date.now()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){tickPlay(true);if(!AWAYP)save();try{scheduleReminders()}catch(e){}return}try{cancelReminders()}catch(e){}playMark=Date.now();if(!S||!S.started)return;if((Date.now()-S.lastSeen)/1000>120){if(A||TU||document.body.classList.contains('sheet-on')){AWAYP=true;return}awayCheck()}if(!AWAYP)S.lastSeen=Date.now()});
 // came back while busy (a panel open, an auction, the tour): hold the away time and show the card as soon as they're free
-setInterval(()=>{if(!AWAYP||!S||document.hidden||A||TU||document.body.classList.contains('sheet-on'))return;AWAYP=false;awayCheck();S.lastSeen=Date.now()},1000);addEventListener('pagehide',()=>{save();try{scheduleReminders()}catch(e){}});
+setInterval(()=>{if(!AWAYP||!S||document.hidden||A||TU||document.body.classList.contains('sheet-on'))return;AWAYP=false;awayCheck();S.lastSeen=Date.now()},1000);
+let playMark=Date.now();
+function tickPlay(force){if(!S||!S.started){playMark=Date.now();return}if(document.hidden&&!force){playMark=Date.now();return}const n=Date.now(),d=Math.min(60000,Math.max(0,n-playMark));playMark=n;if(d>=500)S.playMs=(S.playMs||0)+d}
+setInterval(tickPlay,15000);
+setInterval(()=>{try{maybeReview()}catch(e){}},3000);
+addEventListener('pagehide',()=>{try{tickPlay(true)}catch(e){}save();try{scheduleReminders()}catch(e){}});
 const fontsReady=(document.fonts&&document.fonts.load)?Promise.race([Promise.all([document.fonts.load('40px "Lilita One"'),document.fonts.load('800 20px Nunito')]),new Promise(r=>setTimeout(r,2500))]):Promise.resolve();
 function bootFail(e){console.error(e);const l=$('#loading');if(l){l.style.opacity='1';l.innerHTML='<div style="padding:28px;text-align:center;font:800 16px Nunito,sans-serif;color:#fff"><p style="margin:0 0 14px">Couldn’t open the office.</p><button id="bRetry" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#3fb950;color:#fff;margin:6px">Try again</button><button id="bReset" style="font:800 15px Nunito;padding:12px 18px;border:0;border-radius:14px;background:#2b3445;color:#fff;margin:6px">Reset save</button></div>';$('#bRetry').onclick=()=>location.reload();$('#bReset').onclick=()=>{if(confirm('Delete your save and start again?')){try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'.bak')}catch(_){}location.reload()}}}}
 fontsReady.then(()=>{const hot=window.claude&&window.claude.hot;const go=d=>{try{const p=start(d);if(p&&p.catch)p.catch(bootFail)}catch(e){bootFail(e)}};if(hot&&hot.ready)hot.ready(go);else go((hot&&hot.data)||{})});
-function openDoc(url,title){let d=$('#docv');if(!d){d=document.createElement('div');d.id='docv';d.hidden=true;d.innerHTML='<div class="docbar"><b></b><button class="x" aria-label="Close">×</button></div><iframe title=""></iframe>';document.body.appendChild(d);d.querySelector('.x').onclick=()=>{d.hidden=true;d.querySelector('iframe').src='about:blank'}}
-  d.querySelector('b').textContent=title;d.querySelector('iframe').title=title;d.querySelector('iframe').src=url;d.hidden=false}
+function openDoc(url,title){if(CAPN&&window.AEOpenExternal&&window.AEOpenExternal(url)==='browser'){window.AERouteLink(url,{native:true});return}
+  let d=$('#docv');if(!d){d=document.createElement('div');d.id='docv';d.hidden=true;d.innerHTML='<div class="docbar"><b></b><button class="x" aria-label="Close">×</button></div><iframe title=""></iframe>';document.body.appendChild(d);d.querySelector('.x').onclick=()=>{d.hidden=true;d.querySelector('iframe').src='about:blank'}}
+  const frame=d.querySelector('iframe');
+  frame.onload=function(){try{const path=(frame.contentWindow.location.pathname||'').split('/').pop();if(path==='support.html')d.querySelector('b').textContent='Support';else if(path==='privacy.html')d.querySelector('b').textContent='Privacy'}catch(e){}
+    if(!CAPN)return;let doc;try{doc=frame.contentDocument}catch(e){return}if(!doc||doc.__ae)return;doc.__ae=1;
+    doc.addEventListener('click',function(ev){const a=ev.target&&ev.target.closest&&ev.target.closest('a');if(!a||!window.AERouteLink)return;const href=a.getAttribute('href')||'';const route=window.AERouteLink(href,{native:true});if(route.action==='browser'||route.action==='blocked'||route.action==='browser-missing')ev.preventDefault()},true)};
+  d.querySelector('b').textContent=title;frame.title=title;frame.src=url;d.hidden=false}
 window.openDoc=openDoc;
 function adShopState(){const d=new Date(),day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(!S.adShop||S.adShop.day!==day)S.adShop={day:day,n:0};return S.adShop}
 })();
