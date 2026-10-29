@@ -5,6 +5,20 @@
 (function(){
   var KEY='agency-empire-v2';
   var C=window.Capacitor,native=!!(C&&C.isNativePlatform&&C.isNativePlatform());
+  var plat='web';
+  try{if(C&&C.getPlatform)plat=C.getPlatform()}catch(e){}
+  // IAP_ENABLED — the only purchase switch. Do not add a second one.
+  // ios stays true (App Store). The website is not listed and keeps its simulated shop.
+  // android is the ads-only launch. Leave it false until Play Billing should ship.
+  // Flip android to true to bring every purchase back: shop, VIP, no-ads, diamond
+  // packs, manager packs, Isla Verde, The Shark, restore, and the purchase plugin.
+  // Then from aeapp/ run: npm run cap:sync:android && npm run android:patch
+  // Exact steps are in aeapp/README.md under "Turn Android purchases on".
+  var IAP_ENABLED={
+    ios:true,
+    android:false
+  };
+  window.IAP_ENABLED=plat==='ios'?IAP_ENABLED.ios:(plat==='android'?IAP_ENABLED.android:true);
   // iOS 26 home-screen apps can lay the page out a status bar short of the screen: if so, stretch to the real height
   var sa=(navigator.standalone||(matchMedia&&matchMedia('(display-mode: standalone)').matches));
   if(sa&&!native){var fit=function(){var H=Math.max(screen.height,screen.width)===screen.height?screen.height:screen.width;if(innerHeight<H-2&&innerWidth<innerHeight){document.documentElement.style.height=H+'px';document.body&&(document.body.style.height=H+'px');window.scrollTo(0,0)}};
@@ -20,10 +34,14 @@
   (function(){var gone=false;function hide(){if(gone)return;gone=true;try{P.SplashScreen&&P.SplashScreen.hide()}catch(e){}}
     var iv=setInterval(function(){var l=document.getElementById('loading');if(!l||l.hidden){clearInterval(iv);hide()}},200);
     setTimeout(hide,8000)})();
-  // StoreKit 2 / Google Play Billing (capacitor-plugin-cdv-purchase). The marker must exist before store.js picks a bridge.
-  // Loaded only in the app so the website never pulls the store script.
-  window.CdvPurchaseCapacitor={installed:true};
-  var ps=document.createElement('script');ps.src='vendor/cdv-purchase.js';ps.async=false;document.head.appendChild(ps);
+  // Purchase plugin stays out of startup when the flag is off. Android's ads-only
+  // launch never loads it, so Play Billing is never initialised and nothing can
+  // show "Google Play didn't answer". iOS still loads StoreKit.
+  if(window.IAP_ENABLED){
+    // The marker must exist before store.js picks a bridge. Loaded only in the app.
+    window.CdvPurchaseCapacitor={installed:true};
+    var ps=document.createElement('script');ps.src='vendor/cdv-purchase.js';ps.async=false;document.head.appendChild(ps);
+  }
   // stay inside the app: http(s) links would open Safari chrome. mailto and in-app pages stay.
   document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a');if(!a)return;var href=a.getAttribute('href')||'';
     if(!href||href.indexOf('mailto:')===0||href.indexOf('#')===0||href.charAt(0)==='.'||href.indexOf('javascript:')===0)return;

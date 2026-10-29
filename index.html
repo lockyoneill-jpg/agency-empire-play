@@ -112,6 +112,8 @@ body.sheet-on .tut-bub.top{top:calc(env(safe-area-inset-top,0px) + 74px)}
 .rbtn:active{transform:translateY(2px);box-shadow:inset 0 -2px 0 #c9d4e3,0 1px 0 #8fa0b8}
 .rbtn svg{width:28px;height:28px}
 .dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:10;width:calc(100% - 20px);max-width:460px;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;padding:8px 4px 7px;border-radius:24px}
+body.no-iap .dock{grid-template-columns:repeat(4,1fr)}
+body.no-iap #shopBtn,body.no-iap #vipPassBtn,body.no-iap #adsBtn,body.no-iap #gemBtn .plus{display:none!important}
 .dk{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-weight:900;font-size:11px;letter-spacing:.02em;position:relative;min-width:0}
 .dki{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),inset 0 2px 0 rgba(255,255,255,.35),0 3px 0 rgba(0,0,0,.3);transition:transform .08s}
 .dki svg{width:28px;height:28px}
@@ -7316,7 +7318,7 @@ function updateTags(){
 let lastHud=0;
 function affordableMgrs(){return MGR_ORDER.filter(k=>!S.mgr[k]&&(k==='shark'?S.vip:S.gems>=MGR[k].g&&S.st[k].on)).length}
 function refreshHUD(){
-  $('#vipPassBtn').hidden=!!S.vip;$('#adsBtn').hidden=!!S.noAds||(S.tut|0)<99;$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
+  $('#shopBtn').hidden=!IAP;$('#vipPassBtn').hidden=!IAP||!!S.vip;$('#adsBtn').hidden=!IAP||!!S.noAds||(S.tut|0)<99;if(!IAP){$('#gemBtn').setAttribute('aria-label','Diamonds');$('#cashBtn').setAttribute('aria-label','Cash')}$('#cash').textContent=fmt(S.cash);$('#ips').textContent='+'+fmt(incomePerSec())+'/s';$('#gems').textContent=S.gems>=10000?S.gems.toLocaleString('en-AU'):S.gems;$('#lvl').textContent=S.lvl;{const b=$('#lvlBtn');let k=b.querySelector('.rkb');if(!k){k=document.createElement('i');k.className='rkb';b.appendChild(k)}const e=RANKS[rankOf()].e;if(k.textContent!==e)k.textContent=e}{const ti=repTier(),T_=REPT[ti],rb=$('#repBtn'),rk=Math.round(S.rep);if(rb._k!==rk){rb._k=rk;$('#repG').innerHTML=repGauge(S.rep);$('#rep').textContent=T_.n;rb.style.setProperty('--rc',T_.c)}const tr=Date.now()-(S.repTrendT||0)<6000?S.repTrend:0;if(!tr)S.repTrend=0;const te=$('#repTr');const ts=tr<0?'down':'';if(te._s!==ts){te._s=ts;te.className=ts;te.textContent=ts==='up'?'▲':ts==='down'?'▼':''}}
   $('#agname').textContent=S.agency;$('#profileBtn').classList.toggle('vipg',!!S.vip);$('#town').textContent=`World ${worldOf(S.town)+1} · ${TW.n}`+(S.vip?' · VIP':'');
   $('#xpRing').setAttribute('stroke-dashoffset',(103.7*(1-clamp(S.xp/xpNeed(S.lvl),0,1))).toFixed(1));
   const ac=aucCount(),ad=$('#aucDot');ad.hidden=!ac;ad.textContent=ac;
@@ -7361,6 +7363,9 @@ const STORE_CFG={
 };
 // └────────────────────────────────────────────────────────────────────────────────┘
 const CAPN=(()=>{const C=window.Capacitor;try{return C&&C.isNativePlatform&&C.isNativePlatform()?(C.getPlatform?C.getPlatform():'ios'):''}catch(e){return ''}})();
+// Set in native.js (IAP_ENABLED). Missing means on, so the website and iOS stay as they are.
+const IAP=window.IAP_ENABLED!==false;
+if(!IAP)document.body.classList.add('no-iap');
 
 const ADS=(()=>{
   const AM=()=>{const C=window.Capacitor;return C&&C.Plugins&&C.Plugins.AdMob};
@@ -7476,14 +7481,14 @@ const STORE=(()=>{
       .receiptUpdated(()=>{const got=syncOwned();if(got.length&&!RST)toast('Restored: '+got.join(', ')+'.','good','✅')});
     st.error(()=>{});
     return Promise.resolve(st.initialize([plat])).then(()=>true,()=>true)}
-  function init(){if(!NATIVE||readyP)return;ADS.init();
+  function init(){if(!NATIVE)return;ADS.init();if(!IAP||readyP)return;
     readyP=new Promise(res=>{let n=0;const t=()=>{if(window.CdvPurchase&&window.CdvPurchase.store)return res(true);if(++n>80)return res(false);setTimeout(t,150)};t()})
       .then(ok=>ok?setup():false).catch(()=>false)}
-  const ready=()=>{if(!readyP)init();return readyP||Promise.resolve(false)};
+  const ready=()=>{if(!IAP)return Promise.resolve(false);if(!readyP)init();return readyP||Promise.resolve(false)};
   const real=()=>!!st;
   // simulated purchase (web, artifact, or app without the plugin): granted on the spot, exactly like the prototype
   function sim(k){grant(k,false);return true}
-  function buy(k){if(!cat()[k])return Promise.resolve(false);if(!NATIVE)return Promise.resolve(sim(k));
+  function buy(k){if(!IAP)return Promise.resolve(false);if(!cat()[k])return Promise.resolve(false);if(!NATIVE)return Promise.resolve(sim(k));
     return ready().then(ok=>{if(!ok||!st){storeDown();return false}
       const p=st.get(pid(k));
       if(p&&cat()[k].nc&&st.owned(pid(k))){if(!grant(k,false))toast('You already own this. It’s active.','good','✅');return true}
@@ -7498,6 +7503,7 @@ const STORE=(()=>{
           // the store sheet is done but nothing came back yet: free the button; a late approval still gets granted
           if(WAIT[k]===w)w.t=setTimeout(()=>{if(WAIT[k]===w)settle(k,false)},90000)},()=>fail(null))})})}
   function restore(){
+    if(!IAP)return Promise.resolve(false);
     const done='Purchases restored.';
     if(!NATIVE){toast(done,'good','✅');return Promise.resolve(true)}
     return ready().then(ok=>{if(!ok||!st){storeDown('restore');return false}
@@ -7512,11 +7518,11 @@ const STORE=(()=>{
   function price(k,fb){if(st){try{const p=st.get(pid(k)),pr=p&&p.pricing;if(pr&&pr.price)return pr.price}catch(e){}}return fb}
   const localised=k=>price(k,null)!=null;
   // a buy button: disabled while the store sheet is up (app only); ok() runs after a confirmed purchase
-  function tap(btn,k,ok){if(btn&&btn._iap)return;const pr=buy(k);if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
+  function tap(btn,k,ok){if(!IAP)return;if(btn&&btn._iap)return;const pr=buy(k);if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
     pr.then(r=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false}if(r&&ok&&(!NATIVE||!btn||btn.isConnected))ok()})}
-  function restoreTap(btn,after){if(btn&&btn._iap)return;if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
+  function restoreTap(btn,after){if(!IAP)return;if(btn&&btn._iap)return;if(NATIVE&&btn){btn._iap=1;btn.disabled=true}
     restore().then(()=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false;if(after&&btn.isConnected)after()}})}
-  function storeDown(kind){vibFx('error');
+  function storeDown(kind){if(!IAP)return;vibFx('error');
     const restore=kind==='restore',shop=CAPN==='android'?'Google Play':'The App Store';
     sheet('Store','#e8443a',`<div class="li"><span class="eqi">🛒</span><div><h3>${restore?'Couldn’t restore':'Purchase didn’t go through'}</h3><p>${restore?shop+' didn’t answer, so nothing was restored. Check your connection and try again.':shop+' didn’t answer, so you weren’t charged and nothing was unlocked.'}</p></div></div><button class="gbtn ghost center" id="sdOk"><span>OK</span></button>`,null,null,'🛒');
     const b=$('#sdOk');if(b)b.onclick=closeSheet}
@@ -7528,7 +7534,7 @@ const mpkFrom=list=>{const P=list.slice().sort((a,b)=>parseFloat(a.p.slice(2))-p
 
 // ---- "No ads" button under the goal widget: a short sheet with the ad-free pack and the VIP upsell
 const NOADS_SVG='<svg viewBox="0 0 64 64"><rect x="6" y="13" width="52" height="38" rx="9" fill="#fff" stroke="#7a1a12" stroke-width="3"/><rect x="11" y="18" width="42" height="28" rx="5" fill="#fff"/><text x="32" y="41" text-anchor="middle" font-family="Lilita One,Arial Rounded MT Bold,Arial" font-size="22" font-weight="900" fill="#b42318">AD</text><path d="M12 54L52 10" stroke="#7a1a12" stroke-width="9" stroke-linecap="round"/><path d="M12 54L52 10" stroke="#ffd75e" stroke-width="4.5" stroke-linecap="round"/></svg>';
-function adsSheet(){if(S.noAds)return;const sp=[[12,22],[86,16],[18,72],[82,64],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
+function adsSheet(){if(!IAP||S.noAds)return;const sp=[[12,22],[86,16],[18,72],[82,64],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
   sheet('Remove ads','#e8443a',`<div class="vhero nahero"><div class="vrays"></div>${sp}<div class="vcrown">${NOADS_SVG}</div><h2>Play ad-free</h2><p>Pay once. No more ads.</p></div>
   <div class="vperks naperks"><div><span>⏸️</span><b>No ad breaks</b><small>Never mid-game</small></div><div><span>🎁</span><b>Instant ×2 collect</b><small>No video to watch</small></div><div><span>♾️</span><b>Yours for good</b><small>Every town, forever</small></div><div><span>📶</span><b>Plays offline</b><small>No ads to load</small></div></div>
   <div class="vplans"><button class="vplan naplan" id="naBuy"><small>NO ADS</small><b>Lifetime</b><span class="vprice">${STORE.price('noads','A$6.99')}</span><em>Ad-free, one payment</em></button>
@@ -7580,7 +7586,7 @@ function sheet(title,color,body,live,lvl,icon){
 }
 function setH(el,h){if(el._h!==h){el.innerHTML=h;el._h=h}}
 function afford(el,ok,kind,cost){if(!el)return;el.disabled=false;el.classList.toggle('cant',!ok);el.dataset.need=ok?'':(kind||'');el.dataset.cost=cost>0?cost:''}
-function needFunds(kind,cost){SND.fx('error');if(TU){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
+function needFunds(kind,cost){SND.fx('error');if(TU||!IAP){toast(kind==='gems'?'Not enough diamonds yet.':'Not enough cash yet. Won’t take long.','bad',kind==='gems'?'gem':'💵');return}if(kind!=='gems'&&Date.now()-(window.LASTBUY||0)<1200)return;if(kind!=='gems'&&cost>0){const inc=incomePerSec(),gap=cost-S.cash;if(gap<=0)return;}const back_=openSheet&&openSheet.back;closeSheet();shopSheet(kind);if(back_&&openSheet)openSheet.onClose=back_;toast(kind==='gems'?'Not enough diamonds. Top up here.':'Not enough cash. Top up here.','bad',kind==='gems'?'gem':'💵')}
 function closeSheet(){if(holdStop)holdStop();const oc_=openSheet&&openSheet.onClose;$('#sheet').hidden=true;$('#sheet').innerHTML='';openSheet=null;document.body.classList.remove('sheet-on');unframe();window.SHUT=performance.now();if(oc_)setTimeout(()=>{if(!openSheet&&!A&&!TU)oc_()},0)}
 // a quick double tap on a dock button never lands on the sheet that just slid up under the finger
 let TAPP=null;window.addEventListener('pointerdown',e=>{if(e.isTrusted&&!(e.target&&e.target.closest&&e.target.closest('#sheet .sheet')))TAPP={x:e.clientX,y:e.clientY}},true);
@@ -7658,7 +7664,7 @@ function stationSheet(k){
   $('#hire').onclick=()=>{const c=hireCost(k);if(st.slots>=slotMax(k)||S.cash<c)return;S.cash-=c;st.slots++;SND.fx('hire');syncStations();toast(k==='sales'?'New agent hired!':'New staff hired!','good');save();refreshHUD()};
   extrasWire(k);
 }
-function hireMgr(k){if(S.mgr[k])return;if(k==='shark'&&!S.vip){vipPassSheet();return}const cost=k==='shark'?0:MGR[k].g;if(S.gems<cost)return;if(k!=='shark'&&!S.st[k].on){toast(`Build the ${ST[k].name} first.`,'bad');return}S.gems-=cost;S.mgr[k]=1;syncStations();toast(`${MGR[k].n} hired!`,'gold');save();refreshHUD()}
+function hireMgr(k){if(S.mgr[k])return;if(k==='shark'&&!S.vip){if(!IAP){toast('The Shark isn’t available in this version.');return}vipPassSheet();return}const cost=k==='shark'?0:MGR[k].g;if(S.gems<cost)return;if(k!=='shark'&&!S.st[k].on){toast(`Build the ${ST[k].name} first.`,'bad');return}S.gems-=cost;S.mgr[k]=1;syncStations();toast(`${MGR[k].n} hired!`,'gold');save();refreshHUD()}
 function unlockSheet(k){if(k==='board'){boardSheet();return}const D_=ST[k],c=unlockCost(k);
   sheet(D_.name,D_.col,`<div class="li"><span class="eqi">${DEPT_IC[k]}</span><div><h3>Build ${D_.name}</h3><p>${D_.desc}</p></div><span></span></div><button class="gbtn" id="ub"><span>Build</span><span class="price">${fmt(c)}</span></button>`,()=>{afford($('#ub'),S.cash>=c,'cash',c)},null,DEPT_IC[k]);
   $('#ub').onclick=()=>{unlock(k);closeSheet()}}
@@ -7691,7 +7697,7 @@ function buyMgrPack(id){const P=MPACKS.find(p=>p.id===id),fresh=P.k.filter(k=>!S
 // what the missing managers would add to income right now (pure estimate: flips S.mgr temporarily)
 function mgrGain(keys){const miss=keys.filter(k=>!S.mgr[k]);if(!miss.length)return 0;const a=incomePerSec();miss.forEach(k=>S.mgr[k]=1);const b=incomePerSec();miss.forEach(k=>delete S.mgr[k]);return Math.max(0,b-a)}
 const mpkLeft=()=>MPACKS.filter(P=>P.k.some(k=>!S.mgr[k]));
-function mgrPacksHTML(){const left=mpkLeft();if(!left.length)return '';const from=mpkFrom(left);
+function mgrPacksHTML(){if(!IAP)return '';const left=mpkLeft();if(!left.length)return '';const from=mpkFrom(left);
   if(Date.now()<(S.mpkHide||0))return `<button class="mpk-mini" id="mpkShow"><span class="mpk-faces">${MGR7.slice(0,3).map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</span><span><b>Manager deals</b><small>from ${from}</small></span><i>›</i></button>`;
   const all=left.find(P=>P.id==='all'),rest=left.filter(P=>P.id!=='all'),miss=MGR7.filter(k=>!S.mgr[k]),g=mgrGain(miss);
   return `<div class="mpk-hero"><button class="mpk-x" id="mpkHide">Not now</button>
@@ -7827,7 +7833,8 @@ function managersSheet(){
   const cards=MGR_ORDER.map(k=>{const d=MGR[k];return `<div class="mg ${d.legend?'legend':''}" data-m="${k}">${mgrSVG(k)}<b>${d.n}</b><span class="dept">${k==='shark'?'Whole agency · <i class="vipt">VIP ONLY</i>':ST[k].name}</span><p>${d.fx}</p><button class="mini gem" data-h="${k}"></button></div>`}).join('');
   const nh=MGR7.filter(k=>S.mgr[k]).length;const pk=mgrPacksHTML();sheet('Managers','#8b4ce0',`${pk}<div class="mg-cnt"><b>${nh}/7 hired</b><div class="mbar"><i style="width:${nh/7*100}%"></i></div></div><div class="mgrs">${cards}</div>${pk&&!STORE.native?'<div class="proto"><b>Prototype shop.</b> Deals are free here for testing. Real purchases at launch.</div>':''}`,()=>{mgrPacksLive();
     MGR_ORDER.forEach(k=>{const c=document.querySelector(`[data-m="${k}"]`);if(!c)return;const b=c.querySelector('button');c.classList.toggle('hired',!!S.mgr[k]);
-      if(k==='shark'&&!S.vip){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='👑 Join VIP';b._h=null}
+      if(k==='shark'&&!S.vip&&!IAP){b.disabled=true;b.dataset.need='';b.className='mini ghost';b.textContent='Not available';b._h=null}
+      else if(k==='shark'&&!S.vip){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='👑 Join VIP';b._h=null}
       else if(k==='shark'&&!S.mgr[k]){b.disabled=false;b.dataset.need='';b.className='mini vipb';b.textContent='⭐ Claim free';b._h=null}
       else if(S.mgr[k]){b.textContent=k!=='shark'&&!S.st[k].on?'Hired · starts when built':'Hired';b._h=null;b.className='mini ghost';b.disabled=true;b.dataset.need=''}
       else if(k!=='shark'&&!S.st[k].on){b.textContent='Build first';b._h=null;b.className='mini ghost';b.disabled=true;b.dataset.need=''}
@@ -7878,8 +7885,8 @@ function mapSheet(){
   const vipL=i=>vipBlocked(i);
   const order=WL.slice().sort((a,b)=>(a===mapSel)-(b===mapSel));
   const pins=order.map(i=>{const k=WL.indexOf(i),[x,y]=PTS[k],t=TOWNS[i],cur=i===S.town,dn_=ordT(i)<ordT(S.town),nx=i===NX,sel=i===mapSel,lk=!dn_&&!cur&&!nx;
-    const ring=vipL(i)?'#e6a800':dn_?'#3fb950':cur?t.c:nx?'#ffb01f':'#b6bfcc';const sc=sel?1.18:1;
-    const badge=vipL(i)?['#ffc83d','👑']:dn_?['#3fb950','✓']:lk?['#8a96a8','🔒']:nx?['#ffb01f','!']:null;
+    const ring=vipL(i)?(IAP?'#e6a800':'#b6bfcc'):dn_?'#3fb950':cur?t.c:nx?'#ffb01f':'#b6bfcc';const sc=sel?1.18:1;
+    const badge=vipL(i)?(IAP?['#ffc83d','👑']:['#8a96a8','🔒']):dn_?['#3fb950','✓']:lk?['#8a96a8','🔒']:nx?['#ffb01f','!']:null;
     const nm=esc(t.n),w=nm.length*5.6+14;
     return `<g class="pin" data-i="${i}" transform="translate(${x} ${y}) scale(${sc})" style="cursor:pointer">${cur?`<circle class="pulse" r="22" fill="${t.c}"/>`:''}<ellipse cy="17" rx="13" ry="3.5" fill="rgba(0,0,0,.18)"/>
       <circle r="16.5" fill="${lk?'#eef1f5':'#fff'}" stroke="${ring}" stroke-width="4"/><text y="6.2" text-anchor="middle" font-size="17" opacity="${lk?.45:1}">${TOWN_IC[i]}</text>
@@ -7893,7 +7900,7 @@ function mapSheet(){
    ${mapW?'<ellipse cx="298" cy="126" rx="24" ry="11" fill="#f7e4b2"/><ellipse cx="298" cy="124" rx="17" ry="7" fill="#8fcf6c"/>':''}<path d="${sea}" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="3 6" stroke-linecap="round"/>
    ${pins}</svg>`;
   const i=mapSel,t=TOWNS[i],li=WL.indexOf(i),vl=false,isNext=i===NX;
-  const status=ordT(i)<ordT(S.town)?'Done ✓':i===S.town?'You are here':vipBlocked(i)?'👑 VIP only':isNext?'Up next':'Locked';
+  const status=ordT(i)<ordT(S.town)?'Done ✓':i===S.town?'You are here':vipBlocked(i)?(IAP?'👑 VIP only':'Not available'):isNext?'Up next':'Locked';
   const reqs=isNext?townReq(i):null,can=reqs&&reqs.every(r=>r.ok),cross=worldOf(i)!==worldOf(S.town);
   const tabs=WORLDS.map((w,k)=>`<button class="wtab ${k===mapW?'on':''}" data-w="${k}" style="--wc:${w.c}"><b>${k>worldOf(S.town)?'🔒 ':''}World ${k+1} · ${w.n}</b></button>`).join('');
   const stats=i>0?`<div class="mp-stats"><span>💵 <b>×${xfmt(t.inc)}</b><small>Income</small></span><span>🏷️ <b>×${xfmt(t.cost)}</b><small>Costs</small></span><span>⏳ <b>${Math.round(t.pat*100)}%</b><small>Patience</small></span><span>🏡 <b>×${t.price}</b><small>Home prices</small></span></div>`:'';
@@ -7902,7 +7909,7 @@ function mapSheet(){
     if(dun){const mn=maxedN(),mt=ORDER.length,free=mn>=mt;
       act=`<p class="mp-note">Max all rooms to unlock free, or 200 gems</p><div class="mp-prog"><div class="mbar"><i style="width:${mt?Math.round(mn/mt*100):0}%"></i></div><b>${mn}/${mt} maxed</b></div><div class="mp-btns"><button class="gbtn center ${free?'gold':'ghost'}" id="mvFree"${free?'':' disabled'}><span>Unlock free</span></button><button class="gbtn gem" id="mvg"><span>Unlock</span><span class="price">200${GEMIC}</span></button></div>`}
     else act=`<div class="mp-req">${reqs.map(r=>`<span class="${r.ok?'ok':''}">${r.ok?'✅':'⬜'} ${r.s}</span>`).join('')}</div>`+
-    (vipBlocked(i)?`<div class="mp-vip"><b>👑 VIP members only</b><span>The finale: a private island of overwater villas.</span></div><button class="gbtn gold" id="vipIs"><span>${can?'Join VIP to move':'See VIP'}</span><span class="price">👑</span></button>`:can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
+    (vipBlocked(i)?(IAP?`<div class="mp-vip"><b>👑 VIP members only</b><span>The finale: a private island of overwater villas.</span></div><button class="gbtn gold" id="vipIs"><span>${can?'Join VIP to move':'See VIP'}</span><span class="price">👑</span></button>`:`<div class="mp-vip"><b>Not available yet</b><span>This town isn’t in this version.</span></div>`):can?`<button class="gbtn gold" id="mv"><span>${cross?'Fly to '+WORLDS[worldOf(i)].n:'Move to '+esc(t.n)}</span><span class="price">${cross?'✈️':'🚚'}</span></button>`
         :`<div class="mp-btns"><button class="gbtn ghost" disabled><span>Not ready</span></button><button class="gbtn gem" id="mvg"><span>Unlock</span><span class="price">200${GEMIC}</span></button></div>`)}
   else if(NX>=0&&ordT(i)>ordT(NX)){const pv=PROG[ordT(i)-1],fly=worldOf(i)>worldOf(S.town)&&worldOf(pv)<worldOf(i);act=`<p class="mp-note">${fly?`Finish ${esc(TOWNS[pv].n)} to fly to ${WORLDS[worldOf(i)].n}.`:`Reach ${esc(TOWNS[pv].n)} first.`}</p>`}
   else if(i===S.town&&NX<0)act=`<p class="mp-note">Final town. You built an empire!</p>`;
@@ -7918,7 +7925,7 @@ function mapSheet(){
   const vi=$('#vipIs');if(vi)vi.onclick=()=>vipPassSheet(()=>{mapSel=i;mapSheet()});const g2=$('#gow2');if(g2)g2.onclick=()=>{mapW=1;mapSel=10;mapSheet()};
 }
 const mulTxt=v=>v<9.95?String(+v.toFixed(1)):xfmt(Math.round(v));
-function confirmMove(i,paid){if(vipBlocked(i)){vipPassSheet();return}const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
+function confirmMove(i,paid){if(vipBlocked(i)){if(!IAP){toast('That town isn’t available yet.');mapSheet();return}vipPassSheet();return}const t=TOWNS[i],cross=worldOf(i)!==worldOf(S.town);
   sheet(cross?`Fly to ${WORLDS[worldOf(i)].n}?`:`Move to ${t.n}?`,'#ffb01f',`${cross?`<div class="w2hero"><div class="w2sun"></div><b>✈️ World ${worldOf(i)+1}</b><h3>${WORLDS[worldOf(i)].n}</h3><p>11 new towns on the sun coast. Ends on a private island.</p></div>`:''}<p>New town, new empty office.</p>
   <ul class="tips"><li><span>✓</span>Keep: diamonds, managers, diamond boosts, VIP, level, perks and goals.</li><li><span>↺</span>Reset: cash, rooms, staff, levels and equipment.</li><li><span>!</span>Income ×${mulTxt(t.inc/TW.inc)} · costs ×${mulTxt(t.cost/TW.cost)}${t.pat<TW.pat?' · less patient clients':''}</li></ul>
   <button class="gbtn gold" id="mv2"><span>${paid?'Skip ahead':'Let\'s go'}</span><span class="price">${paid?'200'+GEMIC:cross?'✈️':'🚚'}</span></button><button class="gbtn ghost center" id="mvShare"><span>Share the move</span></button><button class="gbtn ghost center" id="mv3"><span>Not yet</span></button>`,null,null,cross?'✈️':'🚚');
@@ -7955,7 +7962,7 @@ function cashArt(l){const bill=(x,y,r)=>`<g transform="translate(${x} ${y}) rota
    `<rect x="14" y="10" width="52" height="44" rx="6" fill="#8a96a3"/><circle cx="40" cy="32" r="15" fill="#c3cbd7" stroke="#5e6b80" stroke-width="3"/><path d="M40 20v24M28 32h24" stroke="#5e6b80" stroke-width="3"/><circle cx="40" cy="32" r="4" fill="#ffc83d"/>${bill(62,48,-10)}`,
    `<circle cx="40" cy="32" r="20" fill="#ffc83d" stroke="#c98a0c" stroke-width="3"/><text x="40" y="40" text-anchor="middle" font-family="'Lilita One',Arial,sans-serif" font-size="22" fill="#fff" stroke="#9a5d00" stroke-width="1">×2</text>`];
   return `<svg viewBox="0 0 80 60"><ellipse cx="40" cy="55" rx="24" ry="3.5" fill="rgba(0,0,0,.12)"/>${arts[l]}</svg>`}
-function shopSheet(focus){
+function shopSheet(focus){if(!IAP)return;
   const cashCards=CASH_PACKS.map((c,i)=>`<div class="pk" id="cp${i}">${c.tag?`<span class="tagr">${c.tag}</span>`:''}${cashArt(i)}<b data-amt="${i}"></b><small>${c.boost?'×2 all income':c.n}</small><button class="mini gem" data-cp="${i}">${c.g}${GEMIC}</button></div>`).join('');
   const gemCards=GEM_PACKS.map((g,i)=>`<div class="pk ${g.tag?'hot':''}${g.b&&!g.tag?' has-bonus':''}" id="gp${i}">${g.tag?`<span class="tagr">${g.tag}${g.b?' · '+g.b:''}</span>`:''}${g.b&&!g.tag?`<span class="bonus">${g.b}</span>`:''}${gemArt(i)}<b>${g.g.toLocaleString('en-AU')}</b><small>${g.n} of diamonds</small><button class="mini" data-gp="${i}">${STORE.price(STORE.gemKey(g),g.p)}</button></div>`).join('');
   sheet('Shop','#2f6fd6',`<div class="bal"><span><span class="rico cash bico">${CASHI()}</span><i id="shCash" style="font-style:normal"></i></span><span><span class="rico gem bico">${GEMI()}</span><i id="shGems" style="font-style:normal"></i></span></div>
@@ -8031,12 +8038,12 @@ function profileSheet(){
     <div class="set-row"><span class="sr-ic">📳</span><div><b>Vibration</b><small>Taps, sales and rewards</small></div>${sw('tgVib',SET.vib)}</div>
     <div class="set-row"><span class="sr-ic">🔔</span><div><b>Office reminders</b><small>${SET.remind?'On. We’ll nudge you when earnings are full':'Off until you opt in. Stays on this phone'}</small></div>${sw('tgRem',!!SET.remind)}</div>
   </div>
-  <h4 class="set-h">Purchases</h4>
+  ${IAP?`<h4 class="set-h">Purchases</h4>
   <div class="set-card">
     <div class="set-row"><span class="sr-ic">👑</span><div><b>VIP</b><small>${S.vip?'Active. Thank you!':'Isla Verde, +25% income, 8h offline'}</small></div>${S.vip?'<span class="pill ok">Active</span>':'<button class="mini" id="stVip">View</button>'}</div>
     <div class="set-row"><span class="sr-ic">🚫</span><div><b>Ad-free</b><small>${S.noAds?'Rewards pay out with no ads':'Skip ads, keep every reward'}</small></div>${S.noAds?'<span class="pill ok">Owned</span>':'<button class="mini" id="stAds">'+STORE.price('noads','A$6.99')+'</button>'}</div>
     <button class="gbtn ghost center" id="rsP"><span>Restore purchases</span></button>
-  </div>
+  </div>`:''}
   <h4 class="set-h">Help</h4>
   <div class="set-card">
     <button class="set-row link" id="tutR"><span class="sr-ic">🎓</span><div><b>Replay tutorial</b><small>Quick tour of the basics</small></div><i>›</i></button>
@@ -8055,7 +8062,7 @@ function profileSheet(){
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{SET.gfx=b.dataset.g;saveSet();applyGfx();re()});
   $('#tgPop').onclick=()=>{SET.pops=!SET.pops;saveSet();re()};$('#tgVib').onclick=()=>{SET.vib=!SET.vib;saveSet();vibFx('gold');re()};
   const vb=$('#stVip');if(vb)vb.onclick=()=>vipPassSheet();const ab=$('#stAds');if(ab)ab.onclick=()=>STORE.tap(ab,'noads',re);
-  $('#rsP').onclick=e=>STORE.restoreTap(e.currentTarget,re);
+  const rp=$('#rsP');if(rp)rp.onclick=e=>STORE.restoreTap(e.currentTarget,re);
   $('#tutR').onclick=()=>{closeSheet();tutStart(true)};$('#howR').onclick=()=>howToSheet(profileSheet);
   $('#privR').onclick=()=>openDoc('privacy.html','Privacy');$('#supR').onclick=()=>openDoc('support.html','Support');
   $('#stShare').onclick=()=>shareMilestone(`${S.agency} is level ${S.lvl} in ${TW.n}. Agency Empire.`);
@@ -8129,7 +8136,7 @@ function awayCheck(){const P=S.awayCard&&S.awayCard.c>0?S.awayCard:null,real=Mat
 function awaySheet(secs,cash,counted){counted=counted==null?Math.min(secs,awayCap()):counted;
   S.awayCard={c:cash,s:secs,n:counted};S.lastSeen=Date.now();save();
   const h=Math.floor(secs/3600),m=Math.floor(secs%3600/60),ch=Math.floor(counted/3600),cm=Math.floor(counted%3600/60),capped=counted<secs-60;
-  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m.</p><div class="welcome">${fmt(cash)}</div>${capped?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${ch?ch+'h ':''}${cm?cm+'m ':''}counted${S.vip?'':' · 👑 VIP: up to 8h'}</p>`:''}
+  sheet('Welcome back!','#3fb950',`<p>You were away ${h?h+'h ':''}${m}m.</p><div class="welcome">${fmt(cash)}</div>${capped?`<p style="text-align:center;font-size:12px;font-weight:800;margin:-4px 0 8px">${ch?ch+'h ':''}${cm?cm+'m ':''}counted${S.vip||!IAP?'':' · 👑 VIP: up to 8h'}</p>`:''}
   <button class="gbtn gold" id="c2"><span>Collect ×2<small>Watch an ad</small></span><span class="price">${fmt(cash*2)}</span></button><button class="gbtn" id="c1"><span>Collect</span><span class="price">${fmt(cash)}</span></button>`);
   $('#c1').onclick=()=>{if(!S.awayCard)return;S.awayCard=null;S.cash+=cash;S.earned+=cash;save();closeSheet();refreshHUD()};$('#c2').onclick=()=>{if(!S.awayCard)return;const base=cash;S.awayCard=null;S.awayPend=base;save();closeSheet();const pay=m=>{if(!(S.awayPend>0))return;const got=m===2?base*2:S.awayPend;S.awayPend=0;S.cash+=got;S.earned+=got;save();refreshHUD();if(m!==2)toast('Ad didn’t finish. Collected once.','bad','📺')};rewarded(()=>pay(2),()=>pay(1))};$('#sheet .x').style.display='none';$('#sheet').onclick=null;
 }
@@ -8206,6 +8213,7 @@ function updateQuestHUD(){if(!S.qa.length)return;let idx=S.qa.findIndex(q=>{cons
   $('#questBtn').classList.toggle('ready',ready);$('#qTxt').textContent=ready?'Goal done! Tap to claim':I.d;$('#qBar').style.width=(I.cur/I.n*100)+'%';$('#qIc').textContent=ready?'🎁':'🎯'}
 const qNum=(I,v)=>I.m?fmt(v):Math.floor(v).toLocaleString('en-AU');
 function vipPassSheet(ret){
+  if(!IAP)return;
   if(S.vip){sheet('VIP','#8b4ce0',`<div class="vhero"><div class="vrays"></div><div class="vcrown"><svg viewBox="0 0 32 32"><path d="M5 23L3 10l7 6 6-10 6 10 7-6-2 13z" fill="#ffd23f" stroke="#a86e00" stroke-width="2" stroke-linejoin="round"/><rect x="5.5" y="22.5" width="21" height="4.5" rx="1.8" fill="#ffb01f" stroke="#a86e00" stroke-width="2"/><circle cx="16" cy="16.5" r="2.2" fill="#e8443a"/><circle cx="9" cy="19" r="1.4" fill="#7fd8f5"/><circle cx="23" cy="19" r="1.4" fill="#7fd8f5"/></svg></div><h2>You're a VIP</h2><p>Perks active${S.noAds?' · no ads':''}.</p></div><div class="vfeat on"><span class="vfi">🏝️</span><div><b>Isla Verde, VIP only</b><small>The finale: a private island of overwater villas</small></div></div>
   <div class="vperks on"><div><span>💰</span><b>+25% income</b><small>Every room and town</small></div><div><span class="vmg">${mgrSVG('shark')}</span><b>The Shark manager</b><small>×1.5 every room</small></div><div><span>💎</span><b>Free diamonds</b><small>+1 every 4 minutes</small></div><div><span>🌙</span><b>Offline: 8 hours</b><small>Up from 2 hours</small></div><div><span>📊</span><b>2× meetings</b><small>Board every 2 hours</small></div><div><span>✨</span><b>Gold agency look</b><small>Sign, name plate, staff</small></div></div>`,null,null,'👑');return}
   const sp=[[12,20],[86,14],[20,70],[80,62],[50,8],[92,40]].map(([x,y])=>`<span class="vsp" style="left:${x}%;top:${y}%">✦</span>`).join('');
@@ -8363,8 +8371,8 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();if(A)return;zoom=clamp(zo
 const ray=new T.Raycaster(),ndc=new T.Vector2();
 function tap(x,y){if(A)return;ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need,+b.dataset.cost||0)},true);
-$('#shopBtn').onclick=()=>shopSheet();$('#gemBtn').onclick=()=>shopSheet('gems');$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
-$('#vipPassBtn').onclick=()=>vipPassSheet();$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>shopSheet('cash');$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
+$('#shopBtn').onclick=()=>{if(IAP)shopSheet()};$('#gemBtn').onclick=()=>{if(IAP)shopSheet('gems')};$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
+$('#vipPassBtn').onclick=()=>{if(IAP)vipPassSheet()};$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>{if(IAP)shopSheet('cash')};$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
 
 // ================= AUDIO =================
 const SND=(()=>{let ctx=null,out,mus,sfx,nz=null,timer=null,nextT=0,step=0,world=0,lastCoin=0;
