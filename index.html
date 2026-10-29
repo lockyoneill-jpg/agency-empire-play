@@ -7475,11 +7475,12 @@ const STORE=(()=>{
       .pending(pending)
       .receiptUpdated(()=>{const got=syncOwned();if(got.length&&!RST)toast('Restored: '+got.join(', ')+'.','good','✅')});
     st.error(()=>{});
-    return Promise.resolve(st.initialize([plat])).then(()=>true,()=>true)}
+    return Promise.resolve(st.initialize([plat])).then(()=>true,()=>false)}
   function init(){if(!NATIVE||readyP)return;ADS.init();
     readyP=new Promise(res=>{let n=0;const t=()=>{if(window.CdvPurchase&&window.CdvPurchase.store)return res(true);if(++n>80)return res(false);setTimeout(t,150)};t()})
       .then(ok=>ok?setup():false).catch(()=>false)}
-  const ready=()=>{if(!readyP)init();return readyP||Promise.resolve(false)};
+  // never wait on a store that doesn't answer: after 15s the buy/restore fails (no charge, nothing granted)
+  const ready=()=>{if(!readyP)init();return Promise.race([readyP||Promise.resolve(false),new Promise(r=>setTimeout(()=>r(false),15000))])};
   const real=()=>!!st;
   // simulated purchase (web, artifact, or app without the plugin): granted on the spot, exactly like the prototype
   function sim(k){grant(k,false);return true}
@@ -7487,7 +7488,7 @@ const STORE=(()=>{
     return ready().then(ok=>{if(!ok||!st){storeDown();return false}
       const p=st.get(pid(k));
       if(p&&cat()[k].nc&&st.owned(pid(k))){if(!grant(k,false))toast('You already own this. It’s active.','good','✅');return true}
-      if(!p||!p.canPurchase){toast(p?'Not available right now.':'Can’t reach the store. Check your connection.','bad');return false}
+      if(!p||!p.canPurchase){if(p)toast('Not available right now.','bad');else storeDown();return false}
       if(WAIT[k])return false;
       return new Promise(res=>{const w=WAIT[k]={res,t:0};
         const fail=err=>{if(WAIT[k]!==w)return;const cx=err&&CP.ErrorCode&&err.code===CP.ErrorCode.PAYMENT_CANCELLED;
@@ -7504,10 +7505,10 @@ const STORE=(()=>{
       toast('Checking your purchases…','','🔄');RST=[];
       return Promise.resolve(st.restorePurchases()).then(err=>new Promise(r=>setTimeout(()=>r(err),1500))).then(err=>{
         const got=RST.concat(syncOwned()).filter((v,i,a)=>a.indexOf(v)===i);RST=null;
-        if(err&&!got.length){toast('Can’t reach the store. Check your connection.','bad');return false}
+        if(err&&!got.length){storeDown('restore');return false}
         const own=Object.keys(cat()).some(k=>cat()[k].nc&&st.owned(pid(k)));
         toast(got.length?'Restored: '+got.join(', ')+'.':own?'Everything’s already active.':'No past purchases found.',got.length||own?'good':'',got.length||own?'✅':'🔍');return true},
-      ()=>{RST=null;toast('Can’t reach the store. Check your connection.','bad');return false})})}
+      ()=>{RST=null;storeDown('restore');return false})}).catch(()=>{RST=null;storeDown('restore');return false})}
   // store-localised price once the store has loaded, the A$ label otherwise
   function price(k,fb){if(st){try{const p=st.get(pid(k)),pr=p&&p.pricing;if(pr&&pr.price)return pr.price}catch(e){}}return fb}
   const localised=k=>price(k,null)!=null;
@@ -7518,7 +7519,7 @@ const STORE=(()=>{
     restore().then(()=>{if(NATIVE&&btn){btn._iap=0;btn.disabled=false;if(after&&btn.isConnected)after()}})}
   function storeDown(kind){vibFx('error');
     const restore=kind==='restore',shop=CAPN==='android'?'Google Play':'The App Store';
-    sheet('Store','#e8443a',`<div class="li"><span class="eqi">🛒</span><div><h3>${restore?'Couldn’t restore':'Purchase didn’t go through'}</h3><p>${restore?shop+' didn’t answer, so nothing was restored. Check your connection and try again.':shop+' didn’t answer, so you weren’t charged and nothing was unlocked.'}</p></div></div><button class="gbtn ghost center" id="sdOk"><span>OK</span></button>`,null,null,'🛒');
+    sheet('Store','#e8443a',`<div class="li"><span class="eqi">🛒</span><div><h3>Store unavailable, please try again</h3><p><b>${restore?'Couldn’t restore':'Purchase didn’t go through'}</b></p><p>${restore?shop+' didn’t answer, so nothing was restored. Check your connection and try again.':shop+' didn’t answer, so you weren’t charged and nothing was unlocked.'}</p></div></div><button class="gbtn ghost center" id="sdOk"><span>OK</span></button>`,null,null,'🛒');
     const b=$('#sdOk');if(b)b.onclick=closeSheet}
   window.storeDown=storeDown;
   return {native:NATIVE,get ready(){return real()},init,buy,restore,price,localised,tap,restoreTap,gemKey,cat,pid,storeDown};
