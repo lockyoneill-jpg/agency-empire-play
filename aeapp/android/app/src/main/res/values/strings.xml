@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Agency Empire</string>
+    <string name="title_activity_main">Agency Empire</string>
+    <string name="package_name">digital.studioden.agencyempire</string>
+    <string name="custom_url_scheme">digital.studioden.agencyempire</string>
+</resources>

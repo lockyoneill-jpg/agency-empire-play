@@ -2,14 +2,17 @@
   "name": "agency-empire",
   "private": true,
   "version": "0.31.0",
-  "description": "Agency Empire iOS app (Capacitor). The game itself lives at the repo root.",
+  "description": "Agency Empire iOS and Android apps (Capacitor). The game itself lives at the repo root.",
   "scripts": {
     "sync:www": "node scripts/sync-www.js",
     "cap:sync": "npm run sync:www && cap sync ios",
-    "ios:patch": "node scripts/patch-ios.js"
+    "cap:sync:android": "npm run sync:www && cap sync android",
+    "ios:patch": "node scripts/patch-ios.js",
+    "android:patch": "node scripts/patch-android.js"
   },
   "dependencies": {
     "@capacitor-community/admob": "8.2.1",
+    "@capacitor/android": "8.5.3",
     "@capacitor/core": "8.5.3",
     "@capacitor/haptics": "8.0.2",
     "@capacitor/ios": "8.5.3",

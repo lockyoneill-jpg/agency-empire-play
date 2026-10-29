@@ -1,5 +1,8 @@
 # Codemagic looks in the repo root by default. Point the app’s configuration file at aeapp/codemagic.yaml.
-# Secrets live in the Codemagic variable group `appstore_credentials`, never in this file.
+# Secrets live in Codemagic, never in this file.
+# iOS: variable group `appstore_credentials`.
+# Android: code-signing reference `agency_empire` (keystore uploaded in the Codemagic UI) and
+# variable group `android_credentials` for ADMOB_APP_ID_ANDROID. The AAB is signed only when that keystore exists.
 workflows:
   ios-testflight:
     name: Agency Empire iOS TestFlight
@@ -53,3 +56,41 @@ workflows:
         key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
+
+  android-aab:
+    name: Agency Empire Android AAB
+    max_build_duration: 60
+    instance_type: linux_x2
+    environment:
+      android_signing:
+        - agency_empire
+      groups:
+        - android_credentials
+      vars:
+        PACKAGE_NAME: digital.studioden.agencyempire
+      node: 22
+      java: 21
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd aeapp
+          npm ci
+      - name: Bundle the game into the Android project
+        script: |
+          cd aeapp
+          npm run cap:sync:android
+          node scripts/patch-android.js
+      - name: Write the AdMob app id from the environment
+        script: |
+          cd aeapp
+          if [ -n "$ADMOB_APP_ID_ANDROID" ]; then
+            sed -i "s/ca-app-pub-3940256099942544~3347511713/${ADMOB_APP_ID_ANDROID}/" android/app/src/main/AndroidManifest.xml
+          fi
+      - name: Build the release AAB
+        script: |
+          cd aeapp/android
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          chmod +x ./gradlew
+          ./gradlew bundleRelease
+    artifacts:
+      - aeapp/android/app/build/outputs/bundle/release/*.aab

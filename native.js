@@ -1,5 +1,6 @@
-// Runs before the game. In the native app: keeps a copy of the save in the phone's app storage (iOS can clear web
-// storage when space runs low), restores it if the web copy has gone, and sets up the status bar, splash, and StoreKit.
+// Runs before the game. In the native app: keeps a copy of the save in the phone's app storage (iOS and Android can
+// clear web storage when space runs low), restores it if the web copy has gone, and sets up the status bar, splash,
+// and the store (StoreKit on iOS, Google Play Billing on Android).
 // On the web (home-screen version): registers the offline cache.
 (function(){
   var KEY='agency-empire-v2';
@@ -19,7 +20,7 @@
   (function(){var gone=false;function hide(){if(gone)return;gone=true;try{P.SplashScreen&&P.SplashScreen.hide()}catch(e){}}
     var iv=setInterval(function(){var l=document.getElementById('loading');if(!l||l.hidden){clearInterval(iv);hide()}},200);
     setTimeout(hide,8000)})();
-  // StoreKit 2 (capacitor-plugin-cdv-purchase). The marker must exist before store.js picks a bridge.
+  // StoreKit 2 / Google Play Billing (capacitor-plugin-cdv-purchase). The marker must exist before store.js picks a bridge.
   // Loaded only in the app so the website never pulls the store script.
   window.CdvPurchaseCapacitor={installed:true};
   var ps=document.createElement('script');ps.src='vendor/cdv-purchase.js';ps.async=false;document.head.appendChild(ps);

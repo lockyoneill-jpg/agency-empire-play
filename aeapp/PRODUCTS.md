@@ -1,6 +1,6 @@
 # In-app purchases
 
-Product id = `digital.studioden.agencyempire.` + key. Prices are the Australian dollar amounts coded in the game. App Store Connect can localise the charge; the id, type, and this AUD price must match.
+Product id = `digital.studioden.agencyempire.` + key. Prices are the Australian dollar amounts coded in the game. App Store Connect and Google Play can localise the charge; the id, type, and this AUD price must match. Play Console uses these same ids.
 
 | Product id | Type | AUD price | What the player gets |
 | --- | --- | --- | --- |
@@ -21,4 +21,4 @@ Product id = `digital.studioden.agencyempire.` + key. Prices are the Australian 
 
 Cash packs in the shop are paid with diamonds already on the save. They are not App Store products.
 
-Only non-consumables are restored. A restore never grants a product the App Store does not report as owned, and a purchase is never granted because the store plugin was slow to load.
+Only non-consumables are restored. A restore never grants a product the store does not report as owned, and a purchase is never granted because the store plugin was slow to load. The same rule applies to StoreKit and to Google Play Billing.

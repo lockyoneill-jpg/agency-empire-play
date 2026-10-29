@@ -10,6 +10,12 @@
     "backgroundColor": "#051f3f",
     "preferredContentMode": "mobile"
   },
+  "android": {
+    "backgroundColor": "#051f3f",
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
   "plugins": {
     "SplashScreen": {
       "launchAutoHide": false,
