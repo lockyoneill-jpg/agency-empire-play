@@ -7,13 +7,17 @@
   var C=window.Capacitor,native=!!(C&&C.isNativePlatform&&C.isNativePlatform());
   var plat='web';
   try{if(C&&C.getPlatform)plat=C.getPlatform()}catch(e){}
-  // IAP_ENABLED — the one switch for real-money purchases.
-  // ios: App Store (StoreKit). android: Google Play Billing.
-  // false hides the shop, VIP, diamond packs, restore and every buy prompt,
-  // and the purchase plugin is never loaded or initialised.
-  // The website is not in this table: it keeps the simulated shop.
-  // Android ships ads-only. Flip android to true when Play Billing is ready.
-  var IAP_ENABLED={ios:true,android:false};
+  // IAP_ENABLED — the only purchase switch. Do not add a second one.
+  // ios stays true (App Store). The website is not listed and keeps its simulated shop.
+  // android is the ads-only launch. Leave it false until Play Billing should ship.
+  // Flip android to true to bring every purchase back: shop, VIP, no-ads, diamond
+  // packs, manager packs, Isla Verde, The Shark, restore, and the purchase plugin.
+  // Then from aeapp/ run: npm run cap:sync:android && npm run android:patch
+  // Exact steps are in aeapp/README.md under "Turn Android purchases on".
+  var IAP_ENABLED={
+    ios:true,
+    android:false
+  };
   window.IAP_ENABLED=plat==='ios'?IAP_ENABLED.ios:(plat==='android'?IAP_ENABLED.android:true);
   // iOS 26 home-screen apps can lay the page out a status bar short of the screen: if so, stretch to the real height
   var sa=(navigator.standalone||(matchMedia&&matchMedia('(display-mode: standalone)').matches));

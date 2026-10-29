@@ -28,7 +28,8 @@ console.log('Android project patched: portrait, phone screens, AdMob app id pres
 // and running cap sync, then this patch, puts the plugin back.
 function iapAndroidEnabled() {
   const src = fs.readFileSync(path.join(__dirname, '..', '..', 'native.js'), 'utf8');
-  const m = src.match(/var IAP_ENABLED=\{[^}]*android:\s*(true|false)/);
+  const block = src.match(/var IAP_ENABLED\s*=\s*\{([\s\S]*?)\}/);
+  const m = block && block[1].match(/android:\s*(true|false)/);
   return !!(m && m[1] === 'true');
 }
 function stripPurchasePlugin() {
