@@ -99,7 +99,7 @@ check('hosted support is allow-listed', go(window.AE_LEGAL.support, true).action
 check('other sites stay blocked', go('https://example.com/phish', true).action === 'blocked' && opened.length === 3);
 check('bundled privacy stays an overlay', go('privacy.html', true).action === 'overlay');
 check('bundled support stays an overlay', go('support.html', true).action === 'overlay');
-check('mail still works', go('mailto:support@studioden.digital', true).action === 'passthrough');
+check('mail still works', go('mailto:lockyoneill@icloud.com', true).action === 'passthrough');
 check('web does not hijack links', go('https://example.com', false).action === 'web' && opened.length === 3);
 
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
