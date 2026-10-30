@@ -16,8 +16,9 @@ function setString(key, value) {
 }
 setString('GADApplicationIdentifier', 'ca-app-pub-0000000000000000~0000000000');
 setString('NSUserTrackingUsageDescription', 'This lets Idle Estate Agent show ads that fit a property tycoon, instead of random ones. The game plays the same if you say no.');
-setString('CFBundleDisplayName', 'Idle Estate Agent');
-setString('CFBundleName', 'Idle Estate Agent');
+// Home-screen labels stay short. `cap add ios` writes CFBundleDisplayName from capacitor.config.json appName; this patch runs after sync and puts the short name back. cap sync itself does not rewrite these keys.
+setString('CFBundleDisplayName', 'Estate Agent');
+setString('CFBundleName', 'Estate Agent');
 if (!plist.includes('<key>UIRequiresFullScreen</key>')) {
   plist = plist.replace('</dict>\n</plist>', '\t<key>UIRequiresFullScreen</key>\n\t<true/>\n</dict>\n</plist>');
 }
