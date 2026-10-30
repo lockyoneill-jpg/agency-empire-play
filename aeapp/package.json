@@ -2,7 +2,7 @@
   "name": "agency-empire",
   "private": true,
   "version": "0.31.0",
-  "description": "Idle Realtor iOS and Android apps (Capacitor). The game itself lives at the repo root.",
+  "description": "Idle Estate Agent iOS and Android apps (Capacitor). The game itself lives at the repo root.",
   "scripts": {
     "sync:www": "node scripts/sync-www.js",
     "cap:sync": "npm run sync:www && cap sync ios",
