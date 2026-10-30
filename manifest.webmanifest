@@ -1,6 +1,6 @@
 {
- "name": "Idle Realtor",
- "short_name": "Idle Realtor",
+ "name": "Idle Estate Agent",
+ "short_name": "Estate Agent",
  "start_url": "./",
  "scope": "./",
  "display": "fullscreen",

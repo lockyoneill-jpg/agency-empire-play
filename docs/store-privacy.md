@@ -1,4 +1,4 @@
-# Store privacy prep sheet (Idle Realtor)
+# Store privacy prep sheet (Idle Estate Agent)
 
 Plain-English draft answers for Apple's **App Privacy** questions (the "nutrition label") and Google Play's **Data safety** form.
 These are drafts based on what the code does today. Check them again if you add analytics, accounts, cloud saves or another ad network.
