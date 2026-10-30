@@ -2,7 +2,7 @@
   "name": "agency-empire",
   "private": true,
   "version": "0.31.0",
-  "description": "Agency Empire iOS and Android apps (Capacitor). The game itself lives at the repo root.",
+  "description": "Idle Realtor iOS and Android apps (Capacitor). The game itself lives at the repo root.",
   "scripts": {
     "sync:www": "node scripts/sync-www.js",
     "cap:sync": "npm run sync:www && cap sync ios",
@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@capacitor-community/admob": "8.2.1",
+    "@capacitor-community/in-app-review": "8.0.0",
     "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/browser": "8.0.5",
     "@capacitor/core": "8.5.3",
     "@capacitor/haptics": "8.0.2",
     "@capacitor/ios": "8.5.3",

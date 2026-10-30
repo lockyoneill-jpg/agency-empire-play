@@ -1,4 +1,4 @@
-# Store privacy prep sheet (Agency Empire)
+# Store privacy prep sheet (Idle Realtor)
 
 Plain-English draft answers for Apple's **App Privacy** questions (the "nutrition label") and Google Play's **Data safety** form.
 These are drafts based on what the code does today. Check them again if you add analytics, accounts, cloud saves or another ad network.
@@ -13,7 +13,7 @@ These are drafts based on what the code does today. Check them again if you add 
 | Consent form (Google UMP) | Google | Your consent choice, stored on the phone and read by Google's SDK. |
 | Tracking permission (Apple ATT) | Apple | If the player says yes, AdMob can use the advertising ID (IDFA). |
 
-Contact address everywhere: `SUPPORT_EMAIL_PLACEHOLDER@example.com`. Replace it in `index.html` (`SUPPORT_EMAIL`), `privacy.html` and `support.html` before submitting.
+Contact address everywhere: `lockyoneill@icloud.com` in `STORE_CFG.support` (`index.html`), `privacy.html` and `support.html`.
 Privacy policy URL for both stores: the published `privacy.html` (for example `https://<your GitHub Pages address>/privacy.html`).
 
 ## Apple: App Privacy (App Store Connect > App Privacy)
@@ -24,9 +24,10 @@ Privacy policy URL for both stores: the published `privacy.html` (for example `h
 |---|---|---|---|---|
 | Identifiers > Device ID (advertising ID) | Yes | No | Yes | Third-party advertising, Analytics |
 | Usage Data > Product Interaction | Yes | No | Yes | Third-party advertising, Analytics |
-| Usage Data > Advertising Data | Yes | No | Yes | Third-party advertising |
+| Usage Data > Advertising Data | Yes | No | Yes | Third-party advertising, Analytics |
 | Location > Coarse Location (from IP address) | Yes | No | Yes | Third-party advertising |
-| Diagnostics > Crash Data | Yes | No | No | App functionality |
+| Diagnostics > Crash Data | Yes | No | No | Analytics |
+| Diagnostics > Performance Data | Yes | No | Yes | Third-party advertising, Analytics |
 | Purchases > Purchase History | No (Apple processes it; the game keeps nothing off the phone) | | | |
 | Contact info, Name, Email, User content, Health, Financial info, Contacts | No | | | |
 
@@ -56,7 +57,7 @@ Also in Play Console:
 ## Before you submit (checklist)
 
 1. Real AdMob app IDs and ad unit IDs in, test mode off (`STORE_CFG.admob.testing:false`).
-2. Support email placeholder replaced in all three places.
+2. Support email is `lockyoneill@icloud.com` in `index.html`, `privacy.html` and `support.html`.
 3. Privacy policy live at a public URL, and that URL entered in both stores.
 4. In AdMob > Privacy & messaging, create and publish a GDPR message (and the US states message if wanted). Without a published message, the in-app consent form won't appear.
 5. Answers above entered in App Store Connect and Play Console.
