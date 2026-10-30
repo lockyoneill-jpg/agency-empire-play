@@ -2,7 +2,9 @@
 // clear web storage when space runs low), restores it if the web copy has gone, and sets up the status bar, splash,
 // and the store (StoreKit on iOS, Google Play Billing on Android).
 // On the web (home-screen version): registers the offline cache.
-(function(){
+// Splash failsafe first: whatever happens below, the native splash is hidden within 10s.
+(function(){try{var C=window.Capacitor;if(C&&C.isNativePlatform&&C.isNativePlatform())setTimeout(function(){try{C.Plugins.SplashScreen.hide()}catch(e){}},10000)}catch(e){}})();
+(function(){try{
   var KEY='agency-empire-v2';
   var C=window.Capacitor,native=!!(C&&C.isNativePlatform&&C.isNativePlatform());
   var plat='web';
@@ -134,4 +136,5 @@
   var has=false;try{has=!!localStorage.getItem(KEY)}catch(e){}
   if(!has&&!sessionStorage.getItem('ae-restored')){
     Prefs.get({key:KEY}).then(function(r){if(r&&r.value){try{set.call(localStorage,KEY,r.value);sessionStorage.setItem('ae-restored','1');location.reload()}catch(e){}}}).catch(function(){})}
+}catch(err){try{var SS=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.SplashScreen;SS&&SS.hide()}catch(e){}}
 })();
