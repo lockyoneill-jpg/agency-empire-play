@@ -7374,7 +7374,7 @@ const ADS=(()=>{
   const AM=()=>{const C=window.Capacitor;return C&&C.Plugins&&C.Plugins.AdMob};
   const NATIVE=!!(CAPN&&AM());
   const ids=()=>STORE_CFG.admob[CAPN==='ios'?'ios':'android'];
-  let inited=null,CUR=null,canAds=true,rewardReady=false,rewardLoading=null,interReady=false,interLoading=null;
+  let inited=null,CUR=null,canAds=true,privReq=false,rewardReady=false,rewardLoading=null,interReady=false,interLoading=null;
   const pause=on=>{window.AE_AD=!!on};
   function init(){if(!NATIVE)return Promise.resolve();if(inited)return inited;
     const on=(ev,f)=>{try{const r=AM().addListener(ev,f);if(r&&r.catch)r.catch(()=>{})}catch(e){}};
@@ -7390,12 +7390,18 @@ const ADS=(()=>{
       let info=null;
       try{info=await AM().requestConsentInfo()}catch(e){}
       try{if(info&&info.isConsentFormAvailable&&(info.status==='REQUIRED'||info.status===1))info=await AM().showConsentForm()}catch(e){}
-      canAds=!info||info.canRequestAds!==false;
+      canAds=!info||info.canRequestAds!==false;privReq=!!(info&&info.privacyOptionsRequirementStatus==='REQUIRED');
       if(canAds){try{await AM().initialize({initializeForTesting:!!STORE_CFG.admob.testing})}catch(e){}}
       if(canAds){preloadReward();preloadInter()}
       calmTracking();
     })();
     return inited}
+  // UMP "Privacy choices": only offered where Google says the entry point is required (EU/UK etc.)
+  function privacyChoices(){if(!NATIVE)return Promise.resolve(false);
+    return Promise.resolve(inited||init()).then(()=>AM().showPrivacyOptionsForm()).then(()=>AM().requestConsentInfo()).then(info=>{
+      const was=canAds;canAds=!info||info.canRequestAds!==false;privReq=!!(info&&info.privacyOptionsRequirementStatus==='REQUIRED');
+      if(canAds&&!was){return Promise.resolve(AM().initialize({initializeForTesting:!!STORE_CFG.admob.testing})).catch(()=>{}).then(()=>{preloadReward();preloadInter();return true})}
+      return true}).catch(()=>{toast('Privacy choices aren’t available right now. Try again soon.','bad');return false})}
   // App Tracking Transparency at a quiet moment, never as the step immediately before an interstitial.
   let attArmed=false;
   function calmTracking(){if(attArmed||CAPN!=='ios')return;attArmed=true;const notBefore=Date.now()+14000;
@@ -7430,7 +7436,7 @@ const ADS=(()=>{
       const prep=interReady?Promise.resolve():AM().prepareInterstitial({adId:ids().interstitial,isTesting:!!STORE_CFG.admob.testing});
       interReady=false;
       return Promise.resolve(prep).then(()=>{if(c.done)return;clearTimeout(c.to);c.to=setTimeout(()=>end(c),180000);try{SND.hush(true)}catch(e){}stampAd();return AM().showInterstitial()})}).catch(()=>end(c))})}
-  return {native:NATIVE,init,rewarded,inter,preloadReward};
+  return {native:NATIVE,privacyRequired:()=>privReq,privacyChoices,init,rewarded,inter,preloadReward};
 })();
 
 const STORE=(()=>{
@@ -8129,6 +8135,7 @@ function profileSheet(){
     <button class="set-row link" id="tutR"><span class="sr-ic">🎓</span><div><b>Replay tutorial</b><small>Quick tour of the basics</small></div><i>›</i></button>
     <button class="set-row link" id="howR"><span class="sr-ic">📖</span><div><b>How to play</b><small>Rooms, managers, auctions and towns</small></div><i>›</i></button>
     <button class="set-row link" id="privR"><span class="sr-ic">🔒</span><div><b>Privacy policy</b><small>Ads, saves and purchases</small></div><i>›</i></button>
+    ${ADS.privacyRequired()?'<button class="set-row link" id="pcR"><span class="sr-ic">🛡️</span><div><b>Privacy choices</b><small>Change your ad consent</small></div><i>›</i></button>':''}
     <button class="set-row link" id="supR"><span class="sr-ic">💬</span><div><b>Support</b><small>Help and contact</small></div><i>›</i></button>
     ${IAP&&CAPN!=='android'?`<button class="set-row link" id="termsR"><span class="sr-ic">📄</span><div><b>Terms of Use</b><small>Apple’s standard terms for purchases</small></div><i>›</i></button>`:''}
     <a class="set-row link" id="repAd" href="mailto:${STORE_CFG.support}?subject=Idle%20Realtor%20ad%20report"><span class="sr-ic">🚩</span><div><b>Report an ad</b><small>Email us about a bad ad</small></div><i>›</i></a>
@@ -8145,7 +8152,7 @@ function profileSheet(){
   const vb=$('#stVip');if(vb)vb.onclick=()=>vipPassSheet();const ab=$('#stAds');if(ab)ab.onclick=()=>STORE.tap(ab,'noads',re);
   const rp=$('#rsP');if(rp)rp.onclick=e=>STORE.restoreTap(e.currentTarget,re);
   $('#tutR').onclick=()=>{closeSheet();tutStart(true)};$('#howR').onclick=()=>howToSheet(profileSheet);
-  $('#privR').onclick=()=>openDoc('privacy.html','Privacy');$('#supR').onclick=()=>openDoc('support.html','Support');
+  $('#privR').onclick=()=>openDoc('privacy.html','Privacy');{const pc=$('#pcR');if(pc)pc.onclick=()=>ADS.privacyChoices()}$('#supR').onclick=()=>openDoc('support.html','Support');
   const tr=$('#termsR');if(tr)tr.onclick=()=>openTerms();
   $('#stShare').onclick=()=>shareMilestone(`${S.agency} is level ${S.lvl} in ${TW.n}. Idle Realtor.`);
   const rm=$('#tgRem');if(rm)rm.onclick=()=>{if(SET.remind){SET.remind=false;saveSet();cancelReminders();re()}else remindEnable().then(()=>re())};
