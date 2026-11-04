@@ -8363,10 +8363,18 @@ function startAuction(h){
   const L={addr:h.addr,type:ty[0],copy:ty[1],value:val,reserve:r5k(val*.97)};
   const nb=Math.min(6,ri(3,4)+eqMul('auction','bidder'));
   const bidders=shuffle(BIDDERS.slice()).slice(0,nb).map((b,i)=>({n:b[0],d:b[1],c:b[2],max:val*(i===0?rnd(.99,1.12):rnd(.8,1.02)),out:false,p:null}));
-  const out_=aucRoom(h)>=2.1,aucX=h.x-.2,aucZ=out_?h.zf+2.45:h.zf+.5,gy=(x,z)=>TERR?Math.max(hy,TERR(x,z)):hy,spots=[];(out_?[[1.0,6,0,2.0],[1.68,7,1,2.5]]:h.pent?[[1.15,6,0,1.6],[1.85,7,1,1.95]]:[[.62,6,0,2.0],[1.22,7,1,2.3]]).forEach(([r,n,o,w])=>{for(let i=0;i<n;i++){const t=-1.0+2.0*(i+(o?.5:0))/(n-(o?0:1)),x=aucX+.25+Math.sin(t)*w+rnd(-.05,.05),z=aucZ+r-Math.abs(Math.sin(t))*(out_?.35:.12)+rnd(-.05,.05);spots.push(V3(x,gy(x,z),z))}});const props=aucProps(h,hy,aucX,aucZ,out_);
+  const out_=aucRoom(h)>=2.1,aucX=h.x-.2,aucZ=out_?h.zf+2.45:h.zf+.5,gy=(x,z)=>TERR?Math.max(hy,TERR(x,z)):hy;
+  // eight spots in separate screen columns, left side of the yard through the right, on the grass either side of the path. Depth stays short of the asphalt (the carriageway starts just past the fence).
+  const shift=out_?aucZ-(h.zf+.35):0;
+  const lay=[[-4.7,1.15],[-3.42,1.38],[-2.57,1.18],[-1.3,1.4],[-.43,1.22],[2.72,1.72],[3.32,1.28],[4.35,1.12]];
+  const placed=lay.map(([dx,dz])=>[h.x+dx,h.zf+dz+shift]);
+  const onRoad=(x,z)=>((MK.ALL)||[]).some(r=>{const P=r.P,lim=r.w/2+.42;for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i],dx=b[0]-a[0],dz=b[1]-a[1],l2=dx*dx+dz*dz||1;let t=((x-a[0])*dx+(z-a[1])*dz)/l2;if(t<0)t=0;else if(t>1)t=1;const px=a[0]+dx*t-x,pz=a[1]+dz*t-z;if(px*px+pz*pz<lim*lim)return true}return false});
+  placed.forEach(p=>{let g=0;while(onRoad(p[0],p[1])&&g<12){p[1]-=.1;g++}if(p[1]<h.zf+1)p[1]=h.zf+1});
+  const spots=placed.map(([x,z])=>V3(x,gy(x,z),z));
+  const props=aucProps(h,hy,aucX,aucZ,out_);
   const crowd=[];
-  const bs=shuffle([...Array(spots.length).keys()].filter(k=>k<6)),rest=[...Array(spots.length).keys()].filter(k=>!bs.slice(0,nb).includes(k));bidders.forEach((b,i)=>{const g=person({shirt:b.c,pants:pick(PANTS),skin:pick(SKIN),hair:pick(HAIR)});addPaddle(g,i+1);g.position.copy(spots[bs[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z);b.p=g;crowd.push({g,b,raise:0})});
-  for(let i=0;i<Math.min(rest.length,5);i++){const g=randPerson(null);g.position.copy(spots[rest[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z);crowd.push({g,b:null,raise:0})}
+  const bs=shuffle([...Array(spots.length).keys()].filter(k=>k<6)),rest=[...Array(spots.length).keys()].filter(k=>!bs.slice(0,nb).includes(k));bidders.forEach((b,i)=>{const g=person({shirt:b.c,pants:pick(PANTS),skin:pick(SKIN),hair:pick(HAIR)});addPaddle(g,i+1);g.position.copy(spots[bs[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z)+rnd(-.5,.5);b.p=g;crowd.push({g,b,raise:0})});
+  for(let i=0;i<Math.min(rest.length,5);i++){const g=randPerson(null);g.position.copy(spots[rest[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z)+rnd(-.55,.55);crowd.push({g,b:null,raise:0})}
   const auct=person({shirt:'#d63a2f',pants:'#1d2433',skin:pick(SKIN),hair:pick(HAIR),suit:true,tie:'#ffc83d',carry:'clip',style:0});auct.position.set(aucX,hy+.16,aucZ-.15);auct.rotation.y=0;
   const open=r5k(val*rnd(.76,.84)),first=bidders.find(b=>b.max>open)||bidders[0];
   A={props,h,L,bidders,crowd,auct,auctRaise:0,cur:open,leader:null,stage:0,heat:clamp(70+eqMul('auction','heat')+(S.rep-50)/5,0,100),busy:true,mkt:false,late:false,done:null,say:null,fx:[]};
