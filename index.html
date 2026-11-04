@@ -8363,10 +8363,26 @@ function startAuction(h){
   const L={addr:h.addr,type:ty[0],copy:ty[1],value:val,reserve:r5k(val*.97)};
   const nb=Math.min(6,ri(3,4)+eqMul('auction','bidder'));
   const bidders=shuffle(BIDDERS.slice()).slice(0,nb).map((b,i)=>({n:b[0],d:b[1],c:b[2],max:val*(i===0?rnd(.99,1.12):rnd(.8,1.02)),out:false,p:null}));
-  const out_=aucRoom(h)>=2.1,aucX=h.x-.2,aucZ=out_?h.zf+2.45:h.zf+.5,gy=(x,z)=>TERR?Math.max(hy,TERR(x,z)):hy,spots=[];(out_?[[1.0,6,0,2.0],[1.68,7,1,2.5]]:h.pent?[[1.15,6,0,1.6],[1.85,7,1,1.95]]:[[.62,6,0,2.0],[1.22,7,1,2.3]]).forEach(([r,n,o,w])=>{for(let i=0;i<n;i++){const t=-1.0+2.0*(i+(o?.5:0))/(n-(o?0:1)),x=aucX+.25+Math.sin(t)*w+rnd(-.05,.05),z=aucZ+r-Math.abs(Math.sin(t))*(out_?.35:.12)+rnd(-.05,.05);spots.push(V3(x,gy(x,z),z))}});const props=aucProps(h,hy,aucX,aucZ,out_);
+  const out_=aucRoom(h)>=2.1,aucX=h.x-.2,aucZ=out_?h.zf+2.45:h.zf+.5,gy=(x,z)=>TERR?Math.max(hy,TERR(x,z)):hy;
+  // three bidders across the front yard, five spectators along the footpath. Same nine people, with a little jitter so they are not in a grid.
+  const zYard=h.pent?h.zf+1.45:(out_?h.zf+1.45:h.zf+1.2);
+  const zPath=h.pent?h.zf+2.4:(out_?Math.max(aucZ+1.2,h.zf+3.55):h.zf+2.35);
+  const lay=[[-2.25,zYard],[-.7,zYard+.1],[.45,zYard],[-2.45,zPath],[-1.05,zPath+.14],[.1,zPath],[.8,zPath+.62],[3.85,zPath]];
+  const blocks=[[aucX,aucZ-.15,.78],[h.x+1.7,h.zf+1.4,.88],[h.x+1.55,h.zf+2.95,.72],[h.x-3,h.zf+2.75,.52],[h.x+2.6,h.zf+2.75,.52],[h.x-.95,h.zf+2.4,.42],[h.x+.55,h.zf+2.4,.42]];
+  const placed=[],clear=(x,z)=>z>h.zf+.8&&blocks.every(([bx,bz,r])=>Math.hypot(x-bx,z-bz)>r+.45)&&placed.every(p=>Math.hypot(x-p[0],z-p[1])>1.12);
+  lay.forEach(([dx,z0])=>{let x=h.x+dx,z=z0,hit=false;
+    for(let t=0;t<48&&!hit;t++){const s=t<14?.16:.95,tx=h.x+dx+rnd(-s,s),tz=z0+rnd(-s*.55,s*.55);if(clear(tx,tz)){x=tx;z=tz;hit=true}}
+    if(!hit){for(let t=0;t<16&&!hit;t++){let nx=x,nz=z,bd=1e9,bx=x,bz=z;blocks.forEach(([qx,qz])=>{const d=Math.hypot(x-qx,z-qz);if(d<bd){bd=d;bx=qx;bz=qz}});placed.forEach(p=>{const d=Math.hypot(x-p[0],z-p[1]);if(d<bd){bd=d;bx=p[0];bz=p[1]}});const d=Math.hypot(x-bx,z-bz)||.01;nx=x+(x-bx)/d*.4;nz=Math.max(h.zf+.85,z+(z-bz)/d*.4);x=nx;z=nz;if(clear(x,z))hit=true} }
+    placed.push([x,z])});
+  for(let pass=0;pass<8;pass++)placed.forEach((p,i)=>{placed.forEach((q,j)=>{if(j<=i)return;let dx=q[0]-p[0],dz=q[1]-p[1],d=Math.hypot(dx,dz)||.01;if(d<1.12){const s=(1.12-d)/2;dx/=d;dz/=d;p[0]-=dx*s;p[1]-=dz*s;q[0]+=dx*s;q[1]+=dz*s}});blocks.forEach(([bx,bz,r])=>{let dx=p[0]-bx,dz=p[1]-bz,d=Math.hypot(dx,dz)||.01,need=r+.55;if(d<need){p[0]=bx+dx/d*need;p[1]=bz+dz/d*need}});if(p[1]<h.zf+.9)p[1]=h.zf+.9});
+  for(let pass=0;pass<6;pass++)placed.forEach((p,i)=>placed.forEach((q,j)=>{if(j<=i)return;let dx=q[0]-p[0],dz=q[1]-p[1],d=Math.hypot(dx,dz)||.01;if(d<1.12){const s=(1.12-d)/2;dx/=d;dz/=d;p[0]-=dx*s;p[1]-=dz*s;q[0]+=dx*s;q[1]+=dz*s}}));
+  const sx=h.x+1.7;placed.forEach(p=>{if(Math.abs(p[0]-sx)<.85&&p[1]>h.zf+1.05)p[0]+=p[0]<sx?-1.05:.55});
+  for(let pass=0;pass<4;pass++)placed.forEach((p,i)=>placed.forEach((q,j)=>{if(j<=i)return;let dx=q[0]-p[0],dz=q[1]-p[1],d=Math.hypot(dx,dz)||.01;if(d<1.12){const s=(1.12-d)/2;dx/=d;dz/=d;p[0]-=dx*s;p[1]-=dz*s;q[0]+=dx*s;q[1]+=dz*s}}));
+  const spots=placed.map(([x,z])=>V3(x,gy(x,z),z));
+  const props=aucProps(h,hy,aucX,aucZ,out_);
   const crowd=[];
-  const bs=shuffle([...Array(spots.length).keys()].filter(k=>k<6)),rest=[...Array(spots.length).keys()].filter(k=>!bs.slice(0,nb).includes(k));bidders.forEach((b,i)=>{const g=person({shirt:b.c,pants:pick(PANTS),skin:pick(SKIN),hair:pick(HAIR)});addPaddle(g,i+1);g.position.copy(spots[bs[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z);b.p=g;crowd.push({g,b,raise:0})});
-  for(let i=0;i<Math.min(rest.length,5);i++){const g=randPerson(null);g.position.copy(spots[rest[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z);crowd.push({g,b:null,raise:0})}
+  const bs=shuffle([...Array(spots.length).keys()].filter(k=>k<6)),rest=[...Array(spots.length).keys()].filter(k=>!bs.slice(0,nb).includes(k));bidders.forEach((b,i)=>{const g=person({shirt:b.c,pants:pick(PANTS),skin:pick(SKIN),hair:pick(HAIR)});addPaddle(g,i+1);g.position.copy(spots[bs[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z)+rnd(-.5,.5);b.p=g;crowd.push({g,b,raise:0})});
+  for(let i=0;i<Math.min(rest.length,5);i++){const g=randPerson(null);g.position.copy(spots[rest[i]]);g.rotation.y=Math.atan2(aucX-g.position.x,aucZ-g.position.z)+rnd(-.55,.55);crowd.push({g,b:null,raise:0})}
   const auct=person({shirt:'#d63a2f',pants:'#1d2433',skin:pick(SKIN),hair:pick(HAIR),suit:true,tie:'#ffc83d',carry:'clip',style:0});auct.position.set(aucX,hy+.16,aucZ-.15);auct.rotation.y=0;
   const open=r5k(val*rnd(.76,.84)),first=bidders.find(b=>b.max>open)||bidders[0];
   A={props,h,L,bidders,crowd,auct,auctRaise:0,cur:open,leader:null,stage:0,heat:clamp(70+eqMul('auction','heat')+(S.rep-50)/5,0,100),busy:true,mkt:false,late:false,done:null,say:null,fx:[]};
