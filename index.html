@@ -741,6 +741,17 @@ body.tut-on #upg+.hint{margin-top:10px}
 
 .sh-head .spk{display:none}.mg .vipt{white-space:nowrap;display:inline-block}
 @media (orientation:landscape) and (max-height:520px){.scrim.framed .sheet{max-height:calc(100% - 64px)}}@media (orientation:landscape){.sheet{clip-path:inset(0 round 26px 26px 0 0)}}
+/* Unfolded foldables and other wide screens: keep the phone layout in a centred column. */
+:root{--ae-col:480px}
+@media (min-width:481px){
+  html,body{background:#051f3f}
+  #gl,#labels,.hud,#toasts,.scrim,#ad,#auc,#loading,.lvup,#docv{
+    left:50%;
+    right:auto;
+    width:var(--ae-col);
+    margin-left:calc(var(--ae-col) / -2);
+  }
+}
 </style>
 
 <canvas id="gl"></canvas>
@@ -1046,7 +1057,7 @@ scene.add(new T.AmbientLight(0xffffff,.16));
 const sun=new T.DirectionalLight(0xfff1dc,.62);sun.position.set(9,18,7);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-24,right:24,top:24,bottom:-24,near:1,far:70});sun.shadow.bias=-.0006;sun.shadow.normalBias=.02;
 scene.add(sun);scene.add(sun.target);
-function resize(){const w=innerWidth,h=innerHeight,a=w/h;renderer.setSize(w,h,false);let hw,hh;if(a<1){hw=8.5;hh=hw/a}else{hh=9;hw=hh*a}cam.left=-hw;cam.right=hw;cam.top=hh;cam.bottom=-hh;cam.zoom=zoom;cam.updateProjectionMatrix()}
+function viewBox(){const el=document.getElementById('gl');const r=el?el.getBoundingClientRect():{left:0,top:0,width:innerWidth,height:innerHeight};return {x:r.left,y:r.top,w:r.width||innerWidth,h:r.height||innerHeight}}function resize(){const {w,h}=viewBox(),a=w/h;renderer.setSize(w,h,false);let hw,hh;if(a<1){hw=8.5;hh=hw/a}else{hh=9;hw=hh*a}cam.left=-hw;cam.right=hw;cam.top=hh;cam.bottom=-hh;cam.zoom=zoom;cam.updateProjectionMatrix()}
 const BOUND={x0:-47,x1:49,z0:-43,z1:52};
 const _ray=new T.Raycaster(),_nv=new T.Vector2(),_hp=new T.Vector3(),GPLANE=new T.Plane(new T.Vector3(0,1,0),0);
 function applyCam(){cam.position.copy(target).addScaledVector(DIR,60);cam.lookAt(target);cam.zoom=zoom;cam.updateProjectionMatrix();cam.updateMatrixWorld()}
@@ -7287,10 +7298,10 @@ function buildLabels(){
 }
 function pop(pos,txt,cls){if(!SET.pops&&!cls)return;const e=document.createElement('div');e.className='lb pop '+(cls||'');e.textContent=txt;const o=addLabel(e,pos,'pop');setTimeout(()=>removeLabel(o),1200)}
 const pv=new T.Vector3();
-let HUDR=null;function hudRects(){const R_=[];document.querySelectorAll('#cashBtn,#lvlBtn,#gemBtn,#profileBtn,#questBtn,#vipBtn,#repBtn,#mapBtn,#homeBtn,#vipPassBtn,#adsBtn,nav.dock>*').forEach(e=>{if(e.hidden||e.offsetParent===null)return;const r=e.getBoundingClientRect();if(r.width>2&&r.height>2)R_.push([r.left-4,r.top-4,r.right+4,r.bottom+4])});return R_}
+let HUDR=null;function hudRects(){const R_=[];document.querySelectorAll('#cashBtn,#lvlBtn,#gemBtn,#profileBtn,#questBtn,#vipBtn,#repBtn,#mapBtn,#homeBtn,#vipPassBtn,#adsBtn,nav.dock>*').forEach(e=>{if(e.hidden||e.offsetParent===null)return;const r=e.getBoundingClientRect();if(r.width>2&&r.height>2){const v=viewBox();R_.push([r.left-4-v.x,r.top-4-v.y,r.right+4-v.x,r.bottom+4-v.y])}});return R_}
 addEventListener('resize',()=>{HUDR=null});
 let LBF=0;function updateLabels(){
-  const w=innerWidth,h=innerHeight;
+  const v=viewBox(),w=v.w,h=v.h;
   const SEP=[];LBF=(LBF+1)%20;
   for(const l of labels){if(l.obj){pv.copy(l.obj.position);pv.y+=l.dy}else pv.copy(l.pos);pv.project(cam);l.sx=(pv.x+1)/2*w;l.sy=(1-pv.y)/2*h;if(l.owner==='auc'){const hw=(l.el.offsetWidth||0)/2+6;l.sx=Math.max(hw,Math.min(w-hw,l.sx))}
     if(l.sep===undefined)l.sep=/\b(tag|build)\b/.test(l.el.className)||l.el.id==='brdTag';
@@ -7625,10 +7636,10 @@ let TAPP=null;window.addEventListener('pointerdown',e=>{if(e.isTrusted&&!(e.targ
 // frame the room being managed in the clear strip between the HUD and the sheet, then fly back on close
 let camRet=null,camFrK=null;
 function frameRoom(k){if(A||!STN[k]||!STN[k].center)return;$('#sheet').classList.add('framed');requestAnimationFrame(()=>{const sh=$('#sheet .sheet');if(!sh||A)return;
-  const top=innerHeight-sh.offsetHeight,hud=$('.hud.top .row'),hb=Math.min(innerHeight*.2,(hud?hud.getBoundingClientRect().bottom:60)+8),band=Math.max(90,top-hb),py=hb+band/2;
+  const v=viewBox(),top=sh.getBoundingClientRect().top,hud=$('.hud.top .row'),hb=Math.min(v.y+v.h*.2,(hud?hud.getBoundingClientRect().bottom:v.y+60)+8),band=Math.max(90,top-hb),py=hb+band/2;
   if(camFrK===k&&camRet)return;if(!camRet)camRet=camTw?{x:camTw.tx,z:camTw.tz,zm:camTw.tzm}:{x:target.x,z:target.z,zm:zoom};camFrK=k;
-  const s=STN[k],sz=s.size||[6,2,6],span=(sz[0]+sz[2])/1.414+1.2,wpx=Math.min(innerWidth*.92,band*1.75),cw=cam.right-cam.left,
-    zm=clamp(cw*wpx/(span*innerWidth),1.3,2.6),u=cw/zm/innerWidth,dy=py-innerHeight/2,c=s.center.clone().addScaledVector(FWD,dy*u/SINE);
+  const s=STN[k],sz=s.size||[6,2,6],span=(sz[0]+sz[2])/1.414+1.2,wpx=Math.min(v.w*.92,band*1.75),cw=cam.right-cam.left,
+    zm=clamp(cw*wpx/(span*v.w),1.3,2.6),u=cw/zm/v.w,dy=py-(v.y+v.h/2),c=s.center.clone().addScaledVector(FWD,dy*u/SINE);
   flyTo(c.x,c.z,zm,.55)})}
 /* eslint-disable no-func-assign */
 stationSheet=(f=>k=>{f(k);if(openSheet)openSheet.back=()=>stationSheet(k);frameRoom(k)})(stationSheet);boardSheet=(f=>()=>{f();if(openSheet)openSheet.back=()=>boardSheet();frameRoom('board')})(boardSheet);unlockSheet=(f=>k=>{f(k);if(openSheet)openSheet.back=()=>S.st[k]&&S.st[k].on?stationSheet(k):unlockSheet(k);frameRoom(k)})(unlockSheet);
@@ -7790,7 +7801,7 @@ function boardSheet(){
   draw();
 }
 // first time the Board Room is part of the office: fly over to it and explain what it's for, once
-function boardIntro(){S.boardIntro=1;save();if(BRD&&BRD.center){const zm=1.6,u=(cam.right-cam.left)/zm/innerWidth,t=BRD.center.clone().addScaledVector(FWD,-innerHeight*.27*u/SINE);flyTo(t.x,t.z,zm,1.1)}
+function boardIntro(){S.boardIntro=1;save();if(BRD&&BRD.center){const v=viewBox(),zm=1.6,u=(cam.right-cam.left)/zm/v.w,t=BRD.center.clone().addScaledVector(FWD,-v.h*.27*u/SINE);flyTo(t.x,t.z,zm,1.1)}
   const cost=BOARD_COST*TW.cost,n=mgrN();
   setTimeout(()=>sheet('New: Board Room','#5b4a9e',`<div class="br-hero"><div class="br-faces">${['sales','reception','shark','marketing','auction'].map(k=>`<span>${mgrSVG(k)}</span>`).join('')}</div><div class="br-table"></div></div>
   <p class="br-p">Your managers meet here. You pick a big boost.</p>
@@ -8380,7 +8391,7 @@ function startAuction(h){
   A={props,h,L,bidders,crowd,auct,auctRaise:0,cur:open,leader:null,stage:0,heat:clamp(70+eqMul('auction','heat')+(S.rep-50)/5,0,100),busy:true,mkt:false,late:false,done:null,say:null,fx:[]};
   // frame the actual crowd + auctioneer in the top part of the screen (the bid panel covers the bottom ~45%)
   {const ps=crowd.map(c=>c.g.getWorldPosition(V3(0,0,0))).concat([auct.getWorldPosition(V3(0,0,0))]),c=V3(0,0,0);ps.forEach(p=>c.add(p));c.multiplyScalar(1/ps.length);
-    const zm=1.85,cw=cam.right-cam.left,u=cw/zm/innerWidth,dy=innerHeight*.15,t=c.clone().addScaledVector(FWD,-dy*u/SINE);flyTo(t.x,t.z,zm,1.1,c.y)}
+    const v=viewBox(),zm=1.85,cw=cam.right-cam.left,u=cw/zm/v.w,dy=v.h*.15,t=c.clone().addScaledVector(FWD,-dy*u/SINE);flyTo(t.x,t.z,zm,1.1,c.y)}
   syncHouseLabels();
   const sb=document.createElement('div');sb.className='lb say';A.say=addLabel(sb,null,'auc',auct,3.1);
   say(`Welcome to ${L.addr}! ${L.copy}.`);
@@ -8461,13 +8472,13 @@ const ptrs=new Map();let downAt=null,pinch0=0,zoom0=1,moved=0;
 const RIGHT=V3(1,0,-1).normalize(),FWD=V3(-1,0,-1).normalize(),SINE=DIR.y;
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===1){downAt={x:e.clientX,y:e.clientY,t:performance.now()};moved=0}if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0=Math.hypot(a.x-b.x,a.y-b.y);zoom0=zoom}});
 canvas.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);const dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
-  if(ptrs.size===1){moved+=Math.abs(dx)+Math.abs(dy);if(A||camTw)return;const u=(cam.right-cam.left)/zoom/innerWidth;target.addScaledVector(RIGHT,-dx*u);target.addScaledVector(FWD,dy*u/SINE);placeCam()}
+  if(ptrs.size===1){moved+=Math.abs(dx)+Math.abs(dy);if(A||camTw)return;const u=(cam.right-cam.left)/zoom/viewBox().w;target.addScaledVector(RIGHT,-dx*u);target.addScaledVector(FWD,dy*u/SINE);placeCam()}
   else if(ptrs.size===2&&!A){moved=99;const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch0>0){zoom=clamp(zoom0*d/pinch0,.75,2.6);placeCam()}}});
 const up_=e=>{ptrs.delete(e.pointerId);if(ptrs.size===0&&downAt&&moved<10&&performance.now()-downAt.t<500)tap(e.clientX,e.clientY);if(ptrs.size<2)pinch0=0;if(ptrs.size===0)downAt=null};
 canvas.addEventListener('pointerup',up_);canvas.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId)});
 canvas.addEventListener('wheel',e=>{e.preventDefault();if(A)return;zoom=clamp(zoom*(e.deltaY<0?1.1:.9),.75,2.6);placeCam()},{passive:false});
 const ray=new T.Raycaster(),ndc=new T.Vector2();
-function tap(x,y){if(A)return;ndc.set(x/innerWidth*2-1,-(y/innerHeight)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
+function tap(x,y){if(A)return;const v=viewBox();ndc.set((x-v.x)/v.w*2-1,-((y-v.y)/v.h)*2+1);ray.setFromCamera(ndc,cam);const hs=ORDER.map(k=>STN[k].hit);if(BRD)hs.push(BRD.hit);const hits=ray.intersectObjects(hs);if(hits.length){const k=hits[0].object.userData.k;if(k==='board')boardSheet();else stationSheet(k)}}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-need]');if(!b||!b.dataset.need)return;if(b._bought){b._bought=false;return}e.stopPropagation();e.preventDefault();needFunds(b.dataset.need,+b.dataset.cost||0)},true);
 $('#shopBtn').onclick=()=>{if(IAP)shopSheet();else rewardsSheet()};$('#gemBtn').onclick=()=>{if(IAP)shopSheet('gems')};$('#mgrBtn').onclick=managersSheet;$('#boostBtn').onclick=boostSheet;
 $('#vipPassBtn').onclick=()=>{if(IAP)vipPassSheet()};$('#hammerBtn').onclick=()=>{if(!S.st.auction.on){unlockSheet('auction');return}if(aucCount())startAuction();else stationSheet('auction')};$('#questBtn').onclick=()=>{const idx=S.qa.findIndex(q=>{const I=qInfo(q);return I.cur>=I.n});if(idx>=0){const I=qInfo(S.qa[idx]);flyText($('#questBtn'),'+'+rwText(I.r));claimQuest(idx);if(!TU)questsSheet()}else questsSheet()};$('#homeBtn').onclick=()=>{if(!A)flyTo(0,1.5,1.15,.8)};$('#lvlBtn').onclick=careerSheet;$('#repBtn').onclick=repSheet;$('#cashBtn').onclick=()=>{if(IAP)shopSheet('cash');else rewardsSheet('cash')};$('#vipBtn').onclick=()=>{if(!VIP||A)return;const p=VIP.v?VIP.v.g.position:V3(VIP.L.position.x,0,9.6);closeSheet();flyTo(p.x+1.2,p.z+2.2,1.9,.7);if(VIP.state==='wait')setTimeout(vipSheet,750)};$('#mapBtn').onclick=mapSheet;$('#upBtn').onclick=upgradesSheet;$('#profileBtn').onclick=profileSheet;
